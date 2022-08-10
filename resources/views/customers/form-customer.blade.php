@@ -1,6 +1,6 @@
 @extends('layouts.main')
 
-@section('title', 'Criando cliente')
+@section('title', $isEdit ? 'Editando perfil de '.$customer->name : 'Criando perfil')
 
 @section('content')
 
@@ -39,6 +39,7 @@
                 <input type="hidden" name="id" value="{{$customer->id}}">
             @endif
             <button type="submit">Salvar</button>
+            <input type="reset" value="Redefinir alterações">
 
         </form>
     </div>

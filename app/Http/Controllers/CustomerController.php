@@ -127,6 +127,7 @@ class CustomerController extends Controller
             $customer->save();
 
             DB::commit();
+
         }catch(Exception $e){
 
             DB::rollBack();
