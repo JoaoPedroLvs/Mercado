@@ -18,7 +18,7 @@ class CreateProductsSalesTable extends Migration
             $table->integer('qty_sales');
             $table->unsignedInteger('sale_id');
             $table->unsignedInteger('product_id');
-            $table->doube('total_price');
+            $table->double('total_price');
             $table->timestamps();
 
             $table->foreign('sale_id')->references('id')->on('sales')->onDelete('CASCADE');

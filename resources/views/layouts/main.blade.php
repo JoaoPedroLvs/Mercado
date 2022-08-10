@@ -12,9 +12,14 @@
 
     <body>
         <header>
-            <a href="/users">Clientes</a>
+            <a href="/">Página inicial</a>
+            <a href="/customers">Clientes</a>
             <a href="/products">Produtos</a>
             <a href="/employees">Funcionários</a>
+            <a href="/categories">Categorias</a>
+            <a href="/sales">Vendas</a>
+            <a href="/inventory">Estoque</a>
+            <a href="/promotions">Promoções</a>
         </header>
 
         @yield('content')
