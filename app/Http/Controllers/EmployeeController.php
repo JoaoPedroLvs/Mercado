@@ -3,83 +3,98 @@
 namespace App\Http\Controllers;
 
 use App\Models\Employee;
+use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class EmployeeController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
+    public function index(){
+        $employees = Employee::get();
+
+        $data = [
+            'employees' => $employees
+        ];
+
+        return view('employees.show-employees', $data);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+    public function create(){
+
+        return $this->form(new Employee());
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
+    public function edit($id){
+        $employee = Employee::find($id);
+
+        return $this->form($employee);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Employee  $employee
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Employee $employee)
-    {
-        //
+    public function form(Employee $employee){
+
+        $isEdit = $employee->id ? true : false;
+
+        $data = [
+            'employee' => $employee,
+            'isEdit' => $isEdit
+        ];
+
+        return view('employees.form-employee', $data);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Employee  $employee
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Employee $employee)
-    {
-        //
+    public function insert(Request $request){
+        $employee = new Employee();
+
+        $this->save($employee, $request);
+
+        return redirect('/employees')->with('msg', 'Criado com sucesso');
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Employee  $employee
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Employee $employee)
-    {
-        //
+    public function update(Request $request){
+        $employee = Employee::find($request->id);
+
+        $this->save($employee, $request);
+
+        return redirect('/employees')->with('msg', 'Editado com sucesso');
+
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Employee  $employee
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Employee $employee)
-    {
-        //
+    public function delete($id){
+        $employee = Employee::find($id);
+
+        $employee->delete();
+
+        return redirect('/employees')->with('msg', 'Excluido com sucesso');
+    }
+
+    public function show($id){
+        $employee = Employee::find($id);
+
+        $data = [
+            'employee' => $employee
+        ];
+
+        return view('employees.profile-employee', $data);
+    }
+
+    private function save(Employee $employee, Request $request){
+
+        DB::beginTransaction();
+
+        try{
+            $employee->name = $request->name;
+            $employee->cpf = $request->cpf;
+            $employee->rg = $request->rg;
+            $employee->email = $request->email;
+            $employee->phone = $request->phone;
+            $employee->work_code = $request->work_code;
+
+            $employee->save();
+
+            DB::commit();
+
+        }catch(Exception $e){
+            DB::rollBack();
+        }
     }
 }

@@ -9,27 +9,39 @@ Route::get('/', function () {return view('welcome');});
 
 Route::group([], function(){ //Clientes
 
-    Route::get('/customers', [CustomerController::class, 'index']);
+    Route::get('/customers',            'CustomerController@index');
+    Route::get('/create/customer',      'CustomerController@create');
+    Route::post('/form/customer',       'CustomerController@insert');
+    Route::get('/edit/customer/{id}',   'CustomerController@edit');
+    Route::put('/form/customer',        'CustomerController@update');
+    Route::get('/delete/customer/{id}', 'CustomerController@delete');
 
-    Route::get('/create/customer', [CustomerController::class, 'create']);
-    Route::post('/form/customer', [CustomerController::class, 'insert']);
-    Route::get('/edit/customer/{id}', [CustomerController::class, 'edit']);
-    Route::put('/form/customer', [CustomerController::class, 'update']);
-    Route::get('/delete/customer/{id}', [CustomerController::class, 'delete']);
-
-    Route::get('/profile/customer/{id}', [CustomerController::class, 'show']);
+    Route::get('/profile/customer/{id}', 'CustomerController@show');
 
 });
 
 Route::group([], function(){ //Categorias
 
-    Route::get('/categories', [CategoryController::class, 'index']);
+    Route::get('/categories',           'CategoryController@index');
 
-    Route::get('/create/category', [CategoryController::class, 'create']);
-    Route::post('/form/category', [CategoryController::class, 'insert']);
-    Route::get('/edit/category/{id}', [CategoryController::class, 'edit']);
-    Route::put('/form/category', [CategoryController::class, 'update']);
-    Route::get('/delete/category/{id}', [CategoryController::class, 'delete']);
+    Route::get('/create/category',      'CategoryController@create');
+    Route::post('/form/category',       'CategoryController@insert');
+    Route::get('/edit/category/{id}',   'CategoryController@edit');
+    Route::put('/form/category',        'CategoryController@update');
+    Route::get('/delete/category/{id}', 'CategoryController@delete');
 
-    // Route::get('category/{id}/products', [CategoryController::class, 'show']);
+    // Route::get('category/{id}/products', 'CategoryController@show');
+});
+
+Route::group([], function() { //Funcionários
+    Route::get('/employees',            'EmployeeController@index');
+
+    Route::get('/create/employee',      'EmployeeController@create');
+    Route::post('/form/employee',       'EmployeeController@insert');
+    Route::get('/edit/employee/{id}',   'EmployeeController@edit');
+    Route::put('/form/employee',        'EmployeeController@update');
+    Route::get('/delete/employee/{id}', 'EmployeeController@delete');
+
+    Route::get('/profile/employee/{id}', 'EmployeeController@show');
+
 });
