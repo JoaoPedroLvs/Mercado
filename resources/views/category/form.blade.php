@@ -4,9 +4,10 @@
 
 @section('content')
 
-<br><br>
+    <br><br>
 
     <a href="/categories">Ver categorias</a>
+
     <br><br>
 
     <div class="container">

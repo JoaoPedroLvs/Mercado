@@ -23,7 +23,7 @@ class CustomerController extends Controller
             'customers' => $customers
         ];
 
-        return view('customers.show-customers', $data);
+        return view('customer.show', $data);
     }
 
     public function show(Request $request){
@@ -33,7 +33,7 @@ class CustomerController extends Controller
             'customer' => $customer
         ];
 
-        return view('customers.profile-customer', $data);
+        return view('customer.profile', $data);
     }
 
     /**
@@ -68,7 +68,7 @@ class CustomerController extends Controller
 
         $isEdit = $customer->id ? true : false;
 
-        return view('customers.form-customer', ['customer' => $customer, 'isEdit' => $isEdit]);
+        return view('customer.form', ['customer' => $customer, 'isEdit' => $isEdit]);
     }
 
     /**

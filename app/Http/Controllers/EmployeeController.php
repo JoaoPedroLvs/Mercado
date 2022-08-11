@@ -16,7 +16,7 @@ class EmployeeController extends Controller
             'employees' => $employees
         ];
 
-        return view('employees.show-employees', $data);
+        return view('employee.show', $data);
     }
 
     public function create(){
@@ -39,7 +39,7 @@ class EmployeeController extends Controller
             'isEdit' => $isEdit
         ];
 
-        return view('employees.form-employee', $data);
+        return view('employee.form', $data);
     }
 
     public function insert(Request $request){
@@ -74,7 +74,7 @@ class EmployeeController extends Controller
             'employee' => $employee
         ];
 
-        return view('employees.profile-employee', $data);
+        return view('employee.profile', $data);
     }
 
     private function save(Employee $employee, Request $request){

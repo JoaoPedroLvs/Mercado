@@ -16,7 +16,21 @@ class CategoryController extends Controller
             'categories' => $categories
         ];
 
-        return view('categories.show-categories', $data);
+        return view('category.show', $data);
+    }
+
+    public function show($id){
+
+        $category = Category::find($id);
+
+        $products = $category->products;
+
+        $data = [
+            'category' => $category,
+            'products' => $products
+        ];
+
+        return view('category.show_products', $data);
     }
 
     public function create(){
@@ -40,7 +54,7 @@ class CategoryController extends Controller
             'isEdit' => $isEdit
         ];
 
-        return view('categories.form-categories', $data);
+        return view('category.form', $data);
     }
 
     public function insert(Request $request){

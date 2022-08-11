@@ -2,84 +2,77 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
+    public function index(){
+        $products = Product::get();
+
+        $data = [
+            'products' => $products
+        ];
+
+        return view('product.show', $data);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+    public function create(){
+        return $this->form(new Product());
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
+    public function edit($id){
+        $product = Product::find($id);
+
+        return $this->form($product);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Product  $product
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Product $product)
-    {
-        //
+    public function form(Product $product){
+        $isEdit = $product->id ? true : false;
+
+        $categories = Category::get();
+
+        $data = [
+            'categories' => $categories,
+            'product' => $product,
+            'isEdit' => $isEdit
+        ];
+
+        return view('product.form', $data);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Product  $product
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Product $product)
-    {
-        //
+    public function insert(Request $request){
+        $product = new Product();
+
+        $this->save($product, $request);
+
+        return redirect('/products')->with('msg', 'Produto criado com sucesso');
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Product  $product
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Product $product)
-    {
-        //
+    public function update(Request $request){
+        $product = Product::find($request->id);
+
+        $this->save($product, $request);
+
+        return redirect('/products')->with('msg', 'Produto editado com sucesso');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Product  $product
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Product $product)
-    {
-        //
+    public function delete($id){
+        $product = Product::find($id);
+
+        $product->delete();
+
+        return redirect('/products')->with('msg', 'Produto deletado com sucesso');
+    }
+
+    private function save(Product $product, Request $request){
+
+        $product->name = $request->name;
+        $product->price = $request->price;
+
+        $product->category_id = $request->category_id;
+
+        $product->save();
     }
 }

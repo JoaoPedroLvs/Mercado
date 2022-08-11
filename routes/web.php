@@ -30,10 +30,11 @@ Route::group([], function(){ //Categorias
     Route::put('/form/category',        'CategoryController@update');
     Route::get('/delete/category/{id}', 'CategoryController@delete');
 
-    // Route::get('category/{id}/products', 'CategoryController@show');
+    Route::get('category/{id}/products', 'CategoryController@show');
 });
 
 Route::group([], function() { //Funcionários
+
     Route::get('/employees',            'EmployeeController@index');
 
     Route::get('/create/employee',      'EmployeeController@create');
@@ -43,5 +44,17 @@ Route::group([], function() { //Funcionários
     Route::get('/delete/employee/{id}', 'EmployeeController@delete');
 
     Route::get('/profile/employee/{id}', 'EmployeeController@show');
+
+});
+
+Route::group([], function(){
+
+    Route::get('/products',             'ProductController@index');
+
+    Route::get('/create/product',       'ProductController@create');
+    Route::post('/form/product',        'ProductController@insert');
+    Route::get('/edit/product/{id}',    'ProductController@edit');
+    Route::put('/form/product',         'ProductController@update');
+    Route::get('/delete/product/{id}',  'ProductController@delete');
 
 });
