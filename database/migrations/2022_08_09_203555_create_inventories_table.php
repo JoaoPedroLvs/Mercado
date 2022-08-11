@@ -17,7 +17,7 @@ class CreateInventoriesTable extends Migration
             $table->id();
             $table->unsignedInteger('product_id');
             $table->integer('qty');
-            $table->timestamp('created_at');
+            $table->dateTime('created_at');
 
             $table->foreign('product_id')->references('id')->on('products')->onDelete('CASCADE');
         });

@@ -2,84 +2,92 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\inventory;
+use App\Models\Inventory;
+use App\Models\Product;
 use Illuminate\Http\Request;
 
 class InventoryController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
+    public function index(){
+        $inventories = Inventory::get();
+
+        $data = [
+            'inventories' => $inventories
+        ];
+
+        return view('inventory.show', $data);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+    public function create(){
+        return $this->form(new Inventory());
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
+    public function edit($id){
+        $inventory = Inventory::find($id);
+
+        return $this->form($inventory);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\inventory  $inventory
-     * @return \Illuminate\Http\Response
-     */
-    public function show(inventory $inventory)
-    {
-        //
+    public function form(Inventory $inventory){
+
+        $isEdit = $inventory->id ? true : false;
+
+        $products = Product::get();
+
+        $data = [
+            'isEdit' => $isEdit,
+            'inventory' => $inventory,
+            'products' => $products
+        ];
+
+        return view('inventory.form', $data);
+
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\inventory  $inventory
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(inventory $inventory)
-    {
-        //
+    public function insert(Request $request){
+        $inventory = new Inventory();
+
+        $this->save($inventory, $request);
+
+        return redirect('/inventories')->with('msg', 'Estoque criado com sucesso');
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\inventory  $inventory
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, inventory $inventory)
-    {
-        //
+    public function update(Request $request){
+        $inventory = Inventory::find($request->id);
+
+        $this->save($inventory, $request);
+
+        return redirect('/inventories')->with('msg', 'Estoque editado com sucesso');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\inventory  $inventory
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(inventory $inventory)
-    {
-        //
+    public function delete($id){
+        $inventory = Inventory::find($id);
+
+        $product = Product::find($inventory->product_id);
+
+        $product->decrement('current_qty', $inventory->qty);
+
+        $inventory->delete();
+
+        return redirect('/inventories')->with('msg', 'Estoque excluido com sucesso');
+    }
+
+    private function save(Inventory $inventory, Request $request){
+
+        // dd($request->all());
+
+        $product = Product::find($request->product_id);
+
+        $inventory->qty = $request->qty;
+
+        $inventory->created_at = $request->created_at;
+
+        $inventory->product_id = $request->product_id;
+
+        $product->increment('current_qty', $request->qty);
+
+        $product->save();
+
+        $inventory->save();
     }
 }

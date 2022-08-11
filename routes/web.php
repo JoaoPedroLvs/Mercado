@@ -47,7 +47,7 @@ Route::group([], function() { //Funcionários
 
 });
 
-Route::group([], function(){
+Route::group([], function(){ // Produtos
 
     Route::get('/products',             'ProductController@index');
 
@@ -56,5 +56,15 @@ Route::group([], function(){
     Route::get('/edit/product/{id}',    'ProductController@edit');
     Route::put('/form/product',         'ProductController@update');
     Route::get('/delete/product/{id}',  'ProductController@delete');
+
+});
+
+Route::group([], function(){ //Estoque
+
+    Route::get('/inventories',          'InventoryController@index');
+
+    Route::get('/create/inventory',     'InventoryController@create');
+    Route::post('/form/inventory',      'InventoryController@insert');
+    Route::get('/delete/inventory/{id}',     'InventoryController@delete');
 
 });

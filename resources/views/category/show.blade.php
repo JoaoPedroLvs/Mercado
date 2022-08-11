@@ -62,7 +62,7 @@
 
             <h2>Nenhuma categoria cadastrada</h2>
 
-            <p><a href="/create/product">Clique aqui</a> para criar um novo</p>
+            <p><a href="/create/category">Clique aqui</a> para criar um novo</p>
 
         @endif
     </div>

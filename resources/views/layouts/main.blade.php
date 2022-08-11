@@ -18,7 +18,7 @@
             <a href="/employees">Funcionários</a>
             <a href="/categories">Categorias</a>
             <a href="/sales">Vendas</a>
-            <a href="/inventory">Estoque</a>
+            <a href="/inventories">Estoque</a>
             <a href="/promotions">Promoções</a>
         </header>
 

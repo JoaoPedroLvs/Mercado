@@ -27,6 +27,7 @@
                         <th>Id</th>
                         <th>Nome</th>
                         <th>Categoria</th>
+                        <th>Quantidade</th>
                         <th>Ações</th>
                     </tr>
                 </thead>
@@ -40,6 +41,7 @@
                             <td>{{$product->id}}</td>
                             <td>{{$product->name}}</td>
                             <td>{{$product->category->name}}</td>
+                            <td>{{$product->current_qty}}</td>
                             <td>
                                 <a href="/edit/product/{{$product->id}}">Editar</a>
                                 <a href="/delete/product/{{$product->id}}">Deletar</a>
