@@ -6,14 +6,15 @@
 
     <br>
 
-    @if($errors->any())
-    <h4>{{$errors->first()}}</h4>
-    @elseif(session()->has('msg'))
-    <h4>{{session()->get('msg')}}</h4>
-    @endif
 
     <div class="container">
         <h1>Produtos</h1>
+
+        @if (session()->has('msg'))
+
+            <h4>{{session()->get('msg')}}</h4>
+
+        @endif</a></td>
 
         @if (count($products) > 0)
 
@@ -38,21 +39,19 @@
                         {{-- @dd($product->category()->get()) --}}
 
                         <tr>
-                            <td>{{$product->id}}</td>
-                            <td>{{$product->name}}</td>
-                            <td>{{$product->category->name}}</td>
-                            <td>{{$product->current_qty}}</td>
+                            <td>{{ $product->id }}</td>
+                            <td>{{ $product->name }}</td>
+                            <td><a href="/category/{{$product->category->id}}/products">{{ $product->category->name }}</td>
+                            <td>{{ $product->current_qty }}</td>
                             <td>
-                                <a href="/edit/product/{{$product->id}}">Editar</a>
-                                <a href="/delete/product/{{$product->id}}">Deletar</a>
+                                <a href="/edit/product/{{ $product->id }}">Editar</a>
+                                <a href="/delete/product/{{ $product->id }}">Deletar</a>
                             </td>
                         </tr>
                     </tbody>
                 @endforeach
             </table>
-
         @else
-
             <h2>Nenhum produto cadastrado</h2>
             <p><a href="/create/product">Clique aqui</a> para criar um novo</p>
 

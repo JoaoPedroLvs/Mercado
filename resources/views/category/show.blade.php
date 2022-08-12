@@ -3,19 +3,19 @@
 @section('title', 'Categorias')
 
 @section('content')
-<br>
+    <br>
 
     <div class="container">
         <h1>Categorias</h1>
 
 
-        @if($errors->any())
+        @if ($errors->any())
 
-        <h4>{{$errors->first()}}</h4>
+            <h4>{{ $errors->first() }}</h4>
 
         @elseif(session()->has('msg'))
 
-        <h4>{{session()->get('msg')}}</h4>
+            <h4>{{ session()->get('msg') }}</h4>
 
         @endif
 
@@ -26,40 +26,38 @@
 
             <table>
 
-                    <thead>
+                <thead>
+
+                    <tr>
+
+                        <th>Id</th>
+                        <th>Nome</th>
+                        <th>Ações</th>
+
+                    </tr>
+
+                </thead>
+
+                @foreach ($categories as $category)
+                    <tbody>
 
                         <tr>
 
-                            <th>Id</th>
-                            <th>Nome</th>
-                            <th>Ações</th>
+                            <td>{{ $category->id }}</td>
+                            <td>{{ $category->name }}</td>
+                            <td>
+                                <a href="/edit/category/{{ $category->id }}">Editar</a>
+                                <a href="/category/{{ $category->id }}/products">Produtos</a>
+                                <a href="/delete/category/{{ $category->id }}">Deletar</a>
+
+                            </td>
 
                         </tr>
 
-                    </thead>
-
-                    @foreach ($categories as $category)
-                        <tbody>
-
-                            <tr>
-
-                                <td>{{$category->id}}</td>
-                                <td>{{$category->name}}</td>
-                                <td>
-                                    <a href="/edit/category/{{$category->id}}">Editar</a>
-                                    <a href="/category/{{$category->id}}/products">Produtos</a>
-                                    <a href="/delete/category/{{$category->id}}">Deletar</a>
-
-                                </td>
-
-                            </tr>
-
-                        </tbody>
-                    @endforeach
+                    </tbody>
+                @endforeach
             </table>
-
         @else
-
             <h2>Nenhuma categoria cadastrada</h2>
 
             <p><a href="/create/category">Clique aqui</a> para criar um novo</p>

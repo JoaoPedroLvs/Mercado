@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\DB;
 class EmployeeController extends Controller
 {
     public function index(){
-        $employees = Employee::get();
+        $employees = Employee::orderBy('id','asc')->get();
 
         $data = [
             'employees' => $employees

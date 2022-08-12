@@ -2,84 +2,112 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Product;
 use App\Models\Promotion;
+use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class PromotionController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
+    public function index(){
+
+        $promotions = Promotion::orderBy('id','asc')->get();
+
+        // dd($promotions[0]->started_at->format('Y-m-d'));
+
+        $data = [
+
+            'promotions' => $promotions
+
+        ];
+
+        return view('promotion.show', $data);
+
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+    public function create(){
+
+        return $this->form(new Promotion());
+
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
+    public function edit($id){
+
+        $promotion = Promotion::find($id);
+
+        return $this->form($promotion);
+
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Promotion  $promotion
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Promotion $promotion)
-    {
-        //
+    public function form(Promotion $promotion){
+
+        $products = Product::get();
+
+        $isEdit = $promotion->id ? true : false;
+
+        $data = [
+            'products' => $products,
+            'promotion' => $promotion,
+            'isEdit' => $isEdit
+
+        ];
+
+        return view('promotion.form', $data);
+
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Promotion  $promotion
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Promotion $promotion)
-    {
-        //
+    public function insert(Request $request) {
+
+        $promotion = new Promotion();
+
+        $this->save($promotion, $request);
+
+        return redirect('/promotions')->with('msg', 'Promoção criado com sucesso');
+
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Promotion  $promotion
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Promotion $promotion)
-    {
-        //
+    public function update(Request $request){
+
+        $promotion = Promotion::find($request->id);
+
+        $this->save($promotion, $request);
+
+        return redirect('/promotions')->with('msg', 'Promoção editada com sucesso');
+
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Promotion  $promotion
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Promotion $promotion)
-    {
-        //
+    public function delete($id){
+
+        $promotion = Promotion::find($id);
+
+        $promotion->delete();
+
+        return redirect('/promotions')->with('msg', 'Promoção apagada com sucesso');
+
+    }
+
+    private function save(Promotion $promotion, Request $request){
+
+        try{
+
+            DB::beginTransaction();
+
+            $promotion->product_id = $request->product_id;
+            $promotion->price = $request->price;
+            $promotion->started_at = $request->started_at;
+            $promotion->ended_at = $request->ended_at;
+
+            $promotion->save();
+
+            DB::commit();
+
+        }catch(Exception $e){
+
+            dd($e);
+
+            DB::rollBack();
+
+        }
     }
 }

@@ -68,3 +68,15 @@ Route::group([], function(){ //Estoque
     Route::get('/delete/inventory/{id}',     'InventoryController@delete');
 
 });
+
+Route::group([], function(){ //Promoções
+
+    Route::get('/promotions',           'PromotionController@index');
+
+    Route::get('/create/promotion',     'PromotionController@create');
+    Route::post('/form/promotion',      'PromotionController@insert');
+    Route::get('/edit/promotion/{id}',  'PromotionController@edit');
+    Route::put('/form/promotion',       'PromotionController@update');
+    Route::get('/delete/promotion/{id}', 'PromotionController@delete');
+
+});

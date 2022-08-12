@@ -24,6 +24,8 @@
 
                         <th>Nome</th>
 
+                        <th>Quantidaede</th>
+
                     </tr>
 
                 </thead>
@@ -35,7 +37,11 @@
                         <tr>
 
                             <td>{{$product->id}}</td>
+
                             <td>{{$product->name}}</td>
+
+                            <td>{{$product->current_qty}}</td>
+
 
                         </tr>
                     </tbody>

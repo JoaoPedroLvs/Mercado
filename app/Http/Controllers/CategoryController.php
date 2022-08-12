@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\DB;
 class CategoryController extends Controller
 {
     public function index(){
-        $categories = Category::get();
+        $categories = Category::orderBy('id','asc')->get();
 
         $data = [
             'categories' => $categories

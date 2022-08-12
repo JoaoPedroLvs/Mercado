@@ -4,12 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Product;
+use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ProductController extends Controller
 {
     public function index(){
-        $products = Product::get();
+        $products = Product::orderBy('id', 'asc')->get();
 
         $data = [
             'products' => $products
@@ -68,11 +70,23 @@ class ProductController extends Controller
 
     private function save(Product $product, Request $request){
 
-        $product->name = $request->name;
-        $product->price = $request->price;
+        try{
 
-        $product->category_id = $request->category_id;
+            DB::beginTransaction();
 
-        $product->save();
+            $product->name = $request->name;
+            $product->price = $request->price;
+
+            $product->category_id = $request->category_id;
+
+            $product->save();
+
+            DB::commit();
+
+        }catch(Exception $e){
+
+            DB::rollBack();
+
+        }
     }
 }

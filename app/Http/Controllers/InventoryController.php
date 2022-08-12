@@ -4,12 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\Inventory;
 use App\Models\Product;
+use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class InventoryController extends Controller
 {
     public function index(){
-        $inventories = Inventory::get();
+        $inventories = Inventory::orderBy('id','asc')->get();
 
         $data = [
             'inventories' => $inventories
@@ -74,20 +76,31 @@ class InventoryController extends Controller
 
     private function save(Inventory $inventory, Request $request){
 
-        // dd($request->all());
+        try{
+            DB::beginTransaction();
+            // dd($request->all());
 
-        $product = Product::find($request->product_id);
+            $product = Product::find($request->product_id);
 
-        $inventory->qty = $request->qty;
+            $inventory->qty = $request->qty;
 
-        $inventory->created_at = $request->created_at;
+            $inventory->created_at = $request->created_at;
 
-        $inventory->product_id = $request->product_id;
+            $inventory->product_id = $request->product_id;
 
-        $product->increment('current_qty', $request->qty);
+            $product->increment('current_qty', $request->qty);
 
-        $product->save();
+            // $product->save();
 
-        $inventory->save();
+            $inventory->save();
+
+            DB::commit();
+
+        }catch(Exception $e){
+
+            DB::rollBack();
+
+        }
+
     }
 }
