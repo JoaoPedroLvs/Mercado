@@ -15,7 +15,9 @@
             <tr>
 
                 <th>Id</th>
-                <th>Nome</th>
+                <th>Cliente</th>
+                <th>Funcionário</th>
+                <th>Produto</th>
                 <th>Quantidade</th>
                 <th>Preço Total </th>
 
@@ -31,7 +33,9 @@
                 <tr>
 
                     <td>{{$sale->id}}</td>
-                    <td>{{$sale->name}}</td>
+                    <td>{{$sale->client}}</td>
+                    <td>{{$sale->employee}}</td>
+                    <td>{{$sale->product}}</td>
                     <td>{{$sale->qty_sales}}</td>
                     <td>{{$sale->total_price}}</td>
 

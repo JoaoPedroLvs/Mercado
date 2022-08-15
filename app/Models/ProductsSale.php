@@ -16,9 +16,12 @@ class ProductsSale extends Model
 
     public function scopeSearch($query) {
 
-        $query->select("ps.id", "pr.name", "ps.qty_sales", "ps.total_price", 'ps.sale_id')
+        $query->select("ps.id", "pr.name as product", "ps.qty_sales", "ps.total_price", "c.name as client", "em.name as employee", "ps.sale_id")
         ->from("products as pr")
-        ->join("products_sales as ps", "pr.id", "ps.product_id");
+        ->join("products_sales as ps", "pr.id", "ps.product_id")
+        ->join("sales as sa", "sa.id", "ps.sale_id")
+        ->join("customers as c", "c.id", "sa.customer_id")
+        ->join("employees as em", "em.id", "sa.employee_id");
 
     }
 }
