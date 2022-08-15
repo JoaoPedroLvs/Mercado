@@ -80,3 +80,15 @@ Route::group([], function(){ //Promoções
     Route::get('/delete/promotion/{id}', 'PromotionController@delete');
 
 });
+
+Route::group([], function(){ //Vendas
+
+    Route::get('/sales',                'SaleController@index');
+
+    Route::get('/new/sale',             'SaleController@create');
+    Route::post('/form/sale',           'SaleController@insert');
+    Route::get('/delete/sale/{id}',     'SaleController@delete');
+
+    Route::get('/sale/{id}/products',   'SaleController@show');
+
+});

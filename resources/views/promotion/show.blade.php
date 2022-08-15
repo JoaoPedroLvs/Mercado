@@ -48,8 +48,8 @@
                             <td>{{$promotion->id}}</td>
                             <td>{{number_format($promotion->price, 2, ',', ' ')}}</td>
                             <td>{{$promotion->product->name}}</td>
-                            <td>{{$promotion->started_at->format('d-m-Y')}}</td>
-                            <td>{{$promotion->ended_at->format('d-m-Y')}}</td>
+                            <td>{{$promotion->started_at->format('d/m/Y')}}</td>
+                            <td>{{$promotion->ended_at->format('d/m/Y')}}</td>
                             <td>
                                 <a href="/edit/promotion/{{$promotion->id}}">Editar</a>
                                 <a href="/delete/promotion/{{$promotion->id}}">Deletar</a>

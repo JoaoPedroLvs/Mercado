@@ -17,8 +17,8 @@ class CreateSalesTable extends Migration
             $table->id();
             $table->unsignedInteger('employee_id');
             $table->unsignedInteger('customer_id');
-            $table->double('total');
-            $table->timestamp('created_at');
+            $table->double('total')->default(0);
+            $table->timestamps();
 
             $table->foreign('employee_id')->references('id')->on('employees')->onDelete('CASCADE');
             $table->foreign('customer_id')->references('id')->on('customers')->onDelete('CASCADE');

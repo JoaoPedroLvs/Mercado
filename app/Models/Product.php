@@ -32,4 +32,10 @@ class Product extends Model
         return $this->hasMany(Promotion::class);
 
     }
+
+    public function products_sale(){
+
+        return $this->hasMany(ProductsSale::class);
+
+    }
 }

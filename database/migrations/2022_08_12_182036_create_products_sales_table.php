@@ -11,14 +11,14 @@ class CreateProductsSalesTable extends Migration
      *
      * @return void
      */
-    public function up()
-    {
-        Schema::create('products__sales', function (Blueprint $table) {
+    public function up(){
+
+        Schema::create('products_sales', function (Blueprint $table) {
             $table->id();
-            $table->integer('qty_sales');
             $table->unsignedInteger('sale_id');
             $table->unsignedInteger('product_id');
-            $table->double('total_price');
+            $table->integer('qty_sales');
+            $table->double('total_price')->default(0);
             $table->timestamps();
 
             $table->foreign('sale_id')->references('id')->on('sales')->onDelete('CASCADE');
@@ -33,6 +33,6 @@ class CreateProductsSalesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('products__sales');
+        Schema::dropIfExists('products_sales');
     }
 }
