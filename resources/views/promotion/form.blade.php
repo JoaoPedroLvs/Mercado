@@ -39,11 +39,11 @@
             <br>
 
             <label>Data inicial: </label>
-            <input type="date" name="started_at" required value="{{(string) $promotion->started_at->format('Y-m-d') ?? ""}}">
+            <input type="date" name="started_at" required value="{{(string) $promotion->started_at ? $promotion->started_at->format('Y-m-d') : ""}}">
             <br>
             {{-- @dd((string) $promotion->ended_at->format('Y-m-d')) --}}
             <label>Data final: </label>
-            <input type="date" name="ended_at" required value="{{(string) $promotion->ended_at->format('Y-m-d') ?? ""}}">
+            <input type="date" name="ended_at" required value="{{(string) $promotion->ended_at ? $promotion->ended_at->format('Y-m-d') : ""}}">
             <br><br>
 
 
