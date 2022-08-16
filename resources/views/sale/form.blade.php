@@ -37,17 +37,26 @@
             </select>
             <br>
 
-            <label>Qual produto foi comprado e sua quantidade: </label><br>
+            @if (count($products) > 0)
+                <label>Qual produto foi comprado e sua quantidade: </label><br>
 
-            @foreach ($products as $product)
+                @foreach ($products as $product)
 
-                <input type="checkbox" name="product_id[]" value="{{$product->id}}">{{$product->name}}
+                    <input type="checkbox" name="product_id[]" value="{{$product->id}}">{{$product->name}}
 
-                <input type="number" name="qty_sales[]">
-                <br>
+                    <input type="number" name="qty_sales[]">
+                    <br>
 
-            @endforeach
+                @endforeach
+
+            @else
+
+                <h3>Nenhum produto cadastrado</h3>
+                <p><a href="/create/product">Clique aqui</a> para criar um novo</p>
+
             <br>
+
+            @endif
             <button type="submit">Enviar</button>
         </form>
 

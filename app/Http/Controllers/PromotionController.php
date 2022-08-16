@@ -96,6 +96,7 @@ class PromotionController extends Controller
             $promotion->product_id = $request->product_id;
             $promotion->price = $request->price;
             $promotion->started_at = $request->started_at;
+            $promotion->is_active = $request->is_active;
             $promotion->ended_at = $request->ended_at;
 
             $promotion->save();

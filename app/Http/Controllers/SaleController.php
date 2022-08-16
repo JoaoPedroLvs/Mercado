@@ -6,6 +6,7 @@ use App\Models\Customer;
 use App\Models\Employee;
 use App\Models\Product;
 use App\Models\ProductsSale;
+use App\Models\Promotion;
 use App\Models\Sale;
 use Exception;
 use Illuminate\Http\Request;
@@ -98,12 +99,21 @@ class SaleController extends Controller
                 $productSale->sale_id = $sale->id;
 
 
+                $price = Promotion::searchPrice($product_id)->get()->first();
                 $product = Product::find($product_id);
-
+                // dd($product);
 
                 $productSale->product_id = $request->product_id[$k];
                 $productSale->qty_sales = $request->qty_sales[$k];
-                $productSale->total_price = $product->price * $productSale->qty_sales;
+
+                if($price->is_active == "true"){
+
+                    $productSale->total_price = $price->promotion * $productSale->qty_sales;
+
+                }
+                else{
+                    $productSale->total_price = $price->price * $productSale->qty_sales;
+                }
 
                 $product->decrement('current_qty', $productSale->qty_sales);
 

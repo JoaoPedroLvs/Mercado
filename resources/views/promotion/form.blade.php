@@ -34,9 +34,13 @@
             </select>
             <br>
 
+
             <label>Preço: </label>
             <input type="number" step="0.01" name="price" required value="{{$promotion->price ?? ""}}">
-            <br>
+            <br><br>
+
+            <input type="checkbox" name="is_active" {{$promotion->is_active ? "checked" : ""}} value="{{true}}">Está ativo?
+            <br><br>
 
             <label>Data inicial: </label>
             <input type="date" name="started_at" required value="{{(string) $promotion->started_at ? $promotion->started_at->format('Y-m-d') : ""}}">

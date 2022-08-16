@@ -16,6 +16,7 @@ class CreatePromotionsTable extends Migration
         Schema::create('promotions', function (Blueprint $table) {
             $table->id();
             $table->unsignedInteger('product_id');
+            $table->boolean('is_active')->nullable();
             $table->timestamp('started_at');
             $table->timestamp('ended_at');
             $table->double('price');

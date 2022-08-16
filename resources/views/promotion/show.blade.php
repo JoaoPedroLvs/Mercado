@@ -33,6 +33,7 @@
                         <th>Produto</th>
                         <th>Data inicial</th>
                         <th>Data final</th>
+                        <th>Estado</th>
                         <th>Ações</th>
 
                     </tr>
@@ -50,6 +51,7 @@
                             <td>{{$promotion->product->name}}</td>
                             <td>{{$promotion->started_at->format('d/m/Y')}}</td>
                             <td>{{$promotion->ended_at->format('d/m/Y')}}</td>
+                            <td>{{$promotion->is_active ? "Ativo" : "Inativo"}}</td>
                             <td>
                                 <a href="/edit/promotion/{{$promotion->id}}">Editar</a>
                                 <a href="/delete/promotion/{{$promotion->id}}">Deletar</a>
