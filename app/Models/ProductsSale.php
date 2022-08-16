@@ -24,4 +24,11 @@ class ProductsSale extends Model
         ->join("employees as em", "em.id", "sa.employee_id");
 
     }
+
+    public function scopeSearchQty($query){
+
+        $query->select("ps.product_id", "ps.qty_sales")
+        ->from("products_sales as ps")
+        ->join("products as p", "p.id", "ps.product_id");
+    }
 }

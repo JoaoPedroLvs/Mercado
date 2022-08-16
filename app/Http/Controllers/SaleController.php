@@ -63,6 +63,14 @@ class SaleController extends Controller
 
         $sale = Sale::find($id);
 
+        $qty = ProductsSale::searchQty($sale)->where('sale_id', $sale->id)->get();
+
+        foreach($qty as $productQty){
+            $product = Product::find($productQty->product_id);
+
+            $product->increment('current_qty', $productQty->qty_sales);
+        }
+
         $sale->delete();
 
         return redirect('/sales')->with('msg', 'Venda deletada com sucesso');
@@ -129,7 +137,7 @@ class SaleController extends Controller
 
         }catch(Exception $e){
 
-            dd($e);
+            // dd($e);
 
             DB::rollBack();
 
