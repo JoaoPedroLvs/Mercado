@@ -6,6 +6,12 @@
 
     <br><br>
 
+    @if(session()->has('msg'))
+
+            <h4>{{ session()->get('msg') }}</h4>
+
+    @endif
+
     <a href="/categories">Ver categorias</a>
 
     <br><br>
@@ -17,7 +23,7 @@
             @method($isEdit ? "PUT" : "POST")
 
             <label>Nome: </label>
-            <input type="text" name="name" required value="{{$category->name ?? ""}}">
+            <input type="text" name="name" max="250" required value="{{$category->name ?? ""}}">
             <br><br>
 
             @if($isEdit)

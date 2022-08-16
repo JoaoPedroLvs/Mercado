@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use Exception;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -60,17 +61,15 @@ class CategoryController extends Controller
     public function insert(Request $request){
         $category = new Category();
 
-        $this->save($category, $request);
+        return $this->save($category, $request);
 
-        return redirect('/categories')->with('msg', 'Criado com sucesso');
     }
 
     public function update(Request $request){
         $category = Category::find($request->id);
 
-        $this->save($category, $request);
+        return $this->save($category, $request);
 
-        return redirect('/categories')->with('msg', 'Editado com sucesso');
     }
 
     public function delete($id){
@@ -85,12 +84,47 @@ class CategoryController extends Controller
 
         DB::beginTransaction();
 
+        $rules = [
+            'name' => 'required|max:250'
+        ];
+
+        $msg = [
+            'name.required' => 'nome necessário',
+            'name.max' => 'nome inválido'
+        ];
+
+        $validator = Validator::make($request->all(), $rules, $msg);
+
+        if($validator->fails()){
+            if($category->id){
+
+                return redirect('/edit/category/'.$category->id)->with('msg', 'Não foi possível editar: '.$validator->errors()->first());
+
+            }
+            else{
+
+                return redirect('/create/categories')->with('msg', 'Não foi possível criar: '.$validator->errors()->first());
+
+            }
+        }
+
         try{
             $category->name =$request->name;
 
             $category->save();
 
             DB::commit();
+
+            if($category->id){
+
+                return redirect('/categories')->with('msg', 'Editado com sucesso');
+
+            }
+            else{
+
+                return redirect('/categories')->with('msg', 'Criado com sucesso');
+
+            }
 
         }catch(Exception $e){
 

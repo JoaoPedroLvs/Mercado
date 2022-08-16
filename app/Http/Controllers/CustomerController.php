@@ -6,6 +6,7 @@ use App\Models\Customer;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 
 class CustomerController extends Controller
 {
@@ -13,11 +14,16 @@ class CustomerController extends Controller
      * Mostra todos os clientes
      *
      * @return void
-     */
+    */
+
+
+
     public function index()
     {
 
         $customers = Customer::orderBy('id','asc')->get();
+
+        // dd($customers);
 
         $data = [
             'customers' => $customers
@@ -78,9 +84,9 @@ class CustomerController extends Controller
      * @return void
      */
     public function insert(Request $request) {
-        $this->save(new Customer(), $request);
 
-        return redirect('/customers')->with('msg', 'Criado com sucesso');
+        return $this->save(new Customer(), $request);
+
     }
 
     /**
@@ -92,9 +98,8 @@ class CustomerController extends Controller
     public function update(Request $request) {
         $customer = Customer::find($request->id);
 
-        $this->save($customer, $request);
+        return $this->save($customer, $request);
 
-        return redirect('/customers')->with('msg', 'Editado com sucesso');
     }
 
     public function delete(Request $request){
@@ -116,6 +121,43 @@ class CustomerController extends Controller
     {
         DB::beginTransaction();
 
+        $rules = [
+            'name' => 'required|max:250',
+            'email' => 'required|email',
+            'rg' => 'required|string|max:14',
+            'cpf' => 'required|string|max:14',
+            'address' => 'required|string|max:250'
+        ];
+
+        $msg = [
+            'name.required' => 'nome necessário',
+            'name.max' => 'nome inválido',
+            'email.required' => 'necessário um email para o cadastro',
+            'email.email' => 'email inválido',
+            'rg.required' => 'necessário um RG para o cadastro',
+            'rg.max' => 'RG inválido',
+            'cpf.required' => 'necessário um CPF para o cadastro',
+            'cpf.max' => 'CPF inválido',
+            'address.required' => 'necessário um endereço para o cadastro',
+            'address.max' => 'endereço inválido'
+
+        ];
+
+        $validator = Validator::make($request->all(), $rules, $msg);
+
+        if($validator->fails()){
+            if($customer->id){
+
+                return redirect('/edit/customer/'.$customer->id)->with('msg', 'Não foi possivel editar: '.$validator->errors()->first());
+
+            }
+            else{
+
+                return redirect('/create/customer')->with('msg', 'Não foi possivel criar: '.$validator->errors()->first());
+
+            }
+        }
+
         try{
 
             $customer->name = $request->name;
@@ -127,6 +169,15 @@ class CustomerController extends Controller
             $customer->save();
 
             DB::commit();
+
+            if($customer->id){
+
+                return redirect('/customers')->with('msg', 'Editado com sucesso');
+            }
+            else{
+
+                return redirect('/customers')->with('msg', 'Criado com sucesso');
+            }
 
         }catch(Exception $e){
 

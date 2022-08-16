@@ -135,9 +135,7 @@ class SaleController extends Controller
 
             DB::commit();
 
-        }catch(Exception $e){
-
-            // dd($e);
+        } catch(Exception $e){
 
             DB::rollBack();
 
