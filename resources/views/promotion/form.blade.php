@@ -6,6 +6,11 @@
 
     <br>
 
+    @if (session()->has('msg'))
+
+        <h4>{{session()->get('msg')}}</h4>
+
+    @endif
     <div class="container">
 
         <form action="/form/promotion" method="POST">

@@ -6,6 +6,12 @@
 
     <br>
 
+    @if(session()->has('msg'))
+
+        <h4>{{session()->get('msg')}}</h4>
+
+    @endif
+
     <a href="/products">Voltar para produtos</a>
 
     <br><br>

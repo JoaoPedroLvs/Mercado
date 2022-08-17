@@ -8,6 +8,12 @@
 
     <div class="container">
 
+        @if (session()->has('msg'))
+
+            <h4>{{session()->get('msg')}}</h4>
+
+        @endif
+
         <form action="/form/inventory" method="POST">
 
             @csrf

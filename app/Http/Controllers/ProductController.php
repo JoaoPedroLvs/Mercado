@@ -7,6 +7,7 @@ use App\Models\Product;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 
 class ProductController extends Controller
 {
@@ -47,14 +48,38 @@ class ProductController extends Controller
     public function insert(Request $request){
         $product = new Product();
 
-        $this->save($product, $request);
+        $validator = $this->validator($request);
+
+        if($validator->fails()){
+            return redirect('/create/product')->with('msg', 'Não foi possivel criar: '.$validator->errors()->first());
+        }
+        else{
+
+            $this->save($product, $request);
+
+            return redirect('/products')->with('msg', 'Produto criado com sucesso');
+
+        }
+
 
     }
 
     public function update(Request $request){
         $product = Product::find($request->id);
 
-        $this->save($product, $request);
+        $validator = $this->validator($request);
+
+        if($validator->fails()){
+
+            return redirect('/edit/product/'.$product->id)->with('msg', 'Não foi possivel criar: '.$validator->errors()->first());
+        }
+        else{
+
+            $this->save($product, $request);
+
+            return redirect('/products')->with('msg', 'Produto editado com sucesso');
+
+        }
 
     }
 
@@ -66,20 +91,29 @@ class ProductController extends Controller
         return redirect('/products')->with('msg', 'Produto deletado com sucesso');
     }
 
+    private function validator(Request $request){
+
+        $rules = [
+            'name' => 'required|max:100',
+            'price' => 'required|min:0.01',
+        ];
+
+        $msg = [
+            'name.required' => 'nome é necessário',
+            'name.max' => 'nome inválido',
+            'price.required' => 'preço é necessário',
+            'price.min' => 'insira um valor de pelo menos R$ 0,01'
+
+        ];
+
+        $validator = Validator::make($request->all(), $rules, $msg);
+
+        return $validator;
+    }
+
     private function save(Product $product, Request $request){
 
         try{
-
-            if($product->id == null){
-
-                $isEdit = false;
-
-            }
-            else{
-
-                $isEdit = true;
-
-            }
 
             DB::beginTransaction();
 
@@ -91,17 +125,6 @@ class ProductController extends Controller
             $product->save();
 
             DB::commit();
-
-            if($isEdit){
-
-                return redirect('/products')->with('msg', 'Produto editado com sucesso');
-
-            }
-            else{
-
-                return redirect('/products')->with('msg', 'Produto criado com sucesso');
-
-            }
 
         }catch(Exception $e){
 

@@ -19,7 +19,7 @@
                 <th>Funcionário</th>
                 <th>Produto</th>
                 <th>Quantidade</th>
-                <th>Valor do item </th>
+                <th>Valor do volume</th>
 
             </tr>
 

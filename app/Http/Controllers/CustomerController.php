@@ -81,11 +81,23 @@ class CustomerController extends Controller
      * Cria um novo cliente e chama a função de salvar
      *
      * @param Request $request
-     * @return void
+     * @return \Illuminate\Routing\Redirector|\Illuminate\Http\RedirectResponse
      */
     public function insert(Request $request) {
 
-        return $this->save(new Customer(), $request);
+        $validator = $this->validator($request);
+
+        if($validator->fails()){
+
+            return redirect('/create/customer')->with('msg', 'Não foi possivel criar: '.$validator->errors()->first());
+
+        }
+        else{
+
+            $this->save(new Customer(), $request);
+            return redirect('/customers')->with('msg', 'Cliente criado com sucesso');
+
+        }
 
     }
 
@@ -93,12 +105,25 @@ class CustomerController extends Controller
      * Acha a cliente e chama a função de salvar
      *
      * @param Request $request
-     * @return void
+     * @return \Illuminate\Routing\Redirector|\Illuminate\Http\RedirectResponse
      */
     public function update(Request $request) {
+
         $customer = Customer::find($request->id);
 
-        return $this->save($customer, $request);
+        $validator = $this->validator($request);
+
+        if($validator->fails()){
+
+            return redirect('/edit/customer/'.$customer->id)->with('msg', 'Não foi possivel editar: '.$validator->errors()->first());
+
+        }
+        else{
+
+            $this->save($customer, $request);
+            return redirect('/customers')->with('msg', 'Editado com sucesso');
+        }
+
 
     }
 
@@ -111,15 +136,12 @@ class CustomerController extends Controller
     }
 
     /**
-     * Salvar alterações do cliente
+     * Valida os dados do $request
      *
      * @param Request $request
-     * @param $customer
-     * @return void
+     * @return \Illuminate\Contracts\Validation\Validator $validator
      */
-    private function save(Customer $customer, Request $request)
-    {
-        DB::beginTransaction();
+    private function validator(Request $request){
 
         $rules = [
             'name' => 'required|max:250',
@@ -145,28 +167,19 @@ class CustomerController extends Controller
 
         $validator = Validator::make($request->all(), $rules, $msg);
 
-        if($validator->fails()){
-            if($customer->id){
+        return $validator;
+    }
 
-                return redirect('/edit/customer/'.$customer->id)->with('msg', 'Não foi possivel editar: '.$validator->errors()->first());
-
-            }
-            else{
-
-                return redirect('/create/customer')->with('msg', 'Não foi possivel criar: '.$validator->errors()->first());
-
-            }
-        }
-
+    /**
+     * Salvar alterações do cliente
+     *
+     * @param Request $request
+     * @param $customer
+     * @return void
+     */
+    private function save(Customer $customer, Request $request)
+    {
         try{
-
-            if($customer->id == null){
-                $isEdit = false;
-            }
-            else{
-                $isEdit = true;
-            }
-
             DB::beginTransaction();
 
             $customer->name = $request->name;
@@ -178,15 +191,6 @@ class CustomerController extends Controller
             $customer->save();
 
             DB::commit();
-
-            if($isEdit){
-
-                return redirect('/customers')->with('msg', 'Editado com sucesso');
-            }
-            else{
-
-                return redirect('/customers')->with('msg', 'Criado com sucesso');
-            }
 
         }catch(Exception $e){
 

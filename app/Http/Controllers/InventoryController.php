@@ -7,6 +7,7 @@ use App\Models\Product;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 
 class InventoryController extends Controller
 {
@@ -49,14 +50,27 @@ class InventoryController extends Controller
     public function insert(Request $request){
         $inventory = new Inventory();
 
-        return $this->save($inventory, $request);
+        $validator = $this->validator($request);
+
+        if($validator->fails()){
+
+            return redirect('/create/inventory')->with('msg', 'Não foi possivel criar: '.$validator->errors()->first());
+
+        }
+        else{
+
+            $this->save($inventory, $request);
+            return redirect('/inventories')->with('msg', 'Estoque criado com sucesso');
+
+        }
+
 
     }
 
     public function update(Request $request){
         $inventory = Inventory::find($request->id);
 
-        return $this->save($inventory, $request);
+        $validator = $this->validator($request);
 
     }
 
@@ -72,20 +86,27 @@ class InventoryController extends Controller
         return redirect('/inventories')->with('msg', 'Estoque excluido com sucesso');
     }
 
+    private function validator(Request $request){
+
+        $rules = [
+            'qty' => 'required|min:1',
+            'created_at' => 'required|date:Y-m-d'
+        ];
+
+        $msg = [
+            'qty.required' => 'necessário uma quantidade',
+            'qty.min' => 'necessário pelo menos 1 produto',
+            'created_at.required' => 'necessário uma data',
+        ];
+
+        $validator = Validator::make($request->all(), $rules, $msg);
+        return $validator;
+    }
+
     private function save(Inventory $inventory, Request $request){
 
         try{
 
-            if($inventory->id == null){
-
-                $isEdit = false;
-
-            }
-            else{
-
-                $isEdit = true;
-
-            }
             DB::beginTransaction();
 
 
@@ -102,17 +123,6 @@ class InventoryController extends Controller
             $inventory->save();
 
             DB::commit();
-
-            if($isEdit){
-
-                return redirect('/inventories')->with('msg', 'Estoque editado com sucesso');
-
-            }
-            else{
-
-                return redirect('/inventories')->with('msg', 'Estoque criado com sucesso');
-
-            }
 
         }catch(Exception $e){
 

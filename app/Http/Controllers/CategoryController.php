@@ -61,14 +61,39 @@ class CategoryController extends Controller
     public function insert(Request $request){
         $category = new Category();
 
-        return $this->save($category, $request);
+        $validator = $this->validtor($request);
 
+        if($validator->fails()){
+
+            return redirect('/create/categories')->with('msg', 'Não foi possível criar: '.$validator->errors()->first());
+
+        }
+        else{
+
+            $this->save($category,$request);
+
+            return redirect('/categories')->with('msg', 'Criado com sucesso');
+
+        }
     }
 
     public function update(Request $request){
         $category = Category::find($request->id);
 
-        return $this->save($category, $request);
+        $validator = $this->validator($request);
+
+        if($validator->fails()){
+
+            return redirect('/edit/category/'.$category->id)->with('msg', 'Não foi possível editar: '.$validator->errors()->first());
+
+        }
+        else{
+
+            $this->save($category, $request);
+
+            return redirect('/categories')->with('msg', 'Editado com sucesso');
+
+        }
 
     }
 
@@ -80,9 +105,7 @@ class CategoryController extends Controller
         return redirect('/categories')->with('msg', 'Deletado com sucesso');
     }
 
-    private function save(Category $category, Request $request){
-
-        DB::beginTransaction();
+    private function validator(Request $request){
 
         $rules = [
             'name' => 'required|max:250'
@@ -95,48 +118,20 @@ class CategoryController extends Controller
 
         $validator = Validator::make($request->all(), $rules, $msg);
 
-        if($validator->fails()){
-            if($category->id){
+        return $validator;
+    }
 
-                return redirect('/edit/category/'.$category->id)->with('msg', 'Não foi possível editar: '.$validator->errors()->first());
+    private function save(Category $category, Request $request){
 
-            }
-            else{
-
-                return redirect('/create/categories')->with('msg', 'Não foi possível criar: '.$validator->errors()->first());
-
-            }
-        }
 
         try{
-
-            if($category->id == null){
-
-                $isEdit = false;
-
-            }
-            else{
-
-                $isEdit = true;
-
-            }
+            DB::beginTransaction();
 
             $category->name =$request->name;
 
             $category->save();
 
             DB::commit();
-
-            if($isEdit){
-
-                return redirect('/categories')->with('msg', 'Editado com sucesso');
-
-            }
-            else{
-
-                return redirect('/categories')->with('msg', 'Criado com sucesso');
-
-            }
 
         }catch(Exception $e){
 

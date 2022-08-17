@@ -7,6 +7,7 @@ use App\Models\Promotion;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 
 class PromotionController extends Controller
 {
@@ -59,7 +60,21 @@ class PromotionController extends Controller
 
         $promotion = new Promotion();
 
-        $this->save($promotion, $request);
+        $validator = $this->validator($request);
+
+        if($validator->fails()){
+
+            return redirect('/create/promotion')->with('msg', 'Não foi possivel criar: '.$validator->errors()->first());
+
+        }
+        else{
+
+            $this->save($promotion, $request);
+
+            return redirect('/promotions')->with('msg', 'Promoção criado com sucesso');
+
+        }
+
 
     }
 
@@ -67,7 +82,19 @@ class PromotionController extends Controller
 
         $promotion = Promotion::find($request->id);
 
-        $this->save($promotion, $request);
+        $validator = $this->validator($request);
+
+        if($validator->fails()){
+
+            return redirect('/edit/promotion/'.$promotion->id)->with('msg', 'Não foi possivel editar: '.$validator->errors()->first());
+
+        }
+        else{
+
+            $this->save($promotion, $request);
+            return redirect('/promotions')->with('msg', 'Promoção editada com sucesso');
+
+        }
 
     }
 
@@ -81,20 +108,35 @@ class PromotionController extends Controller
 
     }
 
+    private function validator(Request $request){
+
+        $rules = [
+
+            'price' => 'required|min:0.01',
+            'created_at' => 'required|date:Y-m-d',
+            'ended_at' => 'required|date:Y-m-d'
+
+        ];
+
+        $msg = [
+
+            'price.required' => 'preço necessário',
+            'price.min' => 'digite pelo menos um preço de R$ 0,01',
+            'created_at.required' => 'data de início necessário',
+            'created_at.date' => 'data inválida',
+            'ended_at.required' => 'data final inválida',
+            'ended_at.date' => 'data inválida'
+
+        ];
+
+        $validator = Validator::make($request->all(), $rules, $msg);
+
+        return $validator;
+    }
+
     private function save(Promotion $promotion, Request $request){
 
         try{
-
-            if($promotion->id == null){
-
-                $isEdit = false;
-
-            }
-            else{
-
-                $isEdit = true;
-
-            }
 
             DB::beginTransaction();
 
@@ -107,17 +149,6 @@ class PromotionController extends Controller
             $promotion->save();
 
             DB::commit();
-
-            if($isEdit){
-
-                return redirect('/promotions')->with('msg', 'Promoção editada com sucesso');
-
-            }
-            else{
-
-                return redirect('/promotions')->with('msg', 'Promoção criado com sucesso');
-
-            }
 
         }catch(Exception $e){
 

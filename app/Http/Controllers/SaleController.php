@@ -112,18 +112,24 @@ class SaleController extends Controller
 
                         $price = Promotion::searchPrice($product_id)->get()->first();
                         $product = Product::find($product_id);
-                        // dd($product);
 
                         $productSale->product_id = $request->product_id[$k];
                         $productSale->qty_sales = $qty_sales;
 
-                        if($price->is_active == "true"){
+                        if($price !== null){
 
-                            $productSale->total_price = $price->promotion * $productSale->qty_sales;
+                            if($price->is_active == "true"){
+
+                                $productSale->total_price = $price->promotion * $productSale->qty_sales;
+
+                            }
+                            else{
+                                $productSale->total_price = $price->price * $productSale->qty_sales;
+                            }
 
                         }
                         else{
-                            $productSale->total_price = $price->price * $productSale->qty_sales;
+                            $productSale->total_price = $product->price * $productSale->qty_sales;
                         }
 
                         $product->decrement('current_qty', $productSale->qty_sales);
@@ -146,7 +152,7 @@ class SaleController extends Controller
 
         } catch(Exception $e){
 
-            // dd($e);
+            dd($e);
 
             DB::rollBack();
 

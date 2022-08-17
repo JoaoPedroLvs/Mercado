@@ -23,6 +23,8 @@ class ProductsSale extends Model
         ->join("customers as c", "c.id", "sa.customer_id")
         ->join("employees as em", "em.id", "sa.employee_id");
 
+        return $query;
+
     }
 
     public function scopeSearchQty($query){
@@ -31,4 +33,5 @@ class ProductsSale extends Model
         ->from("products_sales as ps")
         ->join("products as p", "p.id", "ps.product_id");
     }
+
 }
