@@ -106,36 +106,47 @@ class SaleController extends Controller
                 $productSale = new ProductsSale();
                 $productSale->sale_id = $sale->id;
 
+                foreach($request->qty_sales as $qty_sales){
 
-                $price = Promotion::searchPrice($product_id)->get()->first();
-                $product = Product::find($product_id);
-                // dd($product);
+                    if($qty_sales !== null){
 
-                $productSale->product_id = $request->product_id[$k];
-                $productSale->qty_sales = $request->qty_sales[$k];
+                        $price = Promotion::searchPrice($product_id)->get()->first();
+                        $product = Product::find($product_id);
+                        // dd($product);
 
-                if($price->is_active == "true"){
+                        $productSale->product_id = $request->product_id[$k];
+                        $productSale->qty_sales = $qty_sales;
 
-                    $productSale->total_price = $price->promotion * $productSale->qty_sales;
+                        if($price->is_active == "true"){
+
+                            $productSale->total_price = $price->promotion * $productSale->qty_sales;
+
+                        }
+                        else{
+                            $productSale->total_price = $price->price * $productSale->qty_sales;
+                        }
+
+                        $product->decrement('current_qty', $productSale->qty_sales);
+
+                        // dd($productSale->total_price);
+
+                        $sale->increment('total',$productSale->total_price);
+
+                        $productSale->save();
+
+                    }
 
                 }
-                else{
-                    $productSale->total_price = $price->price * $productSale->qty_sales;
-                }
 
-                $product->decrement('current_qty', $productSale->qty_sales);
 
-                // dd($productSale->total_price);
-
-                $sale->increment('total',$productSale->total_price);
-
-                $productSale->save();
             }
 
 
             DB::commit();
 
         } catch(Exception $e){
+
+            // dd($e);
 
             DB::rollBack();
 

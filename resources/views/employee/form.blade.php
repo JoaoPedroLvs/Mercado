@@ -16,6 +16,9 @@
             <label>Nome: </label>
             <input type="text" name="name" required value="{{$employee->name ?? ""}}"><br><br>
 
+            <label>Endereço: </label>
+            <input type="text" name="address" required value="{{$employee->address ?? ""}}"><br><br>
+
             <label>Email: </label>
             <input type="email" name="email" required value="{{$employee->email ?? ""}}"><br><br>
 

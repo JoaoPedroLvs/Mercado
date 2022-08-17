@@ -40,9 +40,9 @@
             @if (count($products) > 0)
                 <label>Qual produto foi comprado e sua quantidade: </label><br>
 
-                @foreach ($products as $product)
+                @foreach ($products as $k => $product)
 
-                    <input type="checkbox" name="product_id[]" value="{{$product->id}}">{{$product->name}}
+                    <input type="checkbox" name="product_id[{{$k}}]" value="{{ $product->id }}">{{$product->name}}
 
                     <input type="number" name="qty_sales[]">
                     <br>

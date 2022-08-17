@@ -14,8 +14,6 @@ class PromotionController extends Controller
 
         $promotions = Promotion::orderBy('id','asc')->get();
 
-        // dd($promotions[0]->started_at->format('Y-m-d'));
-
         $data = [
 
             'promotions' => $promotions
@@ -63,8 +61,6 @@ class PromotionController extends Controller
 
         $this->save($promotion, $request);
 
-        return redirect('/promotions')->with('msg', 'Promoção criado com sucesso');
-
     }
 
     public function update(Request $request){
@@ -72,8 +68,6 @@ class PromotionController extends Controller
         $promotion = Promotion::find($request->id);
 
         $this->save($promotion, $request);
-
-        return redirect('/promotions')->with('msg', 'Promoção editada com sucesso');
 
     }
 
@@ -91,6 +85,17 @@ class PromotionController extends Controller
 
         try{
 
+            if($promotion->id == null){
+
+                $isEdit = false;
+
+            }
+            else{
+
+                $isEdit = true;
+
+            }
+
             DB::beginTransaction();
 
             $promotion->product_id = $request->product_id;
@@ -103,9 +108,18 @@ class PromotionController extends Controller
 
             DB::commit();
 
-        }catch(Exception $e){
+            if($isEdit){
 
-            dd($e);
+                return redirect('/promotions')->with('msg', 'Promoção editada com sucesso');
+
+            }
+            else{
+
+                return redirect('/promotions')->with('msg', 'Promoção criado com sucesso');
+
+            }
+
+        }catch(Exception $e){
 
             DB::rollBack();
 

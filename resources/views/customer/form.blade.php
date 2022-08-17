@@ -22,7 +22,7 @@
             @method($isEdit ? 'PUT' : 'POST')
 
             <label>Nome: </label>
-            <input type="text" name="name" required max="250" value="{{ $customer->name ?? '' }}">
+            <input type="text" name="name" required maxlength="100" value="{{ $customer->name ?? '' }}">
             <br><br>
 
             <label>Email: </label>
@@ -30,15 +30,15 @@
             <br><br>
 
             <label>Endereço: </label>
-            <input type="text" name="address" max="250" required value="{{ $customer->address ?? '' }}">
+            <input type="text" name="address" maxlength="250" required value="{{ $customer->address ?? '' }}">
             <br><br>
 
             <label>RG: </label>
-            <input type="number" name=rg required max="14" value="{{ $customer->rg ?? '' }}">
+            <input type="number" name=rg required value="{{ $customer->rg ?? '' }}">
             <br><br>
 
             <label>CPF: </label>
-            <input type="number" name="cpf" required max="14" value="{{ $customer->cpf ?? '' }}">
+            <input type="number" name="cpf" required value="{{ $customer->cpf ?? '' }}">
             <br><br>
 
             @if ($isEdit)

@@ -49,7 +49,6 @@ class ProductController extends Controller
 
         $this->save($product, $request);
 
-        return redirect('/products')->with('msg', 'Produto criado com sucesso');
     }
 
     public function update(Request $request){
@@ -57,7 +56,6 @@ class ProductController extends Controller
 
         $this->save($product, $request);
 
-        return redirect('/products')->with('msg', 'Produto editado com sucesso');
     }
 
     public function delete($id){
@@ -72,6 +70,17 @@ class ProductController extends Controller
 
         try{
 
+            if($product->id == null){
+
+                $isEdit = false;
+
+            }
+            else{
+
+                $isEdit = true;
+
+            }
+
             DB::beginTransaction();
 
             $product->name = $request->name;
@@ -82,6 +91,17 @@ class ProductController extends Controller
             $product->save();
 
             DB::commit();
+
+            if($isEdit){
+
+                return redirect('/products')->with('msg', 'Produto editado com sucesso');
+
+            }
+            else{
+
+                return redirect('/products')->with('msg', 'Produto criado com sucesso');
+
+            }
 
         }catch(Exception $e){
 

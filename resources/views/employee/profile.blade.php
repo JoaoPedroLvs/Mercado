@@ -9,6 +9,7 @@
     <h4>E-mail: </h4>{{$employee->email}}
 
     <h4>Endereço: </h4>{{$employee->address}}
+    {{-- @dd($employee->address) --}}
 
     <h4>Telefone: </h4>{{$employee->phone}}
 

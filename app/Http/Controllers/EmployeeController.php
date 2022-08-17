@@ -45,17 +45,14 @@ class EmployeeController extends Controller
     public function insert(Request $request){
         $employee = new Employee();
 
-        $this->save($employee, $request);
+        return $this->save($employee, $request);
 
-        return redirect('/employees')->with('msg', 'Criado com sucesso');
     }
 
     public function update(Request $request){
         $employee = Employee::find($request->id);
 
-        $this->save($employee, $request);
-
-        return redirect('/employees')->with('msg', 'Editado com sucesso');
+        return $this->save($employee, $request);
 
     }
 
@@ -82,7 +79,14 @@ class EmployeeController extends Controller
         DB::beginTransaction();
 
         try{
+            if($employee->id == null){
+                $isEdit = false;
+            }
+            else{
+                $isEdit = true;
+            }
             $employee->name = $request->name;
+            $employee->address = $request->address;
             $employee->cpf = $request->cpf;
             $employee->rg = $request->rg;
             $employee->email = $request->email;
@@ -92,6 +96,17 @@ class EmployeeController extends Controller
             $employee->save();
 
             DB::commit();
+
+            if($isEdit){
+
+                return redirect('/employees')->with('msg', 'Editado com sucesso');
+
+            }
+            else{
+
+                return redirect('/employees')->with('msg', 'Criado com sucesso');
+
+            }
 
         }catch(Exception $e){
             DB::rollBack();

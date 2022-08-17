@@ -109,13 +109,25 @@ class CategoryController extends Controller
         }
 
         try{
+
+            if($category->id == null){
+
+                $isEdit = false;
+
+            }
+            else{
+
+                $isEdit = true;
+
+            }
+
             $category->name =$request->name;
 
             $category->save();
 
             DB::commit();
 
-            if($category->id){
+            if($isEdit){
 
                 return redirect('/categories')->with('msg', 'Editado com sucesso');
 

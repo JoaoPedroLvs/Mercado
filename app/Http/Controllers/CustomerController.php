@@ -160,6 +160,15 @@ class CustomerController extends Controller
 
         try{
 
+            if($customer->id == null){
+                $isEdit = false;
+            }
+            else{
+                $isEdit = true;
+            }
+
+            DB::beginTransaction();
+
             $customer->name = $request->name;
             $customer->email = $request->email;
             $customer->rg = $request->rg;
@@ -170,7 +179,7 @@ class CustomerController extends Controller
 
             DB::commit();
 
-            if($customer->id){
+            if($isEdit){
 
                 return redirect('/customers')->with('msg', 'Editado com sucesso');
             }

@@ -49,17 +49,15 @@ class InventoryController extends Controller
     public function insert(Request $request){
         $inventory = new Inventory();
 
-        $this->save($inventory, $request);
+        return $this->save($inventory, $request);
 
-        return redirect('/inventories')->with('msg', 'Estoque criado com sucesso');
     }
 
     public function update(Request $request){
         $inventory = Inventory::find($request->id);
 
-        $this->save($inventory, $request);
+        return $this->save($inventory, $request);
 
-        return redirect('/inventories')->with('msg', 'Estoque editado com sucesso');
     }
 
     public function delete($id){
@@ -77,8 +75,19 @@ class InventoryController extends Controller
     private function save(Inventory $inventory, Request $request){
 
         try{
+
+            if($inventory->id == null){
+
+                $isEdit = false;
+
+            }
+            else{
+
+                $isEdit = true;
+
+            }
             DB::beginTransaction();
-            // dd($request->all());
+
 
             $product = Product::find($request->product_id);
 
@@ -90,14 +99,24 @@ class InventoryController extends Controller
 
             $product->increment('current_qty', $request->qty);
 
-            // $product->save();
-
             $inventory->save();
 
             DB::commit();
 
+            if($isEdit){
+
+                return redirect('/inventories')->with('msg', 'Estoque editado com sucesso');
+
+            }
+            else{
+
+                return redirect('/inventories')->with('msg', 'Estoque criado com sucesso');
+
+            }
+
         }catch(Exception $e){
 
+            dd($e);
             DB::rollBack();
 
         }
