@@ -33,9 +33,9 @@ class Product extends Model
 
     }
 
-    public function products_sale(){
+    public function sales(){
 
-        return $this->hasMany(ProductsSale::class);
+        return $this->belongsToMany(Sale::class);
 
     }
 }

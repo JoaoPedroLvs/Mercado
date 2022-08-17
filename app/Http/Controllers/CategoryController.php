@@ -61,7 +61,7 @@ class CategoryController extends Controller
     public function insert(Request $request){
         $category = new Category();
 
-        $validator = $this->validtor($request);
+        $validator = $this->validator($request);
 
         if($validator->fails()){
 

@@ -96,56 +96,70 @@ class SaleController extends Controller
 
             $sale->customer_id = $request->customer_id;
             $sale->employee_id = $request->employee_id;
-            $sale->save();
 
             $products = $request->product_id;
 
+            $sale->save();
 
-            foreach($products as $k => $product_id){
+            foreach($products as $product){
 
-                $productSale = new ProductsSale();
-                $productSale->sale_id = $sale->id;
 
-                foreach($request->qty_sales as $qty_sales){
+                $price = Promotion::searchPrice($product)->get()->first();
 
-                    if($qty_sales !== null){
 
-                        $price = Promotion::searchPrice($product_id)->get()->first();
-                        $product = Product::find($product_id);
+                foreach($request->qty_sales as $qty_sale){
 
-                        $productSale->product_id = $request->product_id[$k];
-                        $productSale->qty_sales = $qty_sales;
-
-                        if($price !== null){
-
-                            if($price->is_active == "true"){
-
-                                $productSale->total_price = $price->promotion * $productSale->qty_sales;
-
-                            }
-                            else{
-                                $productSale->total_price = $price->price * $productSale->qty_sales;
-                            }
-
-                        }
-                        else{
-                            $productSale->total_price = $product->price * $productSale->qty_sales;
-                        }
-
-                        $product->decrement('current_qty', $productSale->qty_sales);
-
-                        // dd($productSale->total_price);
-
-                        $sale->increment('total',$productSale->total_price);
-
-                        $productSale->save();
-
-                    }
 
                 }
 
-
+                $sale->products()->attach($product);
             }
+
+
+            // foreach($products as $k => $product_id){
+
+                //     $productSale->sale_id = $sale->id;
+
+                //     foreach($request->qty_sales as $qty_sales){
+
+            //         if($qty_sales !== null){
+
+            //             $price = Promotion::searchPrice($product_id)->get()->first();
+            //             $product = Product::find($product_id);
+
+            //             $productSale->product_id = $request->product_id[$k];
+            //             $productSale->qty_sales = $qty_sales;
+
+            //             if($price !== null){
+
+            //                 if($price->is_active == "true"){
+
+            //                     $productSale->total_price = $price->promotion * $productSale->qty_sales;
+
+            //                 }
+            //                 else{
+            //                     $productSale->total_price = $price->price * $productSale->qty_sales;
+            //                 }
+
+            //             }
+            //             else{
+            //                 $productSale->total_price = $product->price * $productSale->qty_sales;
+            //             }
+
+            //             $product->decrement('current_qty', $productSale->qty_sales);
+
+            //             // dd($productSale->total_price);
+
+            //             $sale->increment('total',$productSale->total_price);
+
+            //             $productSale->save();
+
+            //         }
+
+            //     }
+
+
+            // }
 
 
             DB::commit();
