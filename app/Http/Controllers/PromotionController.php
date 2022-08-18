@@ -136,9 +136,9 @@ class PromotionController extends Controller
 
     private function save(Promotion $promotion, Request $request){
 
-        try{
+        DB::beginTransaction();
 
-            DB::beginTransaction();
+        try{
 
             $promotion->product_id = $request->product_id;
             $promotion->price = $request->price;
