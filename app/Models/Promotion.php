@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class Promotion extends Model
 {
@@ -29,9 +30,11 @@ class Promotion extends Model
 
     public function scopeSearchPrice($query){
 
-        $query->select("pd.price", "pm.price as promotion", "pm.is_active")
+        $query->select("pd.price as product", "pm.price as promotion", "pm.is_active")
         ->from("products as pd")
-        ->join("promotions as pm", "pd.id", "pm.product_id");
+        ->leftJoin("promotions as pm", "pd.id", DB::raw("pm.product_id and pm.is_active = true"));
+
+        return $query;
 
     }
 }

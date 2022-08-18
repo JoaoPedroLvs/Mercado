@@ -179,8 +179,9 @@ class CustomerController extends Controller
      */
     private function save(Customer $customer, Request $request)
     {
+        DB::beginTransaction();
+
         try{
-            DB::beginTransaction();
 
             $customer->name = $request->name;
             $customer->email = $request->email;

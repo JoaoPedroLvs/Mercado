@@ -50,20 +50,29 @@ class SaleController extends Controller
 
     public function insert(Request $request){
 
-        // dd($request->all());
-
         $sale = new Sale();
 
-        $this->save($sale,$request);
+        $validator = $this->validator($request);
 
-        return redirect('/sales')->with('msg', 'Venda criada com sucesso');
+        if($validator->fails()){
+
+            return redirect('/create/sale')->with('msg', 'Não foi possivel criar: '.$validator->errors()->first());
+
+        }
+        else{
+
+            $this->save($sale,$request);
+
+            return redirect('/sales')->with('msg', 'Venda criada com sucesso');
+
+        }
     }
 
     public function delete($id){
 
         $sale = Sale::find($id);
 
-        $qty = ProductsSale::searchQty($sale)->where('sale_id', $sale->id)->get();
+        $qty = Sale::searchQty($sale->id)->get();
 
         foreach($qty as $productQty){
             $product = Product::find($productQty->product_id);
@@ -78,9 +87,7 @@ class SaleController extends Controller
 
     public function show($id){
 
-        $saleId = Sale::find($id);
-
-        $sales = ProductsSale::search($id)->where('ps.sale_id', $saleId->id)->get();
+        $sales = Sale::search($id)->get();
 
         $data = [
             'sales' => $sales
@@ -89,10 +96,26 @@ class SaleController extends Controller
         return view('sale.show_products', $data);
     }
 
+    private function validator(Request $request){
+
+        $rules = [
+            'customer_id' => 'required',
+            'employee_id' => 'required',
+        ];
+
+        $msg = [
+            'customer_id.' => 'necessário um cliente para registrar a compra',
+            'employee_id.' => 'necessário um funcionário para registrar a compra',
+        ];
+
+        $validator = Validator::make($request->all(), $rules, $msg);
+
+        return $validator;
+    }
     private function save(Sale $sale, Request $request){
 
+        DB::beginTransaction();
         try{
-            DB::beginTransaction();
 
             $sale->customer_id = $request->customer_id;
             $sale->employee_id = $request->employee_id;
@@ -101,66 +124,38 @@ class SaleController extends Controller
 
             $sale->save();
 
-            foreach($products as $product){
+            foreach($products as $k => $product){
+
+                $product = Product::find($product);
+
+                $price = Promotion::searchPrice($product)->first();
+
+                if($request->qty_sales[$k]){
+
+                    $qty_sale = (int)$request->qty_sales[$k];
 
 
-                $price = Promotion::searchPrice($product)->get()->first();
+                    if(isset($price->is_active)){
+                        $total_price = $qty_sale * $price->promotion;
+                    }
+                    else {
+                        $total_price = $qty_sale * $price->product;
+                    }
 
+                    $attachArray = [
+                        'qty_sales' => $qty_sale,
+                        'total_price' => $total_price
+                    ];
 
-                foreach($request->qty_sales as $qty_sale){
+                    $sale->products()->attach($product->id, $attachArray);
 
+                    $product->decrement('current_qty', $qty_sale);
+
+                    $sale->increment('total',$total_price);
 
                 }
 
-                $sale->products()->attach($product);
             }
-
-
-            // foreach($products as $k => $product_id){
-
-                //     $productSale->sale_id = $sale->id;
-
-                //     foreach($request->qty_sales as $qty_sales){
-
-            //         if($qty_sales !== null){
-
-            //             $price = Promotion::searchPrice($product_id)->get()->first();
-            //             $product = Product::find($product_id);
-
-            //             $productSale->product_id = $request->product_id[$k];
-            //             $productSale->qty_sales = $qty_sales;
-
-            //             if($price !== null){
-
-            //                 if($price->is_active == "true"){
-
-            //                     $productSale->total_price = $price->promotion * $productSale->qty_sales;
-
-            //                 }
-            //                 else{
-            //                     $productSale->total_price = $price->price * $productSale->qty_sales;
-            //                 }
-
-            //             }
-            //             else{
-            //                 $productSale->total_price = $product->price * $productSale->qty_sales;
-            //             }
-
-            //             $product->decrement('current_qty', $productSale->qty_sales);
-
-            //             // dd($productSale->total_price);
-
-            //             $sale->increment('total',$productSale->total_price);
-
-            //             $productSale->save();
-
-            //         }
-
-            //     }
-
-
-            // }
-
 
             DB::commit();
 

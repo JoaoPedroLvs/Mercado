@@ -112,9 +112,9 @@ class PromotionController extends Controller
 
         $rules = [
 
-            'price' => 'required|min:0.01',
-            'created_at' => 'required|date:Y-m-d',
-            'ended_at' => 'required|date:Y-m-d'
+            'price'      => 'required|min:0.01',
+            'started_at' => 'required|date:Y-m-d',
+            'ended_at'   => 'required|date:Y-m-d'
 
         ];
 
@@ -122,8 +122,8 @@ class PromotionController extends Controller
 
             'price.required' => 'preço necessário',
             'price.min' => 'digite pelo menos um preço de R$ 0,01',
-            'created_at.required' => 'data de início necessário',
-            'created_at.date' => 'data inválida',
+            'started_at.required' => 'data de início necessário',
+            'started_at.date' => 'data inválida',
             'ended_at.required' => 'data final inválida',
             'ended_at.date' => 'data inválida'
 
@@ -143,7 +143,7 @@ class PromotionController extends Controller
             $promotion->product_id = $request->product_id;
             $promotion->price = $request->price;
             $promotion->started_at = $request->started_at;
-            $promotion->is_active = $request->is_active;
+            $promotion->is_active = $request->is_active ?? false;
             $promotion->ended_at = $request->ended_at;
 
             $promotion->save();

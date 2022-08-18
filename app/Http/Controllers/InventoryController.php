@@ -105,10 +105,9 @@ class InventoryController extends Controller
 
     private function save(Inventory $inventory, Request $request){
 
+        DB::beginTransaction();
+
         try{
-
-            DB::beginTransaction();
-
 
             $product = Product::find($request->product_id);
 

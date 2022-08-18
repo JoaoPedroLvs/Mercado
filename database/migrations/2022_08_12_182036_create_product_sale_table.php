@@ -15,8 +15,8 @@ class CreateProductSaleTable extends Migration
 
         Schema::create('product_sale', function (Blueprint $table) {
             $table->id();
-            $table->unsignedInteger('sale_id');
             $table->unsignedInteger('product_id');
+            $table->unsignedInteger('sale_id');
             $table->integer('qty_sales')->nullable();
             $table->double('total_price')->default(0);
             $table->timestamps();

@@ -113,9 +113,9 @@ class ProductController extends Controller
 
     private function save(Product $product, Request $request){
 
-        try{
+        DB::beginTransaction();
 
-            DB::beginTransaction();
+        try{
 
             $product->name = $request->name;
             $product->price = $request->price;

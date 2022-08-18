@@ -124,8 +124,9 @@ class CategoryController extends Controller
     private function save(Category $category, Request $request){
 
 
+        DB::beginTransaction();
+
         try{
-            DB::beginTransaction();
 
             $category->name =$request->name;
 
