@@ -142,6 +142,7 @@ class SaleController extends Controller
                         $total_price = $qty_sale * $price->product;
                     }
 
+                    // dd(isset($price->is_active));
                     $attachArray = [
                         'qty_sales' => $qty_sale,
                         'total_price' => $total_price
