@@ -1,46 +1,77 @@
-@extends('layouts.main')
-
-@section('title', $isEdit ? 'Editando perfil de '.$employee->name : 'Criando funcionário')
+@extends('layouts.main', [
+    'pageTitle' => 'Funcionários'
+])
 
 @section('content')
-<br>
-    <a href="/employees">Voltar para funcionários</a>
-    <br><br>
 
-    <div class="container">
-        <form action="/form/employee" method="POST">
-            @csrf
+    @php
+        $isEdit = !empty($employee->id);
+    @endphp
 
-            @method($isEdit ? "PUT" : "POST")
+    <div class="page page-employee page-form">
 
-            <label>Nome: </label>
-            <input type="text" name="name" required value="{{$employee->name ?? ""}}"><br><br>
+        <div class="page-header">
+            <h1>Funcionários <small>{{ $isEdit ? 'Editar funcionário' : 'Novo funcionário' }}</small></h1>
+        </div>
 
-            <label>Endereço: </label>
-            <input type="text" name="address" required value="{{$employee->address ?? ""}}"><br><br>
+        <div class="page-body">
 
-            <label>Email: </label>
-            <input type="email" name="email" required value="{{$employee->email ?? ""}}"><br><br>
+            @include('components.alert')
 
-            <label>Telefone: </label>
-            <input type="number" name="phone" required value="{{$employee->phone ?? ""}}"><br><br>
+            <form action="{{ url('employee') }}" method="POST">
 
-            <label>CPF: </label>
-            <input type="number" name="cpf" required value="{{$employee->cpf ?? ""}}"><br><br>
+                @csrf
 
-            <label>RG: </label>
-            <input type="number" name="rg" required value="{{$employee->rg ?? ""}}"><br><br>
+                @method($isEdit ? 'PUT' : 'POST')
 
-            <label>Carteira de trabalho</label>
-            <input type="number" name="work_code" required value="{{$employee->work_code}}"><br><br>
+                <input type="hidden" name="id" value="{{ $employee->id }}">
 
-            @if ($isEdit)
-                <input type="hidden" name="id" value="{{$employee->id}}">
-            @endif
+                <div class="form-group">
+                    <label>Nome</label>
+                    <input type="text" name="name" class="form-control" value="{{ $employee->name }}" required/>
+                </div>
 
-            <button type="submit">Enviar</button>
-            <input type="reset" value="Redefinir alterações">
-        </form>
+                <div class="form-group">
+                    <label>E-mail</label>
+                    <input type="text" name="email" class="form-control" value="{{ $employee->email }}" required/>
+                </div>
+
+                <div class="form-group">
+                    <label>Endereço</label>
+                    <input type="text" name="address" class="form-control" value="{{ $employee->address }}" required/>
+                </div>
+
+                <div class="form-group">
+                    <label>Telefone</label>
+                    <input type="number" name="phone" class="form-control" value="{{ $employee->phone }}" required/>
+                </div>
+
+                <div class="form-group">
+                    <label>CPF</label>
+                    <input type="number" name="cpf" class="form-control" value="{{ $employee->cpf }}" required/>
+                </div>
+
+                <div class="form-group">
+                    <label>RG</label>
+                    <input type="number" name="rg" class="form-control" value="{{ $employee->rg }}" required/>
+                </div>
+
+                <div class="form-group">
+                    <label>Carteira de trabalho</label>
+                    <input type="number" name="work_code" class="form-control" value="{{ $employee->work_code }}" required/>
+                </div>
+
+                <div class="page-controls">
+
+                    <a href="{{ url('employees') }}" class="btn btn-outline-primary">Voltar</a>
+
+                    <button type="submit" class="btn btn-primary">Enviar</button>
+                </div>
+
+            </form>
+
+        </div>
+
     </div>
 
 @endsection

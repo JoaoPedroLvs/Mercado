@@ -20,7 +20,7 @@ Route::group([], function(){
 
 });
 
-/* Rotas para gerenciar funcionários */
+/* Rotas para gerenciar as categorias */
 Route::group([], function(){
 
     Route::get('/categories',           'CategoryController@index');
@@ -34,17 +34,17 @@ Route::group([], function(){
     Route::get('category/{id}/products', 'CategoryController@show');
 });
 
-Route::group([], function() { //Funcionários
+/* Rotas para gerenciar os funcionários*/
+Route::group([], function() {
 
-    Route::get('/employees',            'EmployeeController@index');
+    Route::get   ('/employees',            'EmployeeController@index');
+    Route::get   ('/employee/{id}/show', 'EmployeeController@show');
+    Route::get   ('/employee/create',      'EmployeeController@create');
+    Route::get   ('/employee/{id}/edit',   'EmployeeController@edit');
+    Route::post  ('/employee',       'EmployeeController@insert');
+    Route::put   ('/employee',        'EmployeeController@update');
+    Route::get   ('/employee/{id}/delete', 'EmployeeController@delete');
 
-    Route::get('/create/employee',      'EmployeeController@create');
-    Route::post('/form/employee',       'EmployeeController@insert');
-    Route::get('/edit/employee/{id}',   'EmployeeController@edit');
-    Route::put('/form/employee',        'EmployeeController@update');
-    Route::get('/delete/employee/{id}', 'EmployeeController@delete');
-
-    Route::get('/profile/employee/{id}', 'EmployeeController@show');
 
 });
 

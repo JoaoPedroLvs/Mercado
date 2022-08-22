@@ -23,8 +23,7 @@ class CustomerController extends Controller
      *
      * @return \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
      */
-    public function index()
-    {
+    public function index() {
 
         $customers = Customer::orderBy('id','asc')->get();
 
@@ -41,7 +40,7 @@ class CustomerController extends Controller
      * @param int $id
      * @return \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
      */
-    public function show(int $id){
+    public function show(int $id) {
 
         $customer = Customer::find($id);
 
@@ -109,7 +108,7 @@ class CustomerController extends Controller
      * @param integer $id
      * @return \Illuminate\Routing\Redirector|\Illuminate\Http\RedirectResponse
      */
-    public function delete(int $id){
+    public function delete(int $id) {
 
         try {
 
@@ -137,13 +136,13 @@ class CustomerController extends Controller
         return redirect('customers');
     }
 
-        /**
+    /**
      * Carregar formulário para criar/editar um cliente
      *
      * @param Customer $customer
      * @return \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
      */
-    public function form(Customer $customer){
+    public function form(Customer $customer) {
 
         $data = [
             'customer' => $customer
@@ -158,7 +157,8 @@ class CustomerController extends Controller
      * @param Request $request
      * @return \Illuminate\Routing\Redirector|\Illuminate\Http\RedirectResponse
      */
-    private function insertOrUpdate(Request $request){
+    private function insertOrUpdate(Request $request) {
+
         $validator = $this->getInsertUpdateValidator($request);
 
         if ($validator->fails()) {
@@ -201,7 +201,7 @@ class CustomerController extends Controller
      * @param Request $request
      * @return \Illuminate\Contracts\Validation\Validator $validator
      */
-    private function getInsertUpdateValidator(Request $request){
+    private function getInsertUpdateValidator(Request $request) {
 
         $data = $request->all();
 
@@ -228,11 +228,10 @@ class CustomerController extends Controller
      * Salvar alterações do cliente
      *
      * @param Request $request
-     * @param $customer
+     * @param Customer $customer
      * @return void
      */
-    private function save(Customer $customer, Request $request)
-    {
+    private function save(Customer $customer, Request $request) {
 
         $customer->name = $request->name;
         $customer->email = $request->email;
