@@ -28,11 +28,12 @@ class Promotion extends Model
 
     }
 
-    public function scopeSearchPrice($query){
+    public function scopeSearchPrice($query, Product $product){
 
         $query->select("pd.price as product", "pm.price as promotion", "pm.is_active")
         ->from("products as pd")
-        ->leftJoin("promotions as pm", "pd.id", DB::raw("pm.product_id and pm.is_active = true"));
+        ->leftJoin("promotions as pm", "pd.id", DB::raw("pm.product_id and pm.is_active = true"))
+        ->where('pd.id', $product->id);
 
         return $query;
 

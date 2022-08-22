@@ -7,20 +7,21 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {return view('welcome');});
 
-Route::group([], function(){ //Clientes
+/* Rotas para gerenciar cliente */
+Route::group([], function(){
 
-    Route::get('/customers',            'CustomerController@index');
-    Route::get('/create/customer',      'CustomerController@create');
-    Route::post('/form/customer',       'CustomerController@insert');
-    Route::get('/edit/customer/{id}',   'CustomerController@edit');
-    Route::put('/form/customer',        'CustomerController@update');
-    Route::get('/delete/customer/{id}', 'CustomerController@delete');
-
-    Route::get('/profile/customer/{id}', 'CustomerController@show');
+    Route::get   ('/customers',            'CustomerController@index');
+    Route::get   ('/customer/{id}/show', 'CustomerController@show');
+    Route::get   ('/customer/create',      'CustomerController@create');
+    Route::get   ('/customer/{id}/edit',   'CustomerController@edit');
+    Route::post  ('/customer',       'CustomerController@insert');
+    Route::put   ('/customer',        'CustomerController@update');
+    Route::get   ('/customer/{id}/delete', 'CustomerController@delete');
 
 });
 
-Route::group([], function(){ //Categorias
+/* Rotas para gerenciar funcionários */
+Route::group([], function(){
 
     Route::get('/categories',           'CategoryController@index');
 

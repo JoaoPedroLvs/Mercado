@@ -3,136 +3,196 @@
 namespace App\Http\Controllers;
 
 use App\Models\Customer;
-use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 
+/**
+ * Customer Controller
+ *
+ * @author João Pedro Alves <joaopedro@sysout.com.br>
+ * @since 22/08/2022
+ * @version 1.0.0
+ */
 class CustomerController extends Controller
 {
+
     /**
-     * Mostra todos os clientes
+     * Exibir clientes cadastrados
      *
-     * @return void
-    */
-
-
-
+     * @return \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
+     */
     public function index()
     {
 
         $customers = Customer::orderBy('id','asc')->get();
 
-        // dd($customers);
-
         $data = [
             'customers' => $customers
         ];
 
-        return view('customer.show', $data);
+        return view('pages.customer.index', $data);
     }
 
-    public function show(Request $request){
-        $customer = Customer::find($request->id);
+    /**
+     * Exibir dados de um cliente
+     *
+     * @param int $id
+     * @return \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
+     */
+    public function show(int $id){
+
+        $customer = Customer::find($id);
 
         $data = [
             'customer' => $customer
         ];
 
-        return view('customer.profile', $data);
+        return view('pages.customer.details', $data);
     }
 
     /**
-     * Criar novo cliente
+     * Carregar formulário para criar um novo cliente
      *
-     * @return void
+     * @return \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
      */
     public function create() {
-        return $this->form(new Customer());
+
+        $customer = new Customer();
+
+        return $this->form($customer);
+
     }
 
     /**
-     * Atualizar um cliente
+     * Carrega formulário para editar um cliente
      *
-     * @param [type] $id
-     * @return void
+     * @param int $id
+     * @return \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
      */
-    public function edit($id) {
+    public function edit(int $id) {
 
         $customer = Customer::find($id);
 
         return $this->form($customer);
+
     }
 
     /**
-     * Chamar a view do formulário
-     *
-     * @param Customer $customer
-     * @return void
-     */
-    public function form(Customer $customer){
-
-        $isEdit = $customer->id ? true : false;
-
-        return view('customer.form', ['customer' => $customer, 'isEdit' => $isEdit]);
-    }
-
-    /**
-     * Cria um novo cliente e chama a função de salvar
+     * Inserir novo cliente no banco de dados
      *
      * @param Request $request
      * @return \Illuminate\Routing\Redirector|\Illuminate\Http\RedirectResponse
      */
     public function insert(Request $request) {
 
-        $validator = $this->validator($request);
-
-        if($validator->fails()){
-
-            return redirect('/create/customer')->with('msg', 'Não foi possivel criar: '.$validator->errors()->first());
-
-        }
-        else{
-
-            $this->save(new Customer(), $request);
-            return redirect('/customers')->with('msg', 'Cliente criado com sucesso');
-
-        }
+        return $this->insertOrUpdate($request);
 
     }
 
     /**
-     * Acha a cliente e chama a função de salvar
+     * Persistir atualizações de um cliente no banco de dados
      *
      * @param Request $request
      * @return \Illuminate\Routing\Redirector|\Illuminate\Http\RedirectResponse
      */
     public function update(Request $request) {
 
-        $customer = Customer::find($request->id);
-
-        $validator = $this->validator($request);
-
-        if($validator->fails()){
-
-            return redirect('/edit/customer/'.$customer->id)->with('msg', 'Não foi possivel editar: '.$validator->errors()->first());
-
-        }
-        else{
-
-            $this->save($customer, $request);
-            return redirect('/customers')->with('msg', 'Editado com sucesso');
-        }
-
+        return $this->insertOrUpdate($request);
 
     }
 
-    public function delete(Request $request){
-        $customer=Customer::find($request->id);
+    /**
+     * Remover cliente
+     *
+     * @param integer $id
+     * @return \Illuminate\Routing\Redirector|\Illuminate\Http\RedirectResponse
+     */
+    public function delete(int $id){
 
-        $customer->delete();
+        try {
 
-        return redirect('/customers')->with('msg', 'Excluido com sucesso');
+            DB::beginTransaction();
+
+            $customer = Customer::find($id);
+
+            if (!$customer) {
+                throw new \Exception('Cliente não encontrado!');
+            }
+
+            $customer->delete();
+
+            DB::commit();
+
+            Session::flash('success', 'Cliente removido com sucesso!');
+
+        } catch (\Exception $e) {
+
+            DB::rollBack();
+
+            Session::flash('error', 'Não foi possível remover o cliente: '.$e->getMessage());
+        }
+
+        return redirect('customers');
+    }
+
+        /**
+     * Carregar formulário para criar/editar um cliente
+     *
+     * @param Customer $customer
+     * @return \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
+     */
+    public function form(Customer $customer){
+
+        $data = [
+            'customer' => $customer
+        ];
+
+        return view('pages.customer.form',$data);
+    }
+
+    /**
+     *  Inserir ou atualizar cliente no banco de dados
+     *
+     * @param Request $request
+     * @return \Illuminate\Routing\Redirector|\Illuminate\Http\RedirectResponse
+     */
+    private function insertOrUpdate(Request $request){
+        $validator = $this->getInsertUpdateValidator($request);
+
+        if ($validator->fails()) {
+
+            $error = $validator->errors()->first();
+
+            return back()->withInput()->withErrors($error);
+        } else {
+
+            try {
+
+                DB::beginTransaction();
+
+                $isEdit = $request->method() == 'PUT';
+
+                $customer = $isEdit ? Customer::find($request->id) : new Customer();
+
+                $this->save($customer, $request);
+
+                DB::commit();
+
+                Session::flash('success', 'O cliente foi '. ($isEdit ? 'alterado' : 'criado'). ' com sucessor!');
+
+                return redirect('customers');
+
+            } catch (\Exception $e) {
+
+                DB::rollBack();
+
+                $error = $e->getMessage();
+
+                return back()->withInput()->withErrors($error);
+            }
+        }
     }
 
     /**
@@ -141,31 +201,25 @@ class CustomerController extends Controller
      * @param Request $request
      * @return \Illuminate\Contracts\Validation\Validator $validator
      */
-    private function validator(Request $request){
+    private function getInsertUpdateValidator(Request $request){
+
+        $data = $request->all();
+
+        $method = $request->method();
 
         $rules = [
-            'name' => 'required|max:250',
-            'email' => 'required|email',
-            'rg' => 'required|string|max:14',
-            'cpf' => 'required|string|max:14',
-            'address' => 'required|string|max:250'
+            'name' => ['required', 'max:250'],
+            'email' => ['required', 'email'],
+            'rg' => ['required', 'string', 'max:14'],
+            'cpf' => ['required', 'string', 'max:14'],
+            'address' => ['required', 'string', 'max:250']
         ];
 
-        $msg = [
-            'name.required' => 'nome necessário',
-            'name.max' => 'nome inválido',
-            'email.required' => 'necessário um email para o cadastro',
-            'email.email' => 'email inválido',
-            'rg.required' => 'necessário um RG para o cadastro',
-            'rg.max' => 'RG inválido',
-            'cpf.required' => 'necessário um CPF para o cadastro',
-            'cpf.max' => 'CPF inválido',
-            'address.required' => 'necessário um endereço para o cadastro',
-            'address.max' => 'endereço inválido'
+        $validator = Validator::make($data, $rules);
 
-        ];
-
-        $validator = Validator::make($request->all(), $rules, $msg);
+        $validator->sometimes('id', ['required', 'integer', 'exists:customers,id'], function() use ($method){
+            return $method == 'PUT';
+        });
 
         return $validator;
     }
@@ -179,24 +233,15 @@ class CustomerController extends Controller
      */
     private function save(Customer $customer, Request $request)
     {
-        DB::beginTransaction();
 
-        try{
+        $customer->name = $request->name;
+        $customer->email = $request->email;
+        $customer->rg = $request->rg;
+        $customer->cpf = $request->cpf;
+        $customer->address = $request->address;
 
-            $customer->name = $request->name;
-            $customer->email = $request->email;
-            $customer->rg = $request->rg;
-            $customer->cpf = $request->cpf;
-            $customer->address = $request->address;
+        $customer->save();
 
-            $customer->save();
-
-            DB::commit();
-
-        }catch(Exception $e){
-
-            DB::rollBack();
-
-        }
     }
+
 }
