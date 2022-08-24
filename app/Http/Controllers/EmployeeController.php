@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Employee;
-use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
@@ -24,7 +23,7 @@ class EmployeeController extends Controller
      *
      * @return \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
      */
-    public function index(){
+    public function index() {
 
         $employees = Employee::orderBy('id','asc')->get();
 
@@ -42,7 +41,7 @@ class EmployeeController extends Controller
      * @param integer $id
      * @return \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
      */
-    public function show(int $id){
+    public function show(int $id) {
 
         $employee = Employee::find($id);
 
@@ -58,7 +57,7 @@ class EmployeeController extends Controller
      *
      * @return \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
      */
-    public function create(){
+    public function create() {
 
         $employee = new Employee();
 
@@ -71,7 +70,7 @@ class EmployeeController extends Controller
      * @param integer $id
      * @return \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
      */
-    public function edit(int $id){
+    public function edit(int $id) {
 
         $employee = Employee::find($id);
 
@@ -84,7 +83,7 @@ class EmployeeController extends Controller
      * @param Request $request
      * @return \Illuminate\Routing\Redirector|\Illuminate\Http\RedirectResponse
      */
-    public function insert(Request $request){
+    public function insert(Request $request) {
 
         return $this->insertOrUpdate($request);
 
@@ -108,7 +107,7 @@ class EmployeeController extends Controller
      * @param integer $id
      * @return \Illuminate\Routing\Redirector|\Illuminate\Http\RedirectResponse
      */
-    public function delete(int $id){
+    public function delete(int $id) {
 
         try {
 
@@ -143,7 +142,7 @@ class EmployeeController extends Controller
      * @param Employee $employee
      * @return \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
      */
-    public function form(Employee $employee){
+    public function form(Employee $employee) {
 
         $data = [
             'employee' => $employee,
@@ -158,7 +157,7 @@ class EmployeeController extends Controller
      * @param Request $request
      * @return \Illuminate\Routing\Redirector|\Illuminate\Http\RedirectResponse
      */
-    private function insertOrUpdate(Request $request){
+    private function insertOrUpdate(Request $request) {
 
         $validator = $this->getInsertUpdateValidator($request);
 
@@ -203,7 +202,7 @@ class EmployeeController extends Controller
      * @param Request $request
      * @return \Illuminate\Contracts\Validation\Validator $validator
      */
-    private function getInsertUpdateValidator(Request $request){
+    private function getInsertUpdateValidator(Request $request) {
 
         $data = $request->all();
 
@@ -235,7 +234,7 @@ class EmployeeController extends Controller
      * @param Request $request
      * @return void
      */
-    private function save(Employee $employee, Request $request){
+    private function save(Employee $employee, Request $request) {
 
         $employee->name = $request->name;
         $employee->address = $request->address;

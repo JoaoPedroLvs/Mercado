@@ -23,15 +23,13 @@ Route::group([], function(){
 /* Rotas para gerenciar as categorias */
 Route::group([], function(){
 
-    Route::get('/categories',           'CategoryController@index');
-
-    Route::get('/create/category',      'CategoryController@create');
-    Route::post('/form/category',       'CategoryController@insert');
-    Route::get('/edit/category/{id}',   'CategoryController@edit');
-    Route::put('/form/category',        'CategoryController@update');
-    Route::get('/delete/category/{id}', 'CategoryController@delete');
-
-    Route::get('category/{id}/products', 'CategoryController@show');
+    Route::get   ('/categories',           'CategoryController@index');
+    Route::get   ('category/{id}/products', 'CategoryController@show');
+    Route::get   ('/category/create',      'CategoryController@create');
+    Route::get   ('/category/{id}/edit',   'CategoryController@edit');
+    Route::post  ('/category',       'CategoryController@insert');
+    Route::put   ('/category',        'CategoryController@update');
+    Route::get   ('/category/{id}/delete', 'CategoryController@delete');
 });
 
 /* Rotas para gerenciar os funcionários*/
@@ -48,48 +46,47 @@ Route::group([], function() {
 
 });
 
-Route::group([], function(){ // Produtos
+/* Rotas para gerenciar os produtos */
+Route::group([], function(){
 
-    Route::get('/products',             'ProductController@index');
-
-    Route::get('/create/product',       'ProductController@create');
-    Route::post('/form/product',        'ProductController@insert');
-    Route::get('/edit/product/{id}',    'ProductController@edit');
-    Route::put('/form/product',         'ProductController@update');
-    Route::get('/delete/product/{id}',  'ProductController@delete');
-
-});
-
-Route::group([], function(){ //Estoque
-
-    Route::get('/inventories',          'InventoryController@index');
-
-    Route::get('/create/inventory',     'InventoryController@create');
-    Route::post('/form/inventory',      'InventoryController@insert');
-    Route::get('/delete/inventory/{id}',     'InventoryController@delete');
+    Route::get   ('/products',             'ProductController@index');
+    Route::get   ('/product/create',       'ProductController@create');
+    Route::get   ('/product/{id}/edit',    'ProductController@edit');
+    Route::post  ('/product',        'ProductController@insert');
+    Route::put   ('/product',         'ProductController@update');
+    Route::get   ('/product/{id}/delete',  'ProductController@delete');
 
 });
 
-Route::group([], function(){ //Promoções
+/* Rotas para gerenciar os estoques */
+Route::group([], function(){
 
-    Route::get('/promotions',           'PromotionController@index');
-
-    Route::get('/create/promotion',     'PromotionController@create');
-    Route::post('/form/promotion',      'PromotionController@insert');
-    Route::get('/edit/promotion/{id}',  'PromotionController@edit');
-    Route::put('/form/promotion',       'PromotionController@update');
-    Route::get('/delete/promotion/{id}', 'PromotionController@delete');
+    Route::get   ('/inventories',          'InventoryController@index');
+    Route::get   ('/inventory/create',     'InventoryController@create');
+    Route::post  ('/inventory',      'InventoryController@insert');
+    Route::get   ('/inventory/{id}/delete',     'InventoryController@delete');
 
 });
 
-Route::group([], function(){ //Vendas
+/* Rotas para gerenciar as promoções */
+Route::group([], function(){
 
-    Route::get('/sales',                'SaleController@index');
+    Route::get   ('/promotions',           'PromotionController@index');
+    Route::get   ('/promotion/create',     'PromotionController@create');
+    Route::get   ('/promotion/{id}/edit',  'PromotionController@edit');
+    Route::post  ('/promotion',      'PromotionController@insert');
+    Route::put   ('/promotion',       'PromotionController@update');
+    Route::get   ('/promotion/{id}/delete', 'PromotionController@delete');
 
-    Route::get('/new/sale',             'SaleController@create');
-    Route::post('/form/sale',           'SaleController@insert');
-    Route::get('/delete/sale/{id}',     'SaleController@delete');
+});
 
-    Route::get('/sale/{id}/products',   'SaleController@show');
+/* Rotas para gerenciar as vendas */
+Route::group([], function(){
+
+    Route::get   ('/sales',                'SaleController@index');
+    Route::get   ('/sale/{id}/products',   'SaleController@show');
+    Route::get   ('/sale/create',             'SaleController@create');
+    Route::post  ('/sale',           'SaleController@insert');
+    Route::get   ('/sale/{id}/delete',     'SaleController@delete');
 
 });

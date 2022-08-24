@@ -14,7 +14,9 @@ class CreateEmployeesTable extends Migration
     public function up()
     {
         Schema::create('employees', function (Blueprint $table) {
+
             $table->id();
+
             $table->string('name', 50);
             $table->string('address');
             $table->string('cpf', 14)->unique();
@@ -23,6 +25,7 @@ class CreateEmployeesTable extends Migration
             $table->string('phone', 14);
             $table->string('work_code')->unique();
             $table->timestamps();
+
         });
     }
 

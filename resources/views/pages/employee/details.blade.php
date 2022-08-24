@@ -5,7 +5,9 @@
 @section('content')
     <div class="page page-employee page-details">
 
-        <h1>Funcionários <small>Detalhes do Funcionário</small></h1>
+        <div class="page-header">
+            <h1>Funcionários <small>Detalhes do Funcionário</small></h1>
+        </div>
 
         <div class="page-body">
 

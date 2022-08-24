@@ -14,7 +14,9 @@ class CreatePromotionsTable extends Migration
     public function up()
     {
         Schema::create('promotions', function (Blueprint $table) {
+
             $table->id();
+
             $table->unsignedInteger('product_id');
             $table->boolean('is_active')->nullable();
             $table->timestamp('started_at');
@@ -22,7 +24,8 @@ class CreatePromotionsTable extends Migration
             $table->double('price');
             $table->timestamps();
 
-            $table->foreign('product_id')->references('id')->on('products')->onDelete('CASCADE');
+            $table->foreign('product_id')->references('id')->on('products');
+
         });
     }
 

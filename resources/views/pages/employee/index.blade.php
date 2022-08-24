@@ -7,7 +7,7 @@
     <div class="page page-employee page-index">
 
         <div class="page-header">
-            <h1>Funcionários <small>Listagem de Funcionários</small></h1>
+            <h1>Funcionários <small>Listagem de funcionários</small></h1>
         </div>
 
         <div class="page-body">

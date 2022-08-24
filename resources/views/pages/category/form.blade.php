@@ -1,38 +1,47 @@
-@extends('layouts.main')
-
-@section('title', $isEdit ? 'Editando '. $category->name : 'Criando categoria')
+@extends('layouts.main',[
+    'pageTitle' => 'Categorias'
+])
 
 @section('content')
 
-    <br><br>
+    @php
+        $isEdit = !empty($category->id)
+    @endphp
 
-    @if(session()->has('msg'))
+    <div class="page page-category page-form">
 
-            <h4>{{ session()->get('msg') }}</h4>
+        <div  class="page-header">
+            <h1>Categorias <small>{{ $isEdit ? 'Editar categoria' : 'Criar categoria' }}</small></h1>
+        </div >
 
-    @endif
+        <div class="page-body">
 
-    <a href="/categories">Ver categorias</a>
+            @include('components.alert')
 
-    <br><br>
+            <form action="{{ url('category') }}" method="POST">
 
-    <div class="container">
-        <form action="/form/category" method="POST">
-            @csrf
+                @csrf
 
-            @method($isEdit ? "PUT" : "POST")
+                @method($isEdit ? 'PUT' : 'POST')
 
-            <label>Nome: </label>
-            <input type="text" name="name" max="250" required value="{{$category->name ?? ""}}">
-            <br><br>
+                <input type="hidden" name="id" value="{{ $category->id }}">
 
-            @if($isEdit)
-                <input type="hidden" name="id" value="{{$category->id}}">
-            @endif
+                <div class="form-group">
+                    <label>Nome</label>
+                    <input type="text" name="name" class="form-control" required maxlength="250" value="{{ $category->name }}"/>
+                </div>
 
-            <button type="submit">Enviar</button>
-            <input type="reset" value="Redefinir alterações">
-        </form>
+                <div class="page-controls">
+
+                    <a href="{{ url('categories') }}" class="btn btn-outline-primary">Voltar</a>
+
+                    <button type="submit" class="btn btn-primary">Enviar</button>
+                </div>
+
+            </form>
+
+        </div>
+
     </div>
 
 @endsection

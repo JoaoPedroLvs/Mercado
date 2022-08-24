@@ -3,24 +3,45 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
-use Exception;
+use App\Models\Product;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
 
+/**
+ * Category Controller
+ *
+ * @author João Pedro Alves <joaopedro@sysout.com.br>
+ * @since 23/08/2022
+ * @version 1.0.0
+ */
 class CategoryController extends Controller
 {
-    public function index(){
+    /**
+     * Exibir categorias criadas
+     *
+     * @return \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
+     */
+    public function index() {
+
         $categories = Category::orderBy('id','asc')->get();
 
         $data = [
             'categories' => $categories
         ];
 
-        return view('category.show', $data);
+        return view('pages.category.index', $data);
+
     }
 
-    public function show($id){
+    /**
+     * Exibir dados de uma categoria
+     *
+     * @param integer $id
+     * @return \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
+     */
+    public function show(int $id) {
 
         $category = Category::find($id);
 
@@ -31,14 +52,28 @@ class CategoryController extends Controller
             'products' => $products
         ];
 
-        return view('category.show_products', $data);
+        return view('pages.category.details', $data);
     }
 
-    public function create(){
-        return $this->form(new Category());
+    /**
+     * Carregar formulário para criar uma nova categoria
+     *
+     * @return \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
+     */
+    public function create() {
+
+        $category = new Category();
+
+        return $this->form($category);
     }
 
-    public function edit($id){
+    /**
+     * Carregar formulário para editar uma categoria
+     *
+     * @param integer $id
+     * @return \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
+     */
+    public function edit(int $id) {
 
         $category = Category::find($id);
 
@@ -46,98 +81,178 @@ class CategoryController extends Controller
 
     }
 
-    public function form (Category $category){
+    /**
+     * Inserir uma nova categoria no banco de dados
+     *
+     * @param Request $request
+     * @return \Illuminate\Routing\Redirector|\Illuminate\Http\RedirectResponse
+     */
+    public function insert(Request $request) {
 
-        $isEdit = $category->id ? true : false;
+        return $this->insertOrUpdate($request);
+
+    }
+
+    /**
+     * Persistir atualizações de uma categoria no banco de dados
+     *
+     * @param Request $request
+     * @return \Illuminate\Routing\Redirector|\Illuminate\Http\RedirectResponse
+     */
+    public function update(Request $request) {
+
+        return $this->insertOrUpdate($request);
+
+    }
+
+    /**
+     * Remover categoria
+     *
+     * @param integer $id
+     * @return \Illuminate\Routing\Redirector|\Illuminate\Http\RedirectResponse
+     */
+    public function delete(int $id) {
+
+        try {
+
+            DB::beginTransaction();
+
+            $category = Category::find($id);
+
+            if (!$category) {
+                throw new \Exception('Categoria não encontrada');
+            }
+
+            $this->preDelete($category->id);
+
+            $category->delete();
+
+            DB::commit();
+
+            Session::flash('success', 'Categoria deletada com sucesso!');
+
+        } catch (\Exception $e) {
+
+            DB::rollBack();
+
+            Session::flash('error', 'Não foi possível remover o cliente: '. $e->getMessage());
+
+        }
+
+        return redirect('categories');
+    }
+
+    /**
+     * Carregar formulário para criar/editar uma categoria
+     *
+     * @param Category $category
+     * @return \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
+     */
+    public function form (Category $category) {
 
         $data = [
-            'category' => $category,
-            'isEdit' => $isEdit
+            'category' => $category
         ];
 
-        return view('category.form', $data);
+        return view('pages.category.form', $data);
     }
 
-    public function insert(Request $request){
-        $category = new Category();
+    /**
+     * Inserir formulário para criar/editar uma categoria
+     *
+     * @param Request $request
+     * @return \Illuminate\Routing\Redirector|\Illuminate\Http\RedirectResponse
+     */
+    private function insertOrUpdate(Request $request) {
 
-        $validator = $this->validator($request);
+        $validator = $this->getInsertUpdateValidator($request);
 
-        if($validator->fails()){
+        if ($validator->fails()) {
 
-            return redirect('/create/categories')->with('msg', 'Não foi possível criar: '.$validator->errors()->first());
+            $error = $validator->errors()->first();
 
-        }
-        else{
+            return back()->withInput()->withErrors($error);
 
-            $this->save($category,$request);
+        } else {
 
-            return redirect('/categories')->with('msg', 'Criado com sucesso');
+            try {
 
+                DB::beginTransaction();
+
+                $isEdit = $request->method() == 'PUT';
+
+                $category = $isEdit ? Category::find($request->id) : new Category();
+
+                $this->save($category, $request);
+
+                DB::commit();
+
+                Session::flash('success', 'A categoria foi '. ($isEdit ? 'alterada' : 'criada') .' com sucesso!');
+
+                return redirect('categories');
+
+            } catch (\Exception $e) {
+
+                DB::rollBack();
+
+                $error = $e->getMessage();
+
+                return back()->withInput()->withErrors($error);
+            }
         }
     }
 
-    public function update(Request $request){
-        $category = Category::find($request->id);
+    /**
+     * Valida os dados do $request
+     *
+     * @param Request $request
+     * @return \Illuminate\Contracts\Validation\Validator $validator
+     */
+    private function getInsertUpdateValidator(Request $request) {
 
-        $validator = $this->validator($request);
+        $data = $request->all();
 
-        if($validator->fails()){
-
-            return redirect('/edit/category/'.$category->id)->with('msg', 'Não foi possível editar: '.$validator->errors()->first());
-
-        }
-        else{
-
-            $this->save($category, $request);
-
-            return redirect('/categories')->with('msg', 'Editado com sucesso');
-
-        }
-
-    }
-
-    public function delete($id){
-        $category = Category::find($id);
-
-        $category->delete();
-
-        return redirect('/categories')->with('msg', 'Deletado com sucesso');
-    }
-
-    private function validator(Request $request){
+        $method = $request->method() == 'PUT';
 
         $rules = [
-            'name' => 'required|max:250'
+            'name' => ['required','max:250']
         ];
 
-        $msg = [
-            'name.required' => 'nome necessário',
-            'name.max' => 'nome inválido'
-        ];
+        $validator = Validator::make($data, $rules);
 
-        $validator = Validator::make($request->all(), $rules, $msg);
+        $validator->sometimes('id', ['required', 'integer', 'exists:categories,id'], function() use ($method){
+            return $method == 'PUT';
+        });
 
         return $validator;
     }
 
-    private function save(Category $category, Request $request){
+    /**
+     * Deleta os produtos relacionados a categoria
+     *
+     * @param integer $id
+     * @return void
+     */
+    private function preDelete(int $id) {
 
+        $products = Product::where('category_id', $id);
 
-        DB::beginTransaction();
+        $products->delete();
 
-        try{
+    }
 
-            $category->name =$request->name;
+    /**
+     * Salva as alterações no banco de dados
+     *
+     * @param Category $category
+     * @param Request $request
+     * @return void
+     */
+    private function save(Category $category, Request $request) {
 
-            $category->save();
+        $category->name =$request->name;
 
-            DB::commit();
-
-        }catch(Exception $e){
-
-            DB::rollBack();
-        }
+        $category->save();
 
     }
 }

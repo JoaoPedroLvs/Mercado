@@ -4,132 +4,227 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Product;
-use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 
+/**
+ * Product Controller
+ *
+ * @author João Pedro Alves <joaopedro@sysout.com.br>
+ * @since 23/08/2022
+ * @version 1.0.0
+ */
 class ProductController extends Controller
 {
-    public function index(){
+
+    /**
+     * Exibir produtos cadastrados
+     *
+     * @return \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
+     */
+    public function index() {
+
         $products = Product::orderBy('id', 'asc')->get();
 
         $data = [
             'products' => $products
         ];
 
-        return view('product.show', $data);
+        return view('pages.product.index', $data);
+
     }
 
-    public function create(){
-        return $this->form(new Product());
-    }
+    /**
+     * Carregar o formulário para criar novo produto
+     *
+     * @return \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
+     */
+    public function create() {
 
-    public function edit($id){
-        $product = Product::find($id);
+        $product = new Product();
 
         return $this->form($product);
     }
 
-    public function form(Product $product){
-        $isEdit = $product->id ? true : false;
+    /**
+     * Carregar o formulário para editar um produto
+     *
+     * @param integer $id
+     * @return \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
+     */
+    public function edit(int $id) {
+
+        $product = Product::find($id);
+
+        return $this->form($product);
+
+    }
+
+    /**
+     * Inserir novo produto no banco de dados
+     *
+     * @param Request $request
+     * @return \Illuminate\Routing\Redirector|\Illuminate\Http\RedirectResponse
+     */
+    public function insert(Request $request) {
+
+        return $this->insertOrUpdate($request);
+
+    }
+
+    /**
+     * Persistir atualizações de um produto no banco de dados
+     *
+     * @param Request $request
+     * @return \Illuminate\Routing\Redirector|\Illuminate\Http\RedirectResponse
+     */
+    public function update(Request $request ) {
+
+        return $this->insertOrUpdate($request);
+
+    }
+
+    /**
+     * Remover um produto
+     *
+     * @param int $id
+     * @return \Illuminate\Routing\Redirector|\Illuminate\Http\RedirectResponse
+     */
+    public function delete(int $id) {
+
+        try {
+
+            DB::beginTransaction();
+
+            $product = Product::find($id);
+
+            if (!$product) {
+                throw new \Exception('Produto não encontrado!');
+            }
+
+            $product->delete();
+
+            DB::commit();
+
+            Session::flash('success', 'Produto excluído com sucesso!');
+
+        } catch (\Exception $e) {
+
+            DB::rollBack();
+
+            Session::flash('error', 'Não foi possível remover o produto: '. $e->getMessage());
+
+        }
+
+        return redirect('products');
+    }
+
+    /**
+     * Carregar o formulário para criar/editar um produto
+     *
+     * @param Product $product
+     * @return \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
+     */
+    public function form(Product $product) {
 
         $categories = Category::get();
 
         $data = [
             'categories' => $categories,
-            'product' => $product,
-            'isEdit' => $isEdit
+            'product' => $product
         ];
 
-        return view('product.form', $data);
+        return view('pages.product.form', $data);
     }
 
-    public function insert(Request $request){
-        $product = new Product();
+    /**
+     * Inserir ou atualizar produto no banco de dados
+     *
+     * @param Request $request
+     * @return \Illuminate\Routing\Redirector|\Illuminate\Http\RedirectResponse
+     */
+    private function insertOrUpdate(Request $request) {
 
-        $validator = $this->validator($request);
+        $validator = $this->getInsertUpdateValidator($request);
 
-        if($validator->fails()){
-            return redirect('/create/product')->with('msg', 'Não foi possivel criar: '.$validator->errors()->first());
+        if ($validator->fails()) {
+
+            $error = $validator->errors()->first();
+
+            return back()->withInput()->withErrors($error);
+
+        } else {
+
+            try {
+
+                DB::beginTransaction();
+
+                $isEdit = $request->method() == 'PUT';
+
+                $product = $isEdit ? Product::find($request->id) : new Product();
+
+                $this->save($product, $request);
+
+                DB::commit();
+
+                Session::flash('success', 'O Produto foi '. ($isEdit ? 'alterado' : 'criado') .' com sucesso!');
+
+                return redirect('products');
+
+            } catch (\Exception $e) {
+
+                DB::rollBack();
+
+                $error = $e->getMessage();
+
+                return back()->withInput()->withErrors($error);
+
+            }
         }
-        else{
-
-            $this->save($product, $request);
-
-            return redirect('/products')->with('msg', 'Produto criado com sucesso');
-
-        }
-
-
     }
 
-    public function update(Request $request){
-        $product = Product::find($request->id);
+    /**
+     * Valida os dados do $request
+     *
+     * @param Request $request
+     * @return \Illuminate\Contracts\Validation\Validator $validator
+     */
+    private function getInsertUpdateValidator(Request $request){
 
-        $validator = $this->validator($request);
+        $data = $request->all();
 
-        if($validator->fails()){
-
-            return redirect('/edit/product/'.$product->id)->with('msg', 'Não foi possivel criar: '.$validator->errors()->first());
-        }
-        else{
-
-            $this->save($product, $request);
-
-            return redirect('/products')->with('msg', 'Produto editado com sucesso');
-
-        }
-
-    }
-
-    public function delete($id){
-        $product = Product::find($id);
-
-        $product->delete();
-
-        return redirect('/products')->with('msg', 'Produto deletado com sucesso');
-    }
-
-    private function validator(Request $request){
+        $method = $request->method();
 
         $rules = [
-            'name' => 'required|max:100',
-            'price' => 'required|min:0.01',
+            'name' => ['required', 'max:100'],
+            'category_id' => ['required', 'exists:products,id'],
+            'price' => ['required']
         ];
 
-        $msg = [
-            'name.required' => 'nome é necessário',
-            'name.max' => 'nome inválido',
-            'price.required' => 'preço é necessário',
-            'price.min' => 'insira um valor de pelo menos R$ 0,01'
+        $validator = Validator::make($data,$rules);
 
-        ];
-
-        $validator = Validator::make($request->all(), $rules, $msg);
+        $validator->sometimes('id', ['required', 'integer', 'exists:products,id'], function() use ($method){
+            return $method == 'PUT';
+        });
 
         return $validator;
     }
 
+    /**
+     * Salvar alterações do produto
+     *
+     * @param Product $product
+     * @param Request $request
+     * @return void
+     */
     private function save(Product $product, Request $request){
 
-        DB::beginTransaction();
+        $product->name = $request->name;
+        $product->price = $request->price;
+        $product->category_id = $request->category_id;
 
-        try{
-
-            $product->name = $request->name;
-            $product->price = $request->price;
-
-            $product->category_id = $request->category_id;
-
-            $product->save();
-
-            DB::commit();
-
-        }catch(Exception $e){
-
-            DB::rollBack();
-
-        }
+        $product->save();
     }
 }

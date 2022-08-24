@@ -11,7 +11,7 @@
     @php
         $title = config('app.app_name');
 
-        if(isset($pageTitle)){
+        if (isset($pageTitle)) {
             $title = $title. ' - '.$pageTitle;
         }
 

@@ -22,13 +22,13 @@ class Promotion extends Model
         'ended_at' => 'datetime'
     ];
 
-    public function product(){
+    public function product() {
 
         return $this->belongsTo(Product::class);
 
     }
 
-    public function scopeSearchPrice($query, Product $product){
+    public function scopeSearchPrice($query, Product $product) {
 
         $query->select("pd.price as product", "pm.price as promotion", "pm.is_active")
         ->from("products as pd")

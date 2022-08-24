@@ -7,7 +7,7 @@
         ['Categorias','categories'],
         ['Vendas','sales'],
         ['Estoque','inventories'],
-        ['Promoção','promotion']
+        ['Promoção','promotions']
     ];
 
 @endphp

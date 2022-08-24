@@ -1,71 +1,86 @@
-@extends('layouts.main')
-
-@section('title', $isEdit ? 'Editando promoção '.$promotion->name : 'Criando promoção')
+@extends('layouts.main', [
+    'pageTitle' => 'Promoções'
+])
 
 @section('content')
 
-    <br>
+    @php
+        $isEdit = !empty($promotion->id);
+    @endphp
 
-    @if (session()->has('msg'))
+    <div class="page page-promotion page-form">
 
-        <h4>{{session()->get('msg')}}</h4>
+        <div class="page-header">
+            <h1>Promoções <small>{{ $isEdit ? 'Editando promoção' : 'Criando promoção' }}</small></h1>
+        </div>
 
-    @endif
-    <div class="container">
+        <div class="page-body">
 
-        <form action="/form/promotion" method="POST">
+            @include('components.alert')
 
-            @csrf
+            <form action="{{ url('promotion') }}" method="POST">
+                @csrf
 
-            @method($isEdit ? "PUT" : "POST")
+                @method($isEdit ? 'PUT' : 'POST')
 
-            <label>Qual produto: </label>
-            <select name="product_id">
+                <input type="hidden" name="id" value="{{ $promotion->id }}">
 
-                @if (count($products) > 0)
+                <div class="form-group">
+                    <input type="checkbox" name="is_active" class="from-check-input" {{ $promotion->is_active ? "checked" : "" }} value="{{true}}">
+                    <label>Está Ativo?</label>
+                </div>
 
-                    @foreach ($products as $product)
+                <div class="form-group">
+                    <label>Produto</label>
+                    <select name="product_id" class="form-select">
 
-                        <option value="{{$product->id}}">{{$product->name}}</option>
+                        @if (count($products) > 0)
 
-                    @endforeach
+                            <option value="" selected>Selecione um produto</option>
 
-                @else
-
-                    <option>Nenhum produto cadastrado</option>
-
-                @endif
-
-            </select>
-            <br>
-
-
-            <label>Preço: </label>
-            <input type="number" step="0.01" name="price" required value="{{$promotion->price ?? ""}}">
-            <br><br>
-
-            <input type="checkbox" name="is_active" {{$promotion->is_active ? "checked" : ""}} value="{{true}}">Está ativo?
-            <br><br>
-
-            <label>Data inicial: </label>
-            <input type="date" name="started_at" required value="{{(string) $promotion->started_at ? $promotion->started_at->format('Y-m-d') : ""}}">
-            <br>
-            {{-- @dd((string) $promotion->ended_at->format('Y-m-d')) --}}
-            <label>Data final: </label>
-            <input type="date" name="ended_at" required value="{{(string) $promotion->ended_at ? $promotion->ended_at->format('Y-m-d') : ""}}">
-            <br><br>
+                            @foreach ($products as $product)
 
 
-            @if ($isEdit)
+                                <option value="{{ $product->id }}" {{ $product->id == $promotion->product_id ? 'selected' : '' }}>{{ $product->name }}</option>
 
-                <input type="hidden" name="id" value="{{$promotion->id}}">
+                            @endforeach
 
-            @endif
+                        @else
 
-            <button type="submit">Enviar</button>
+                            <option>Nenhum produto criado</option>
 
+                        @endif
 
-        </form>
+                    </select>
+                </div>
+
+                {{-- @dd($promotion->price) --}}
+                <div class="form-group">
+                    <label>Preço</label>
+                    <input type="number" name="price" step="0.01" class="form-control" value="{{ $promotion->price }}">
+                </div>
+
+                <div class="form-group">
+                    <label>Data de início</label>
+                    <input type="date" name="started_at" class="form-control" required value="{{ $promotion->started_at ? (string) $promotion->started_at->format('Y-m-d') : '' }}">
+                </div>
+
+                <div class="form-group">
+                    <label>Data final</label>
+                    <input type="date" name="ended_at" class="form-control" required value="{{ $promotion->ended_at ? (string) $promotion->ended_at->format('Y-m-d') : '' }}">
+                </div>
+
+                <div class="page-controls">
+
+                    <a href="{{ url('promotions') }}" class="btn btn-outline-primary">Voltar</a>
+
+                    <button type="submit" class="btn btn-primary">Enviar</button>
+
+                </div>
+
+            </form>
+
+        </div>
 
     </div>
 

@@ -1,86 +1,129 @@
-@extends('layouts.main')
-
-@section('title', 'Nova venda')
+@extends('layouts.main', [
+    'pageTitle' => 'Vendas'
+])
 
 @section('content')
 
-    <div class="page sale form">
+    <div class="page page-sale sale-form">
 
-        <div class="container">
-            <h1>Nova venda</h1>
+        <div class="page-header">
+            <h1>Vendas <small>Criando uma venda</small></h1>
+        </div>
 
-            <form action="/form/sale" method="POST">
+        <div class="page-body">
 
+            @include('components.alert')
+
+            <form action="{{ url('sale') }}" method="POST">
                 @csrf
 
-                <label>Cliente: </label>
-                <select name="customer_id" required>
-                    <option selected>Selecione um cliente</option>
+                <div class="form-group">
+                    <label>Cliente</label>
+                    <select name="customer_id" class="form-select" >
 
-                    @foreach ($customers as $customer)
+                        @if (count($customers) > 0)
 
-                        <option value="{{$customer->id}}">{{$customer->name}}</option>
+                            <option value="" selected>Selecione o cliente</option>
 
-                    @endforeach
+                            @foreach ($customers as $customer)
 
-                </select>
-                <br>
+                                <option value="{{ $customer->id }}">{{ $customer->name }}</option>
 
-                <label>Funcionário: </label>
-                <select name="employee_id" required>
-                    <option selected>Selecione um funcionário</option>
+                            @endforeach
 
-                    @foreach ($employees as $employee)
+                        @else
 
-                        <option value="{{$employee->id}}">{{$employee->name}}</option>
+                            <option value="" selected>Nenhum cliente criado</option>
 
-                    @endforeach
+                        @endif
 
-                </select>
-                <br>
-                <br>
-
-                <div class="products sale">
-
-                    @if (count($products) > 0)
-
-                        <button type="button" class='btn new product'>Novo produto</button><br><br>
-
-                        <label>Qual produto foi comprado e sua quantidade: </label><br>
-
-
-                        <div class="products itens">
-
-                            <select name="product_id[]">
-                                <option selected>Selecione um produto</option>
-
-                                @foreach ($products as $product)
-                                    <option value="{{$product->id}}">{{$product->name}}</option>
-                                @endforeach
-
-                            </select>
-
-                            <input type="number" placeholder="Quantidade" name="qty_sales[]">
-                            <button type="button" class="btn-delete-product">Excluir produto</button>
-
-                            <br><br>
-                        </div>
-
-                    @else
-
-                        <h3>Nenhum produto cadastrado</h3>
-                        <p><a href="/create/product">Clique aqui</a> para criar um novo</p>
-
-                    <br>
-
-                    @endif
+                    </select>
 
                 </div>
 
-                <button type="submit">Enviar</button>
+                <div class="form-group">
+                    <label>Funcionários</label>
+                    <select name="employee_id" class="form-select" >
+
+                        @if (count($employees) > 0)
+
+                            <option  value="0" selected>Selecione o funcionário</option>
+
+                            @foreach ($employees as $employee)
+
+                                <option value="{{ $employee->id }}">{{ $employee->name }}</option>
+
+                            @endforeach
+
+                        @else
+
+                            <option value="" selected>Nenhum funcionário criado</option>
+
+                        @endif
+
+                    </select>
+
+                </div>
+
+                <div class="form-group">
+
+                    <div class="products-sale">
+
+                        @if (count($products) > 0)
+
+                            <button type="button" class='btn btn-new-product btn-primary'>Novo produto</button><br><br>
+
+                            <label>Qual produto foi comprado e sua quantidade: </label><br>
+
+
+                            <div class="products-itens">
+
+                                <div class="input-group">
+
+                                    <select name="product_id[]" class="form-select">
+
+                                        <option  value="" selected>Selecione um produto</option>
+
+                                        @foreach ($products as $product)
+
+                                            <option value="{{$product->id}}">{{$product->name}}</option>
+
+                                        @endforeach
+
+                                    </select>
+
+                                    <input type="number" placeholder="Quantidade" name="qty_sales[]" class="form-control">
+
+                                    <button type="button" class="btn-delete-product btn btn-danger">X</button>
+
+                                </div>
+
+                            </div>
+
+                        @else
+
+                            <h3>Nenhum produto cadastrado</h3>
+                            <p><a href="/create/product">Clique aqui</a> para criar um novo</p>
+
+                        <br>
+
+                        @endif
+
+                    </div>
+
+                </div>
+
+                <div class="page-controls">
+
+                    <a href="{{ url('sales') }}" class="btn btn-outline-primary">Voltar</a>
+
+                    <button type="submit" class="btn btn-primary">Enviar</button>
+                </div>
+
             </form>
 
         </div>
+
     </div>
 
 @endsection

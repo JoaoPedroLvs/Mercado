@@ -166,6 +166,7 @@ class CustomerController extends Controller
             $error = $validator->errors()->first();
 
             return back()->withInput()->withErrors($error);
+
         } else {
 
             try {
@@ -180,7 +181,7 @@ class CustomerController extends Controller
 
                 DB::commit();
 
-                Session::flash('success', 'O cliente foi '. ($isEdit ? 'alterado' : 'criado'). ' com sucessor!');
+                Session::flash('success', 'O cliente foi '. ($isEdit ? 'alterado' : 'criado'). ' com sucesso!');
 
                 return redirect('customers');
 

@@ -1,29 +1,31 @@
 $(function(){
 
-    $('.page.sale.form').each(function() {
+    $('.page.page-sale.sale-form').each(function() {
 
         var $self = $(this)
 
-        var $btnNewProduct = $self.find('.new.product');
+        var $btnNewProduct = $self.find('.btn-new-product');
 
-        $btnNewProduct.on('click', function(){
+        $btnNewProduct.on('click', function() {
 
             var $btn = $(this);
             var $div = $btn.parent();
-            var $products = $div.find('.products.itens');
+            var $products = $div.find('.products-itens');
             var $itens = $products.eq(0).clone().find("input").val("").end();
             $div.append($itens);
 
         });
 
-        $self.on('click', '.btn-delete-product' , function(){
+        $self.on('click', '.btn-delete-product' , function() {
 
-            var countItems = $self.find('.products.itens').length;
+            var countItems = $self.find('.products-itens').length;
+
+            console.log(countItems);
 
             if (countItems >= 2) {
 
                 var $btn = $(this);
-                var $div = $btn.parent();
+                var $div = $btn.parents('.products-itens');
 
                 $div.remove();
 

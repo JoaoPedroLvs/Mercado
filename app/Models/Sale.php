@@ -13,7 +13,7 @@ class Sale extends Model
         'total'
     ];
 
-    public function products(){
+    public function products() {
 
         return $this->belongsToMany(Product::class);
 
@@ -33,12 +33,14 @@ class Sale extends Model
 
     }
 
-    public function scopeSearchQty($query, $id){
+    public function scopeSearchQty($query, $id) {
 
         $query->select("ps.product_id", "ps.qty_sales")
         ->from("product_sale as ps")
         ->join("products as p", "p.id", "ps.product_id")
         ->where("ps.sale_id", $id);
+
+        return $query;
     }
 
 }

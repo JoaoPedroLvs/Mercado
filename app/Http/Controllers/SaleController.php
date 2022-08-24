@@ -5,34 +5,138 @@ namespace App\Http\Controllers;
 use App\Models\Customer;
 use App\Models\Employee;
 use App\Models\Product;
-use App\Models\ProductsSale;
 use App\Models\Promotion;
 use App\Models\Sale;
-use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 
+/**
+ * Sale Controller
+ *
+ * @author João Pedro Alves <joaopedro@sysout.com.br>
+ * @since 23/08/2022
+ * @version 1.0.0
+ */
 class SaleController extends Controller
 {
-    public function index(){
+    /**
+     * Exibir vendas criadas
+     *
+     * @return \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
+     */
+    public function index() {
+
         $sales = Sale::orderBy('id', 'asc')->get();
 
         $data = [
             'sales' =>$sales
         ];
 
-        return view('sale.show', $data);
+        return view('pages.sale.index', $data);
     }
 
-    public function create(){
+    /**
+     * Exibir os produtos que foram vendido na determiada venda
+     *
+     * @param integer $id
+     * @return \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
+     */
+    public function show(int $id) {
 
-        return $this->form(new Sale());
+        $sales = Sale::search($id)->get();
+
+        $data = [
+            'sales' => $sales
+        ];
+
+        return view('pages.sale.details', $data);
+    }
+
+    /**
+     * Carrega o formulário para criar uma venda
+     *
+     * @return \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
+     */
+    public function create() {
+
+        $sale = new Sale();
+
+        return $this->form($sale);
 
     }
 
-    public function form(Sale $sale){
+    /**
+     * Inserir nova venda no banco de dados
+     *
+     * @param Request $request
+     * @return \Illuminate\Routing\Redirector|\Illuminate\Http\RedirectResponse
+     */
+    public function insert(Request $request) {
+
+        return $this->insertOnly($request);
+
+    }
+
+    /**
+     * Deletar venda
+     *
+     * @param integer $id
+     * @return \Illuminate\Routing\Redirector|\Illuminate\Http\RedirectResponse
+     */
+    public function delete(int $id) {
+
+        try {
+
+            DB::beginTransaction();
+
+            $sale = Sale::find($id);
+
+            if (!$sale) {
+                throw new \Exception('Venda não encontrada');
+            }
+
+            $qty = Sale::searchQty($sale->id)->get();
+
+
+            foreach ($qty as $productQty) {
+
+                $product = Product::find($productQty->product_id);
+
+                $product->increment('current_qty', $productQty->qty_sales);
+
+            }
+
+            $this->preDelete($sale);
+
+            // dd('oi');
+
+            $sale->delete();
+
+
+            DB::commit();
+
+            Session::flash('success', 'Venda removida com sucesso!');
+
+        } catch (\Exception $e) {
+
+            DB::rollBack();
+
+            Session::flash('error', 'Não foi possível remover a venda: '.$e->getMessage());
+        }
+
+        return redirect('sales');
+
+    }
+
+    /**
+     * Carrega o formulário para criar uma venda
+     *
+     * @param Sale $sale
+     * @return \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
+     */
+    public function form(Sale $sale) {
 
         $products = Product::orderBy('id','asc')->get();
         $customers = Customer::get();
@@ -45,126 +149,127 @@ class SaleController extends Controller
             'products' => $products
         ];
 
-        return view('sale.form', $data);
+        return view('pages.sale.form', $data);
     }
 
-    public function insert(Request $request){
+    /**
+     * Inserir a venda no banco de dados
+     *
+     * @param Request $request
+     * @return \Illuminate\Routing\Redirector|\Illuminate\Http\RedirectResponse
+     */
+    private function insertOnly(Request $request) {
 
-        $sale = new Sale();
+        $validator = $this->insertValidator($request);
 
-        $validator = $this->validator($request);
+        if ($validator->fails()) {
 
-        if($validator->fails()){
+            $error = $validator->errors()->first();
 
-            return redirect('/create/sale')->with('msg', 'Não foi possivel criar: '.$validator->errors()->first());
+            return back()->withInput()->withErrors($error);
+
+        } else {
+
+            try {
+
+                DB::beginTransaction();
+
+                $sale = new Sale();
+
+                $this->save($sale, $request);
+
+                DB::commit();
+
+                Session::flash('success', 'Venda criada com sucesso!');
+
+                return redirect('sales');
+
+            } catch (\Exception $e) {
+
+                DB::rollBack();
+
+                $error = $e->getMessage();
+
+                return back()->withInput()->withErrors($error);
+            }
 
         }
-        else{
 
-            $this->save($sale,$request);
-
-            return redirect('/sales')->with('msg', 'Venda criada com sucesso');
-
-        }
     }
 
-    public function delete($id){
+    /**
+     * Valida os dados do $request
+     *
+     * @param Request $request
+     * @return \Illuminate\Contracts\Validation\Validator $validator
+     */
+    private function insertValidator(Request $request) {
 
-        $sale = Sale::find($id);
-
-        $qty = Sale::searchQty($sale->id)->get();
-
-        foreach($qty as $productQty){
-            $product = Product::find($productQty->product_id);
-
-            $product->increment('current_qty', $productQty->qty_sales);
-        }
-
-        $sale->delete();
-
-        return redirect('/sales')->with('msg', 'Venda deletada com sucesso');
-    }
-
-    public function show($id){
-
-        $sales = Sale::search($id)->get();
-
-        $data = [
-            'sales' => $sales
-        ];
-
-        return view('sale.show_products', $data);
-    }
-
-    private function validator(Request $request){
+        $data = $request->all();
 
         $rules = [
-            'customer_id' => 'required',
-            'employee_id' => 'required',
+            'customer_id' => ['required', 'integer', 'exists:customers,id'],
+            'employee_id' => ['required', 'integer', 'exists:employees,id'],
+            'qty_sales' => ['required'],
+            'product_id' => ['required', 'exists:products,id']
         ];
 
-        $msg = [
-            'customer_id.' => 'necessário um cliente para registrar a compra',
-            'employee_id.' => 'necessário um funcionário para registrar a compra',
-        ];
-
-        $validator = Validator::make($request->all(), $rules, $msg);
+        $validator = Validator::make($data, $rules);
 
         return $validator;
     }
-    private function save(Sale $sale, Request $request){
 
-        DB::beginTransaction();
-        try{
+    private function preDelete(Sale $sale) {
 
-            $sale->customer_id = $request->customer_id;
-            $sale->employee_id = $request->employee_id;
+        $sale->products()->detach();
 
-            $products = $request->product_id;
+    }
 
-            $sale->save();
+    /**
+     * Salva a venda no banco de dados
+     *
+     * @param Sale $sale
+     * @param Request $request
+     * @return void
+     */
+    private function save(Sale $sale, Request $request) {
 
-            foreach($products as $k => $product){
+        $sale->customer_id = $request->customer_id;
+        $sale->employee_id = $request->employee_id;
 
-                $product = Product::find($product);
+        $products = $request->product_id;
 
-                $price = Promotion::searchPrice($product)->first();
+        $sale->save();
 
-                if($request->qty_sales[$k]){
+        foreach ($products as $k => $product) {
 
-                    $qty_sale = (int)$request->qty_sales[$k];
+            $product = Product::find($product);
+
+            $price = Promotion::searchPrice($product)->first();
+
+            if ($request->qty_sales[$k]) {
+
+                $qty_sale = (int)$request->qty_sales[$k];
 
 
-                    if(isset($price->is_active)){
-                        $total_price = $qty_sale * $price->promotion;
-                    }
-                    else {
-                        $total_price = $qty_sale * $price->product;
-                    }
-
-                    // dd(isset($price->is_active));
-                    $attachArray = [
-                        'qty_sales' => $qty_sale,
-                        'total_price' => $total_price
-                    ];
-
-                    $sale->products()->attach($product->id, $attachArray);
-
-                    $product->decrement('current_qty', $qty_sale);
-
-                    $sale->increment('total',$total_price);
-
+                if (isset($price->is_active)) {
+                    $total_price = $qty_sale * $price->promotion;
+                } else {
+                    $total_price = $qty_sale * $price->product;
                 }
 
+                $attachArray = [
+                    'qty_sales' => $qty_sale,
+                    'total_price' => $total_price
+                ];
+
+                $sale->products()->attach($product->id, $attachArray);
+
+                $product->decrement('current_qty', $qty_sale);
+
+                $sale->increment('total',$total_price);
+
             }
-
-            DB::commit();
-
-        } catch(Exception $e){
-
-            dd($e);
-
-            DB::rollBack();
 
         }
 

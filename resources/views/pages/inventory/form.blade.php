@@ -1,54 +1,57 @@
-@extends('layouts.main')
-
-@section('title', 'Criando estoque')
+@extends('layouts.main', [
+    'pageTitle' => 'Estoque'
+])
 
 @section('content')
 
-    <br>
+    <div class="page page-inventories page-form">
 
-    <div class="container">
+        <div class="page-header">
+            <h1>Estoque <small>Criar estoque</small></h1>
+        </div>
 
-        @if (session()->has('msg'))
+        <div class="page-body">
+            @include('components.alert')
 
-            <h4>{{session()->get('msg')}}</h4>
+            <form action="{{ url('inventory') }}" method="POST">
+                @csrf
 
-        @endif
+                <div class="form-group">
+                    <label>Produto</label>
+                    <select name="product_id" class="form-select">
 
-        <form action="/form/inventory" method="POST">
+                        <option value="" selected>Selecione um produto:</option>
 
-            @csrf
+                        @foreach ($products as $product)
 
-            {{-- @dd($inventory->product); --}}
+                            <option value="{{ $product->id }}">{{ $product->name }}</option>
 
-            <label>Produto: </label>
-            <select name="product_id" required>
+                        @endforeach
 
-                @if (count($products) > 0)
+                    </select>
+                </div>
 
-                    @foreach ($products as $product)
+                <div class="form-group">
+                    <label>Quantidade</label>
+                    <input type="number" name="qty" class="form-control">
+                </div>
 
-                        <option value="{{ $product->id }}">{{ $product->name }}</option>
+                <div class="form-group">
+                    <label>Data de entrada</label>
+                    <input type="date" name="created_at" class="form-control">
+                </div>
 
-                    @endforeach
+                <div class="page-controls">
 
-                @else
+                    <a href="{{ url('inventories') }}" class="btn btn-outline-primary">Voltar</a>
 
-                    <option>Nenhum produto criado</option>
+                    <button type="submit" class="btn btn-primary">Enviar</button>
 
-                @endif
+                </div>
 
-            </select><br><br>
+            </form>
 
-            <label>Quantidade: </label>
-            <input type="number" name="qty" required><br><br>
-
-            <label>Data: </label>
-            <input type="date" name="created_at"><br><br>
-
-
-            <button type="submit">Enviar</button>
-
-        </form>
+        </div>
 
     </div>
 

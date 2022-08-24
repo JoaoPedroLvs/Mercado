@@ -1,70 +1,76 @@
-@extends('layouts.main')
-
-@section('title', $isEdit ? 'Editando ' . $product->name : 'Criando produto')
+@extends('layouts.main',[
+    'pageTitle' => 'Produtos'
+])
 
 @section('content')
 
-    <br>
+    @php
+        $isEdit = !empty($product->id);
+    @endphp
 
-    @if(session()->has('msg'))
+    <div class="page page-customer page-form">
 
-        <h4>{{session()->get('msg')}}</h4>
+        <div class="page-header">
+            <h1>Produtos <small>{{ $isEdit ? 'Editar produto' : 'Criar produto' }}</small></h1>
+        </div>
 
-    @endif
+        <div class="page-body">
 
-    <a href="/products">Voltar para produtos</a>
+            @include('components.alert')
 
-    <br><br>
+            <form action="{{ url('product') }}" method="post">
 
-    <div class="container">
-        <form action="/form/product" method="POST">
+                @csrf
 
-            @csrf
-
-            @method($isEdit ? 'PUT' : 'POST')
-
-            <label>Nome: </label>
-            <input type="text" name="name" required value="{{ $product->name ?? '' }}">
-
-            <br><br>
-
-            <label>Preço: </label>
-            <input type="number" name="price" step="0.01" required value="{{ $product->price ?? '' }}">
-
-            <br><br>
-
-            <label>Categorias</label>
-            <select name="category_id" required>
-
-                @if (count($categories) > 0)
-
-                    @foreach ($categories as $category)
-
-                        <option value="{{ $category->id }}">{{ $category->name }}</option>
-
-                    @endforeach
-
-                @else
-
-                    <option>Nenhuma categoria criada</option>
-
-                @endif
-
-            </select>
-
-            <br><br>
-
-            @if ($isEdit)
+                @method($isEdit ? 'PUT' : 'POST')
 
                 <input type="hidden" name="id" value="{{ $product->id }}">
 
-            @endif
+                <div class="form-group">
+                    <label>Nome</label>
+                    <input type="text" name="name" class="form-control" value="{{ $product->name }}" maxlength="100" required />
+                </div>
 
-            <button type="submit">Enviar</button>
+                <div class="form-group">
+                    <label>Categorias</label>
+                    <select name="category_id"class="form-select">
 
-            <input type="reset" value="Redefinir alteirações">
+                        @if (count($categories) > 0)
 
-        </form>
+                            <option value="" {{ $isEdit ?? 'selected' }}>Selecione uma categoria</option>
+
+                            @foreach ($categories as $category)
+
+                                <option value="{{ $category->id }}" {{ $product->category_id == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
+
+                            @endforeach
+
+                        @else
+
+                            <option value="" selected>Nenhuma categoria criada</option>
+
+                        @endif
+
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Preço</label>
+                    <input type="number" name="price" required step="0.01" class="form-control" value="{{ number_format($product->price, 2, '.', ',') }}">
+                </div>
+
+                <div class="page-control">
+
+                    <a href="{{ url('products') }}" class="btn btn-outline-primary">Voltar</a>
+
+                    <button type="submit" class="btn btn-primary">Enviar</button>
+
+                </div>
+
+            </form>
+
+        </div>
+
     </div>
 
 @endsection

@@ -16,7 +16,7 @@ class Inventory extends Model
 
     public $timestamps = false;
 
-    public function product(){
+    public function product() {
         return $this->belongsTo(Product::class);
     }
 }

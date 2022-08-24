@@ -4,131 +4,216 @@ namespace App\Http\Controllers;
 
 use App\Models\Inventory;
 use App\Models\Product;
-use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 
+/**
+ * Inventory Controller
+ *
+ * @author João Pedro Alves <joaopedro@sysout.com.br>
+ * @since 23/08/2022
+ * @version 1.0.0
+ */
 class InventoryController extends Controller
 {
-    public function index(){
+
+    /**
+     * Exibir os estoques criados
+     *
+     * @return \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
+     */
+    public function index() {
+
         $inventories = Inventory::orderBy('id','asc')->get();
 
         $data = [
             'inventories' => $inventories
         ];
 
-        return view('inventory.show', $data);
+        return view('pages.inventory.index', $data);
     }
 
-    public function create(){
-        return $this->form(new Inventory());
-    }
+    /**
+     * Carregar formulário para criar um novo estoque
+     *
+     * @return \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
+     */
+    public function create() {
 
-    public function edit($id){
-        $inventory = Inventory::find($id);
+        $inventory = new Inventory();
 
         return $this->form($inventory);
     }
 
-    public function form(Inventory $inventory){
+    /**
+     * Inserir nova estoque no banco de dados
+     *
+     * @param Request $request
+     * @return \Illuminate\Routing\Redirector|\Illuminate\Http\RedirectResponse
+     */
+    public function insert(Request $request) {
 
-        $isEdit = $inventory->id ? true : false;
+        return $this->insertOnly($request);
+
+    }
+
+    /**
+     * Deleta o estoque
+     *
+     * @param integer $id
+     * @return \Illuminate\Routing\Redirector|\Illuminate\Http\RedirectResponse
+     */
+    public function delete(int $id) {
+
+        try {
+
+            DB::beginTransaction();
+
+            $inventory = Inventory::find($id);
+
+            if (!$inventory) {
+                throw new \Exception('Estoque não encontrado');
+            }
+
+            $this->preDelete($inventory->product->id, $inventory->qty);
+
+            $inventory->delete();
+
+            DB::commit();
+
+            Session::flash('success', 'Estoque removido com sucesso!');
+
+        } catch (\Exception $e) {
+
+            DB::rollBack();
+
+            Session::flash('error', 'Não foi possível remover o estoque: '. $e->getMessage());
+        }
+
+        return redirect('inventores');
+    }
+
+    /**
+     * Carregar formulário para criar um estoque
+     *
+     * @param Inventory $inventory
+     * @return \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
+     */
+    public function form(Inventory $inventory) {
 
         $products = Product::get();
 
         $data = [
-            'isEdit' => $isEdit,
             'inventory' => $inventory,
             'products' => $products
         ];
 
-        return view('inventory.form', $data);
+        return view('pages.inventory.form', $data);
 
     }
 
-    public function insert(Request $request){
-        $inventory = new Inventory();
+    /**
+     * Insere um estoque no banco de dados
+     *
+     * @param Request $request
+     * @return \Illuminate\Routing\Redirector|\Illuminate\Http\RedirectResponse
+     */
+    private function insertOnly(Request $request) {
 
-        $validator = $this->validator($request);
+        $validator = $this->getInsertValidator($request);
 
-        if($validator->fails()){
+        if ($validator->fails()) {
 
-            return redirect('/create/inventory')->with('msg', 'Não foi possivel criar: '.$validator->errors()->first());
+            $error = $validator->errors()->first();
 
+            return back()->withInput()->withErrors($error);
+
+        } else {
+
+            try {
+
+                DB::beginTransaction();
+
+                $inventory = new Inventory();
+
+                $this->save($inventory, $request);
+
+                DB::commit();
+
+                Session::flash('success', 'O estoque foi criado com sucesso!');
+
+                return redirect('inventories');
+
+            } catch (\Exception $e) {
+
+                DB::rollBack();
+
+                $error = $e->getMessage();
+
+                return back()->withInput()->withErrors($error);
+
+            }
         }
-        else{
-
-            $this->save($inventory, $request);
-            return redirect('/inventories')->with('msg', 'Estoque criado com sucesso');
-
-        }
-
 
     }
 
-    public function update(Request $request){
-        $inventory = Inventory::find($request->id);
+    /**
+     * Valida o $request
+     *
+     * @param Request $request
+     * @return \Illuminate\Contracts\Validation\Validator $validator
+     */
+    private function getInsertValidator(Request $request) {
 
-        $validator = $this->validator($request);
-
-    }
-
-    public function delete($id){
-        $inventory = Inventory::find($id);
-
-        $product = Product::find($inventory->product_id);
-
-        $product->decrement('current_qty', $inventory->qty);
-
-        $inventory->delete();
-
-        return redirect('/inventories')->with('msg', 'Estoque excluido com sucesso');
-    }
-
-    private function validator(Request $request){
+        $data = $request->all();
 
         $rules = [
-            'qty' => 'required|min:1',
-            'created_at' => 'required|date:Y-m-d'
+            'product_id' => ['required', 'exists:products,id'],
+            'qty' => ['required', 'min:1'],
+            'created_at' => ['required', 'date:Y-m-d']
         ];
 
-        $msg = [
-            'qty.required' => 'necessário uma quantidade',
-            'qty.min' => 'necessário pelo menos 1 produto',
-            'created_at.required' => 'necessário uma data',
-        ];
+        $validator = Validator::make($data,$rules);
 
-        $validator = Validator::make($request->all(), $rules, $msg);
         return $validator;
     }
 
-    private function save(Inventory $inventory, Request $request){
+    /**
+     * Decrementa a quantidade total do produto
+     *
+     * @param int $id
+     * @param int $qty
+     * @return void
+     */
+    private function preDelete(int $id, int $qty) {
 
-        DB::beginTransaction();
+        $product = Product::find($id);
+        $product->decrement('current_qty', $qty);
 
-        try{
+    }
 
-            $product = Product::find($request->product_id);
+    /**
+     * Salva o estoque no banco de dados
+     *
+     * @param Inventory $inventory
+     * @param Request $request
+     * @return void
+     */
+    private function save(Inventory $inventory, Request $request) {
 
-            $inventory->qty = $request->qty;
+        $product = Product::find($request->product_id);
 
-            $inventory->created_at = $request->created_at;
+        $inventory->qty = $request->qty;
 
-            $inventory->product_id = $request->product_id;
+        $inventory->created_at = $request->created_at;
 
-            $product->increment('current_qty', $request->qty);
+        $inventory->product_id = $request->product_id;
 
-            $inventory->save();
+        $product->increment('current_qty', $request->qty);
 
-            DB::commit();
-
-        }catch(Exception $e){
-
-            dd($e);
-            DB::rollBack();
-
-        }
+        $inventory->save();
 
     }
 }

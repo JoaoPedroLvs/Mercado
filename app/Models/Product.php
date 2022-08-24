@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use GuzzleHttp\Promise\Promise;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -15,25 +14,25 @@ class Product extends Model
         'price'
     ];
 
-    public function category(){
+    public function category() {
 
         return $this->belongsTo(Category::class);
 
     }
 
-    public function inventories(){
+    public function inventories() {
 
         return $this->hasMany(Inventories::class);
 
     }
 
-    public function promotions(){
+    public function promotions() {
 
         return $this->hasMany(Promotion::class);
 
     }
 
-    public function sales(){
+    public function sales() {
 
         return $this->belongsToMany(Sale::class);
 
