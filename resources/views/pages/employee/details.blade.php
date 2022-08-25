@@ -22,7 +22,7 @@
             </ul>
 
             <div class="page-controls">
-                <a href="{{ url('employees') }}">Voltar</a>
+                <a class="btn btn-outline-primary" href="{{ url('employees') }}">Voltar</a>
             </div>
 
         </div>

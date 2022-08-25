@@ -69,7 +69,7 @@
             </table>
 
             <div class="page-controls">
-                <a href="{{ url('sales') }}">Voltar</a>
+                <a class="btn btn-outline-primary" href="{{ url('sales') }}">Voltar</a>
             </div>
 
         </div>

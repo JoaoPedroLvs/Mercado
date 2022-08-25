@@ -22,7 +22,7 @@ class CreateEmployeesTable extends Migration
             $table->string('cpf', 14)->unique();
             $table->string('rg', 11)->unique();
             $table->string('email', 50)->unique();
-            $table->string('phone', 14);
+            $table->string('phone', 15);
             $table->string('work_code')->unique();
             $table->timestamps();
 

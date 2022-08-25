@@ -42,12 +42,12 @@
 
                 <div class="form-group">
                     <label>RG</label>
-                    <input class="form-control" type="number" name="rg" value="{{ $customer->rg }}" required />
+                    <input class="form-control" type="text" name="rg" value="{{ $customer->rg }}" required />
                 </div>
 
                 <div class="form-group">
                     <label>CPF</label>
-                    <input class="form-control" type="number" name="cpf" value="{{ $customer->cpf }}" required />
+                    <input class="form-control cpf" type="text" name="cpf" value="{{ $customer->cpf }}" required />
                 </div>
 
                 <div class="page-controls">

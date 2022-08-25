@@ -56,7 +56,7 @@
 
                 <div class="form-group">
                     <label>Preço</label>
-                    <input type="number" name="price" required step="0.01" class="form-control" value="{{ $product->price }}">
+                    <input type="text" name="price" required step="0.01" class="form-control price" value="{{ $product->price }}">
                 </div>
 
                 <div class="page-control">

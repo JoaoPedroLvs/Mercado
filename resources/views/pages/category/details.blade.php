@@ -53,7 +53,7 @@
             @endif
 
             <div class="page-controls">
-                <a href="{{ url('categories') }}" class="btn btn-primary">Voltar</a>
+                <a href="{{ url('categories') }}" class="btn btn-outline-primary">Voltar</a>
             </div>
 
         </div>

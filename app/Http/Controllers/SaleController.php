@@ -248,7 +248,6 @@ class SaleController extends Controller
 
                 $qty_sale = (int)$request->qty_sales[$k];
 
-
                 if (isset($price->is_active)) {
 
                     $total_price = $qty_sale * $price->promotion;

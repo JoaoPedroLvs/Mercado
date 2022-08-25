@@ -244,7 +244,8 @@ class ProductController extends Controller
     private function save(Product $product, Request $request){
 
         $product->name = $request->name;
-        $product->price = $request->price;
+
+        $product->price = floatval(str_replace(',','.',$request->price));
         $product->category_id = $request->category_id;
 
         $product->save();

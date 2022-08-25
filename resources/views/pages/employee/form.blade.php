@@ -43,12 +43,12 @@
 
                 <div class="form-group">
                     <label>Telefone</label>
-                    <input type="number" name="phone" class="form-control" value="{{ $employee->phone }}" required/>
+                    <input type="text" name="phone" class="form-control phone" value="{{ $employee->phone }}" required/>
                 </div>
 
                 <div class="form-group">
                     <label>CPF</label>
-                    <input type="number" name="cpf" class="form-control" value="{{ $employee->cpf }}" required/>
+                    <input type="text" name="cpf" class="form-control cpf" value="{{ $employee->cpf }}" required/>
                 </div>
 
                 <div class="form-group">
@@ -58,7 +58,7 @@
 
                 <div class="form-group">
                     <label>Carteira de trabalho</label>
-                    <input type="number" name="work_code" class="form-control" value="{{ $employee->work_code }}" required/>
+                    <input type="text" name="work_code" class="form-control work-code" value="{{ $employee->work_code }}" required/>
                 </div>
 
                 <div class="page-controls">
