@@ -14,6 +14,10 @@
 
             @include('components.alert')
 
+            <div class="page-controls">
+                <a href="{{ url('sale/create') }}" class="btn btn-primary">Nova venda</a>
+            </div>
+
             @if (count($sales) > 0)
 
                 <table class="table table-striped">
@@ -24,6 +28,7 @@
                             <th>ID</th>
                             <th>Valor</th>
                             <th>Quantidade de produtos</th>
+                            <th>Data da venda</th>
                             <th>Ações</th>
                         </tr>
 
@@ -37,9 +42,15 @@
                                 <td>{{ $sale->id }}</td>
                                 <td>R$ {{ number_format($sale->total, 2, ',', ' ') }}</td>
                                 <td>{{ count($sale->products) }}</td>
+                                <td>{{ $sale->created_at->format('d/m/Y') }}</td>
                                 <td>
-                                    <a href="{{ url('/sale/'.$sale->id.'/products') }}">Detalhes</a><br>
-                                    <a href="{{ url('/sale/'.$sale->id.'/delete') }}">Remover</a>
+
+                                    <div class="table-options">
+
+                                        <a href="{{ url('/sale/'.$sale->id.'/products') }}" class="btn btn-secondary buttons" ><i class="fas fa-list"></i></a><br>
+                                        <a href="{{ url('/sale/'.$sale->id.'/delete') }}" class="btn btn-danger buttons" ><i class="fas fa-trash"></i></a>
+
+                                    </div>
                                 </td>
                             </tr>
 
@@ -49,6 +60,8 @@
 
                 </table>
 
+                {{ $sales->appends(Request::except('page'))->links() }}
+
             @else
 
                 <div class="page-message">
@@ -57,9 +70,6 @@
 
             @endif
 
-            <div class="page-controls">
-                <a href="{{ url('sale/create') }}" class="btn btn-primary">Criar venda</a>
-            </div>
 
         </div>
 

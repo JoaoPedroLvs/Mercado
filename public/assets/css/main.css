@@ -7,6 +7,11 @@
     opacity: 0.6;
 }
 
+.page-header h4 small {
+    font-size: 20px;
+    opacity: 0.6;
+}
+
 .form-group {
     margin-bottom: 15px;
 }
@@ -18,4 +23,26 @@
 
 .products-itens {
     margin-bottom: 15px;
+}
+
+table {
+    text-align: center;
+}
+
+.table-options {
+    display: flex;
+    justify-content: center;
+}
+
+.buttons {
+    margin-right: 1px;
+}
+
+.page-controls {
+    margin-bottom: 10px;
+}
+
+.paginate {
+    display: flex;
+    justify-content: center;
 }

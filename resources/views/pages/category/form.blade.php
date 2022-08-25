@@ -33,9 +33,10 @@
 
                 <div class="page-controls">
 
+
                     <a href="{{ url('categories') }}" class="btn btn-outline-primary">Voltar</a>
 
-                    <button type="submit" class="btn btn-primary">Enviar</button>
+                    <button type="submit" class="btn btn-success">Enviar</button>
                 </div>
 
             </form>

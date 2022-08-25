@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Product;
+use App\Models\Promotion;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
@@ -26,7 +27,7 @@ class ProductController extends Controller
      */
     public function index() {
 
-        $products = Product::orderBy('id', 'asc')->get();
+        $products = Product::search()->paginate(10);
 
         $data = [
             'products' => $products
@@ -103,6 +104,8 @@ class ProductController extends Controller
             if (!$product) {
                 throw new \Exception('Produto não encontrado!');
             }
+
+            $this->preDelete($product);
 
             $product->delete();
 
@@ -199,7 +202,7 @@ class ProductController extends Controller
 
         $rules = [
             'name' => ['required', 'max:100'],
-            'category_id' => ['required', 'exists:products,id'],
+            'category_id' => ['required', 'exists:categories,id'],
             'price' => ['required']
         ];
 
@@ -210,6 +213,25 @@ class ProductController extends Controller
         });
 
         return $validator;
+    }
+
+    /**
+     * Deletar todas as promoções relacionadas aquele produto
+     *
+     * @param Product $product
+     * @return void
+     */
+    private function preDelete(Product $product) {
+
+        // dd(count($product->sales));
+
+        if (count($product->sales) > 0) {
+            throw new \Exception('ele está presente em pelo menos uma venda');
+        }
+
+        Promotion::where('product_id', $product->id)->delete();
+
+
     }
 
     /**

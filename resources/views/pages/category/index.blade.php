@@ -14,6 +14,10 @@
 
             @include('components.alert')
 
+            <div class="page-controls">
+                <a href="{{ url('category/create') }}" class="btn btn-primary">Nova categoria</a>
+            </div>
+
             @if (count($categories) > 0)
 
                 <table class="table table-striped">
@@ -23,6 +27,8 @@
                         <tr>
                             <th>ID</th>
                             <th>Nome</th>
+                            <th>Quantidade de produtos</th>
+                            <th>Data de criação</th>
                             <th>Ações</th>
                         </tr>
 
@@ -35,10 +41,16 @@
                             <tr>
                                 <td>{{ $category->id }}</td>
                                 <td>{{ $category->name }}</td>
+                                <td>{{ count($category->products) }}</td>
+                                <td>{{ $category->created_at->format('d/m/Y') }}</td>
                                 <td>
-                                    <a href="{{ url('category/'.$category->id.'/products') }}">Ver Produtos</a><br>
-                                    <a href="{{ url('category/'.$category->id.'/edit') }}">Editar</a><br>
-                                    <a href="{{ url('category/'.$category->id.'/delete') }}">Remover</a>
+                                    <div class="table-options">
+
+                                        <a href="{{ url('category/'.$category->id.'/products') }}" class="btn btn-secondary buttons" ><i class="fas fa-list"></i></a><br>
+                                        <a href="{{ url('category/'.$category->id.'/edit') }}" class="btn btn-primary buttons" ><i class="far fa-edit"></i></a><br>
+                                        <a href="{{ url('category/'.$category->id.'/delete') }}" class="btn btn-danger buttons" ><i class="fas fa-trash"></i></a>
+
+                                    </div>
                                 </td>
                             </tr>
 
@@ -47,6 +59,8 @@
                     @endforeach
 
                 </table>
+
+                {{ $categories->appends(Request::except('page'))->links() }}
 
             @else
 
@@ -57,10 +71,6 @@
                 </div>
 
             @endif
-
-            <div class="page-controls">
-                <a href="{{ url('category/create') }}" class="btn btn-primary">Nova categoria</a>
-            </div>
 
         </div>
 

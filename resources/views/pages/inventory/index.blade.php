@@ -14,6 +14,10 @@
 
             @include('components.alert')
 
+            <div class="page-controls">
+                <a href="{{ url('inventory/create') }}" class="btn btn-primary">Novo Estoque</a>
+            </div>
+
             @if (count($inventories) > 0)
 
                 <table class="table table-striped">
@@ -24,6 +28,7 @@
                             <th>ID</th>
                             <th>Produto</th>
                             <th>Quantidade</th>
+                            <th>Data de entrada</th>
                             <th>Ações</th>
                         </tr>
 
@@ -34,11 +39,13 @@
                         <tbody>
 
                             <tr>
+                                {{-- @dd($inventory->created_at) --}}
                                 <td>{{ $inventory->id }}</td>
                                 <td>{{ $inventory->product->name }}</td>
                                 <td>{{ $inventory->qty }}</td>
+                                <td>{{ $inventory->created_at->format('d/m/Y') }}</td>
                                 <td>
-                                    <a href="{{ url('inventory/'.$inventory->id.'/delete') }}">Remover</a>
+                                    <a href="{{ url('inventory/'.$inventory->id.'/delete') }}" class="btn btn-danger buttons" ><i class="fas fa-trash"></i></a>
                                 </td>
                             </tr>
 
@@ -48,6 +55,8 @@
 
                 </table>
 
+                {{ $inventories->appends(Request::except('page'))->links() }}
+
             @else
 
                 <div class="page-message">
@@ -55,10 +64,6 @@
                 </div>
 
             @endif
-
-            <div class="page-controls">
-                <a href="{{ url('inventory/create') }}" class="btn btn-primary">Criar Estoque</a>
-            </div>
 
         </div>
 

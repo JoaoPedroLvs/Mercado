@@ -14,6 +14,15 @@
 
             @include('components.alert')
 
+            <div class="page-list">
+
+                <ul>
+                    <li><b>Cliente: </b>{{ $sales[0]->client }}</li>
+                    <li><b>Funcionário: </b>{{ $sales[0]->employee }}</li>
+                </ul>
+
+            </div>
+
             <table class="table table-striped">
 
                 <thead>
@@ -21,29 +30,35 @@
                     <tr>
 
                         <th>Id</th>
-                        <th>Cliente</th>
-                        <th>Funcionário</th>
                         <th>Produto</th>
                         <th>Quantidade</th>
-                        <th>Valor do volume</th>
+                        <th>Valor</th>
+                        <th>Valor sem promoções</th>
 
                     </tr>
 
                 </thead>
 
-
-                @foreach ($sales as $sale)
+                @foreach ($sales as $k => $sale)
 
                     <tbody>
 
                         <tr>
 
-                            <td>{{ $sale->id }}</td>
-                            <td>{{ $sale->client }}</td>
-                            <td>{{ $sale->employee }}</td>
+                            <td>{{ $k+1 }}</td>
                             <td>{{ $sale->product }}</td>
                             <td>{{ $sale->qty_sales }}</td>
                             <td>R$ {{ number_format($sale->total_price, 2, ',', ' ') }}</td>
+                            @php
+
+                                if (!$sale->total_no_promotion == 0) {
+                                    $price = "R$ ".number_format($sale->qty_sales * $sale->price, 2, ',', ' ');
+                                } else {
+                                    $price = "-";
+                                }
+
+                            @endphp
+                            <td>{{ $price }}</td>
 
                         </tr>
 

@@ -14,6 +14,10 @@
 
             @include('components.alert')
 
+            <div class="page-controls">
+                <a href="{{ url('promotion/create') }}" class="btn btn-primary">Nova Promoção</a>
+            </div>
+
             @if (count($promotions) > 0)
 
                 <table class="table table-striped">
@@ -41,11 +45,15 @@
                                 <td>{{ $promotion->product->name }}</td>
                                 <td>R$ {{ number_format($promotion->price, 2, ',', ' ') }}</td>
                                 <td>{{ $promotion->is_active ? 'Ativa' : 'Desativa' }}</td>
-                                <td>{{ (string) $promotion->started_at->format('d/m/Y') }}</td>
-                                <td>{{ (string) $promotion->ended_at->format('d/m/Y') }}</td>
+                                <td>{{ $promotion->started_at->format('d/m/Y') }}</td>
+                                <td>{{ $promotion->ended_at->format('d/m/Y') }}</td>
                                 <td>
-                                    <a href="{{ url('promotion/'.$promotion->id.'/edit') }}">Editar</a><br>
-                                    <a href="{{ url('promotion/'.$promotion->id.'/delete') }}">Remover</a>
+                                    <div class="table-options">
+
+                                        <a href="{{ url('promotion/'.$promotion->id.'/edit') }}" class="btn btn-primary buttons" ><i class="far fa-edit"></i></a><br>
+                                        <a href="{{ url('promotion/'.$promotion->id.'/delete') }}" class="btn btn-danger buttons" ><i class="fas fa-trash"></i></a>
+
+                                    </div>
                                 </td>
                             </tr>
 
@@ -55,6 +63,8 @@
 
                 </table>
 
+                {{ $promotions->appends(Request::except('page'))->links() }}
+
             @else
 
                 <div class="page-message">
@@ -62,10 +72,6 @@
                 </div>
 
             @endif
-
-            <div class="page-control">
-                <a href="{{ url('promotion/create') }}" class="btn btn-primary">Criar Promoção</a>
-            </div>
 
         </div>
 

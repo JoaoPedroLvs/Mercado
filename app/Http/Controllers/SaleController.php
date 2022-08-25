@@ -28,7 +28,7 @@ class SaleController extends Controller
      */
     public function index() {
 
-        $sales = Sale::orderBy('id', 'asc')->get();
+        $sales = Sale::orderBy('id', 'asc')->paginate(10);
 
         $data = [
             'sales' =>$sales
@@ -110,10 +110,7 @@ class SaleController extends Controller
 
             $this->preDelete($sale);
 
-            // dd('oi');
-
             $sale->delete();
-
 
             DB::commit();
 
@@ -253,9 +250,15 @@ class SaleController extends Controller
 
 
                 if (isset($price->is_active)) {
+
                     $total_price = $qty_sale * $price->promotion;
+                    $total_no_promotion = $qty_sale * $price->product;
+
+                    $sale->increment('total_no_promotion', $total_no_promotion);
                 } else {
+
                     $total_price = $qty_sale * $price->product;
+
                 }
 
                 $attachArray = [
@@ -268,6 +271,7 @@ class SaleController extends Controller
                 $product->decrement('current_qty', $qty_sale);
 
                 $sale->increment('total',$total_price);
+
 
             }
 

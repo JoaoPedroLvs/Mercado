@@ -14,6 +14,10 @@ class Inventory extends Model
         'created_at'
     ];
 
+    protected $casts = [
+        'created_at' => 'datetime'
+    ];
+
     public $timestamps = false;
 
     public function product() {

@@ -17,4 +17,8 @@ class Employee extends Model
         'phone',
         'work_code'
     ];
+
+    protected $casts = [
+        'created_at' => 'datetime',
+    ];
 }

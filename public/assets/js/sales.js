@@ -20,8 +20,6 @@ $(function(){
 
             var countItems = $self.find('.products-itens').length;
 
-            console.log(countItems);
-
             if (countItems >= 2) {
 
                 var $btn = $(this);

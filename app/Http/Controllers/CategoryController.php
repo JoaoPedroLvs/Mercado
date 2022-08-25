@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Product;
+use App\Models\Promotion;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -25,7 +26,7 @@ class CategoryController extends Controller
      */
     public function index() {
 
-        $categories = Category::orderBy('id','asc')->get();
+        $categories = Category::orderBy('id','asc')->paginate(10);
 
         $data = [
             'categories' => $categories
@@ -123,7 +124,9 @@ class CategoryController extends Controller
                 throw new \Exception('Categoria não encontrada');
             }
 
-            $this->preDelete($category->id);
+            // dd($category->products);
+            $this->preDelete($category);
+
 
             $category->delete();
 
@@ -135,7 +138,7 @@ class CategoryController extends Controller
 
             DB::rollBack();
 
-            Session::flash('error', 'Não foi possível remover o cliente: '. $e->getMessage());
+            Session::flash('error', 'Não foi possível remover a categoria: '. $e->getMessage());
 
         }
 
@@ -233,11 +236,23 @@ class CategoryController extends Controller
      * @param integer $id
      * @return void
      */
-    private function preDelete(int $id) {
+    private function preDelete(Category $category) {
 
-        $products = Product::where('category_id', $id);
+        $products = $category->products;
 
-        $products->delete();
+        foreach ($products as $product) {
+
+            $promotions = $product->promotions;
+
+            $promotions->each->delete();
+
+            if ($product->sales = []) {
+                throw new \Exception('tem um produto que está presente em pelo menos uma venda');
+            }
+
+        }
+
+        $products->each->delete();
 
     }
 

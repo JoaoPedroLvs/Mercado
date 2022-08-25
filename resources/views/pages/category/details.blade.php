@@ -22,6 +22,7 @@
                             <th>ID</th>
                             <th>Nome</th>
                             <th>Quantidade</th>
+                            <th>Data de criação</th>
                         </tr>
 
                     </thead>
@@ -34,6 +35,7 @@
                                 <td>{{ $product->id }}</td>
                                 <td>{{ $product->name }}</td>
                                 <td>{{ $product->current_qty }}</td>
+                                <td>{{ (string) $product->created_at->format('d/m/Y') }}</td>
                             </tr>
 
                         </tbody>

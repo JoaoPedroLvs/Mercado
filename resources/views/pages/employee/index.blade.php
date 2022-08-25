@@ -14,6 +14,10 @@
 
             @include('components.alert')
 
+            <div class="page-controls">
+                <a href="{{ url('employee/create') }}" class="btn btn-primary">Novo funcionário</a>
+            </div>
+
             @if (count($employees))
 
                 <table class="table table-striped">
@@ -24,6 +28,7 @@
                             <th>ID</th>
                             <th>Nome</th>
                             <th>E-mail</th>
+                            <th>Data de criação</th>
                             <th>Ações</th>
                         </tr>
 
@@ -37,10 +42,16 @@
                                 <td>{{ $employee->id }}</td>
                                 <td>{{ $employee->name }}</td>
                                 <td>{{ $employee->email }}</td>
+                                <td>{{ $employee->created_at->format('d/m/Y') }}</td>
                                 <td>
-                                    <a href="{{ url('employee/'.$employee->id.'/show') }}">Visualizar</a><br>
-                                    <a href="{{ url('employee/'.$employee->id.'/edit') }}">Editar</a><br>
-                                    <a href="{{ url('employee/'.$employee->id.'/delete') }}">Remover</a>
+
+                                    <div class="table-options">
+
+                                        <a href="{{ url('employee/'.$employee->id.'/show') }}" class="btn btn-secondary buttons" ><i class="fas fa-list"></i></a><br>
+                                        <a href="{{ url('employee/'.$employee->id.'/edit') }}" class="btn btn-primary buttons" ><i class="far fa-edit"></i></a><br>
+                                        <a href="{{ url('employee/'.$employee->id.'/delete') }}" class="btn btn-danger buttons" ><i class="fas fa-trash"></i></a>
+
+                                    </div>
                                 </td>
                             </tr>
 
@@ -49,6 +60,8 @@
                     @endforeach
 
                 </table>
+
+                {{ $employees->appends(Request::except('page'))->links() }}
 
             @else
 
@@ -59,10 +72,6 @@
                 </div>
 
             @endif
-
-            <div class="page-controls">
-                <a href="{{ url('employee/create') }}" class="btn btn-primary">Novo funcionário</a>
-            </div>
 
         </div>
 

@@ -16,4 +16,8 @@ class Customer extends Model
         'rg',
         'cpf'
     ];
+
+    protected $casts = [
+        'created_at' => 'datetime',
+    ];
 }

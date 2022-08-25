@@ -56,14 +56,14 @@
 
                 <div class="form-group">
                     <label>Preço</label>
-                    <input type="number" name="price" required step="0.01" class="form-control" value="{{ number_format($product->price, 2, '.', ',') }}">
+                    <input type="number" name="price" required step="0.01" class="form-control" value="{{ $product->price }}">
                 </div>
 
                 <div class="page-control">
 
                     <a href="{{ url('products') }}" class="btn btn-outline-primary">Voltar</a>
 
-                    <button type="submit" class="btn btn-primary">Enviar</button>
+                    <button type="submit" class="btn btn-success">Enviar</button>
 
                 </div>
 

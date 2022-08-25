@@ -26,8 +26,8 @@
                 <input type="hidden" name="id" value="{{ $promotion->id }}">
 
                 <div class="form-group">
-                    <input type="checkbox" name="is_active" class="from-check-input" {{ $promotion->is_active ? "checked" : "" }} value="{{true}}">
-                    <label>Está Ativo?</label>
+                    <input type="checkbox" name="is_active" id="checkbox" class="from-check-input" {{ $promotion->is_active ? "checked" : "" }} value="{{true}}">
+                    <label for="checkbox">Está Ativo?</label>
                 </div>
 
                 <div class="form-group">
@@ -74,7 +74,7 @@
 
                     <a href="{{ url('promotions') }}" class="btn btn-outline-primary">Voltar</a>
 
-                    <button type="submit" class="btn btn-primary">Enviar</button>
+                    <button type="submit" class="btn btn-success">Enviar</button>
 
                 </div>
 

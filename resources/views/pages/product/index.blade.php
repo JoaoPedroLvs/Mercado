@@ -14,6 +14,11 @@
 
             @include('components.alert')
 
+            <div class="page-controls">
+
+                <a href="{{ url('product/create') }}" class="btn btn-primary">Novo Produto</a>
+            </div>
+
             @if (count($products) > 0)
 
                 <table class="table table-striped">
@@ -23,8 +28,11 @@
                         <tr>
                             <th>ID</th>
                             <th>Nome</th>
+                            <th>Categoria</th>
                             <th>Preço</th>
                             <th>Quantidade</th>
+                            <th>Vendido</th>
+                            <th>Data de criação</th>
                             <th>Ações</th>
                         </tr>
 
@@ -37,11 +45,18 @@
                             <tr>
                                 <td>{{ $product->id }}</td>
                                 <td>{{ $product->name }}</td>
+                                <td>{{ $product->category->name }}</td>
                                 <td>R$ {{ number_format($product->price, '2', ',', ' ' ) }}</td>
                                 <td>{{ $product->current_qty }}</td>
+                                <td>{{ $product->total_sold }}</td>
+                                <td>{{ $product->created_at->format('d/m/Y') }}</td>
                                 <td>
-                                    <a href="{{ url('product/'.$product->id.'/edit') }}">Editar</a><br>
-                                    <a href="{{ url('product/'.$product->id.'/delete') }}">Remover</a>
+                                    <div class="table-options">
+
+                                        <a href="{{ url('product/'.$product->id.'/edit') }}" class="btn btn-primary buttons" ><i class="far fa-edit"></i></a><br>
+                                        <a href="{{ url('product/'.$product->id.'/delete') }}" class="btn btn-danger buttons" ><i class="fas fa-trash"></i></a>
+
+                                    </div>
                                 </td>
                             </tr>
 
@@ -50,6 +65,8 @@
                     @endforeach
 
                 </table>
+
+                {{ $products->appends(Request::except('page'))->links() }}
 
             @else
 
@@ -60,11 +77,6 @@
                 </div>
 
             @endif
-
-            <div class="page-controls">
-
-                <a href="{{ url('product/create') }}" class="btn btn-primary">Novo Produto</a>
-            </div>
 
         </div>
 
