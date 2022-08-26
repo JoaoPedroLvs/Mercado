@@ -92,7 +92,7 @@ class InventoryController extends Controller
             Session::flash('error', 'Não foi possível remover o estoque: '. $e->getMessage());
         }
 
-        return redirect('inventores');
+        return redirect('inventories');
     }
 
     /**

@@ -8,6 +8,7 @@
 
         <div class="page-header">
             <h1>Vendas <small>Listagem de vendas</small></h1>
+            <h3>Valor total de vendas: <small>R$ {{ number_format($total,2,',','.') }}</small></h3>
         </div>
 
         <div class="page-body">

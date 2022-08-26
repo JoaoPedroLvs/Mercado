@@ -8,6 +8,7 @@
 
         <div class="page-header">
             <h1>Produtos <small>Listagem de produtos</small></h1>
+            <h3>Produto mais vendido: <small>{{ $productMostSold->name }}</small></h3>
         </div>
 
         <div class="page-body">
@@ -17,6 +18,7 @@
             <div class="page-controls">
 
                 <a href="{{ url('product/create') }}" class="btn btn-primary">Novo Produto</a>
+
             </div>
 
             @if (count($products) > 0)
@@ -47,7 +49,7 @@
                                 <td>{{ $product->name }}</td>
                                 <td>{{ $product->category->name }}</td>
                                 <td>R$ {{ number_format($product->price, '2', ',', ' ' ) }}</td>
-                                <td>{{ $product->current_qty }}</td>
+                                <td>{{ $product->current_qty > 0 ? $product->current_qty : '-' }}</td>
                                 <td>{{ $product->total_sold }}</td>
                                 <td>{{ $product->created_at->format('d/m/Y') }}</td>
                                 <td>

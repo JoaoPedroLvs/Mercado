@@ -30,8 +30,19 @@ class SaleController extends Controller
 
         $sales = Sale::orderBy('id', 'asc')->paginate(10);
 
+        $salesPrice = Sale::get();
+
+        $total = 0;
+
+        foreach ($salesPrice as $sale) {
+
+            $total += $sale->total;
+
+        }
+
         $data = [
-            'sales' =>$sales
+            'sales' => $sales,
+            'total' => $total
         ];
 
         return view('pages.sale.index', $data);

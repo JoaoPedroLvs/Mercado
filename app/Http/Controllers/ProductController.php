@@ -27,10 +27,13 @@ class ProductController extends Controller
      */
     public function index() {
 
-        $products = Product::search()->paginate(10);
+        $products = Product::search()->orderBy('id', 'asc')->paginate(10);
+
+        $productMostSold = Product::search()->orderBy('total_sold', 'desc')->first();
 
         $data = [
-            'products' => $products
+            'products' => $products,
+            'productMostSold' => $productMostSold
         ];
 
         return view('pages.product.index', $data);
@@ -172,7 +175,7 @@ class ProductController extends Controller
 
                 DB::commit();
 
-                Session::flash('success', 'O Produto foi '. ($isEdit ? 'alterado' : 'criado') .' com sucesso!');
+                Session::flash('success', 'O produto foi '. ($isEdit ? 'alterado' : 'criado') .' com sucesso!');
 
                 return redirect('products');
 

@@ -57,7 +57,13 @@
                 {{-- @dd($promotion->price) --}}
                 <div class="form-group">
                     <label>Preço</label>
-                    <input type="text" name="price" step="0.01" class="form-control price" value="{{ $promotion->price }}">
+
+                    <div class="input-group">
+
+                        <span class="input-group-text">R$</span>
+                        <input type="text" name="price" step="0.01" class="form-control price" value="{{ $promotion->price }}">
+
+                    </div>
                 </div>
 
                 <div class="form-group">

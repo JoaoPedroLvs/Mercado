@@ -56,7 +56,14 @@
 
                 <div class="form-group">
                     <label>Preço</label>
-                    <input type="text" name="price" required step="0.01" class="form-control price" value="{{ $product->price }}">
+
+                    <div class="input-group">
+
+                        <span class="input-group-text">R$</span>
+                        <input type="text" name="price" required step="0.01" class="form-control price" value="{{ $product->price }}">
+
+                    </div>
+
                 </div>
 
                 <div class="page-control">

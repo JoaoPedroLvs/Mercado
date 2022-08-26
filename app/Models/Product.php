@@ -56,8 +56,6 @@ class Product extends Model
 
         $query->groupBy('p.id');
 
-        $query->orderBy('id', 'asc');
-
         return $query;
     }
 

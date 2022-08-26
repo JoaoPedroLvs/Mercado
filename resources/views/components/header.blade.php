@@ -2,8 +2,9 @@
 
     $pages =[
         ['Clientes', 'customers'],
-        ['Produtos', 'products'],
         ['Funcionários', 'employees'],
+        // ['Usuários', 'users'],
+        ['Produtos', 'products'],
         ['Categorias','categories'],
         ['Vendas','sales'],
         ['Estoque','inventories'],
