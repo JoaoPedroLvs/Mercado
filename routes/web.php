@@ -1,15 +1,13 @@
 <?php
 
-use App\Http\Controllers\CategoryController;
-use App\Http\Controllers\CustomerController;
-use Illuminate\Routing\RouteGroup;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {return view('welcome');});
 
 /* Rotas para gerenciar cliente */
-Route::group([], function(){
+Route::group(['middleware' => ['auth']], function() {
 
+    Route::get   ('/', function () {return view('welcome');});
     Route::get   ('/customers',            'CustomerController@index');
     Route::get   ('/customer/{id}/show', 'CustomerController@show');
     Route::get   ('/customer/create',      'CustomerController@create');
@@ -20,20 +18,8 @@ Route::group([], function(){
 
 });
 
-/* Rotas para gerenciar as categorias */
-Route::group([], function(){
-
-    Route::get   ('/categories',           'CategoryController@index');
-    Route::get   ('category/{id}/products', 'CategoryController@show');
-    Route::get   ('/category/create',      'CategoryController@create');
-    Route::get   ('/category/{id}/edit',   'CategoryController@edit');
-    Route::post  ('/category',       'CategoryController@insert');
-    Route::put   ('/category',        'CategoryController@update');
-    Route::get   ('/category/{id}/delete', 'CategoryController@delete');
-});
-
 /* Rotas para gerenciar os funcionários*/
-Route::group([], function() {
+Route::group(['middleware' => ['auth','admin']], function() {
 
     Route::get   ('/employees',            'EmployeeController@index');
     Route::get   ('/employee/{id}/show', 'EmployeeController@show');
@@ -46,8 +32,20 @@ Route::group([], function() {
 
 });
 
+/* Rotas para gerenciar as categorias */
+Route::group(['middleware' => ['auth']], function(){
+
+    Route::get   ('/categories',           'CategoryController@index');
+    Route::get   ('category/{id}/products', 'CategoryController@show');
+    Route::get   ('/category/create',      'CategoryController@create');
+    Route::get   ('/category/{id}/edit',   'CategoryController@edit');
+    Route::post  ('/category',       'CategoryController@insert');
+    Route::put   ('/category',        'CategoryController@update');
+    Route::get   ('/category/{id}/delete', 'CategoryController@delete');
+});
+
 /* Rotas para gerenciar os produtos */
-Route::group([], function(){
+Route::group(['middleware' => ['auth']], function(){
 
     Route::get   ('/products',             'ProductController@index');
     Route::get   ('/product/create',       'ProductController@create');
@@ -59,7 +57,7 @@ Route::group([], function(){
 });
 
 /* Rotas para gerenciar os estoques */
-Route::group([], function(){
+Route::group(['middleware' => ['auth']], function(){
 
     Route::get   ('/inventories',          'InventoryController@index');
     Route::get   ('/inventory/create',     'InventoryController@create');
@@ -69,7 +67,7 @@ Route::group([], function(){
 });
 
 /* Rotas para gerenciar as promoções */
-Route::group([], function(){
+Route::group(['middleware' => ['auth']], function(){
 
     Route::get   ('/promotions',           'PromotionController@index');
     Route::get   ('/promotion/create',     'PromotionController@create');
@@ -81,7 +79,7 @@ Route::group([], function(){
 });
 
 /* Rotas para gerenciar as vendas */
-Route::group([], function(){
+Route::group(['middleware' => ['auth']], function(){
 
     Route::get   ('/sales',                'SaleController@index');
     Route::get   ('/sale/{id}/products',   'SaleController@show');
@@ -90,3 +88,15 @@ Route::group([], function(){
     Route::get   ('/sale/{id}/delete',     'SaleController@delete');
 
 });
+
+Route::group([], function() {
+
+    Route::get   ('/login', 'Auth\LoginController@showLoginForm')->name('login');
+    Route::post  ('/login', 'Auth\LoginController@login');
+    Route::post  ('/logout', 'Auth\LoginController@logout')->name('logout');
+    Route::get   ('/register', 'Auth\RegisterController@showRegistrationForm')->name('register');
+    Route::post  ('/register', 'Auth\RegisterController@register');
+
+});
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

@@ -8,7 +8,7 @@
 
         <div class="page-header">
             <h1>Produtos <small>Listagem de produtos</small></h1>
-            <h3>Produto mais vendido: <small>{{ $productMostSold->name }}</small></h3>
+            <h3>Produto mais vendido: <small>{{ isset($productMostSold->total_sold) == 0 ? 'Nenhum produto criado' : $productMostSOld->name }}</small></h3>
         </div>
 
         <div class="page-body">
@@ -49,7 +49,7 @@
                                 <td>{{ $product->name }}</td>
                                 <td>{{ $product->category->name }}</td>
                                 <td>R$ {{ number_format($product->price, '2', ',', ' ' ) }}</td>
-                                <td>{{ $product->current_qty > 0 ? $product->current_qty : '-' }}</td>
+                                <td>{{ $product->current_qty /* > 0 ? $product->current_qty : '-' */ }}</td>
                                 <td>{{ $product->total_sold }}</td>
                                 <td>{{ $product->created_at->format('d/m/Y') }}</td>
                                 <td>

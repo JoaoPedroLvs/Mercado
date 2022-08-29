@@ -17,7 +17,14 @@ class RouteServiceProvider extends ServiceProvider
      *
      * @var string
      */
-    public const HOME = '/home';
+    public const HOME = '/';
+
+    /**
+     * Para redirecionar para a parte de login após criar uma conta
+     *
+     * @var string
+     */
+    public const LOGIN = '/login';
 
     /**
      * The controller namespace for the application.

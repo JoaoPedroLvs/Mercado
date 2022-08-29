@@ -47,10 +47,11 @@ table {
     justify-content: center;
 }
 
-.button::hover{
-    display: block !important;
+.nav-item.dropdown-menu {
+    margin-right: 10px;
 }
 
-.button::hover .ul {
-    display: block !important;
+.page-auth > .page-header h1{
+    display: flex;
+    justify-content: center;
 }

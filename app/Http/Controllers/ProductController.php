@@ -25,13 +25,14 @@ class ProductController extends Controller
      *
      * @return \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
      */
-    public function index() {
+    public function index(Request $request) {
 
         $products = Product::search()->orderBy('id', 'asc')->paginate(10);
 
         $productMostSold = Product::search()->orderBy('total_sold', 'desc')->first();
 
         $data = [
+            'request' => $request,
             'products' => $products,
             'productMostSold' => $productMostSold
         ];
