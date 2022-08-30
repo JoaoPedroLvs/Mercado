@@ -28,12 +28,12 @@
 
                 <div class="form-group">
                     <label>Nome</label>
-                    <input type="text" name="name" class="form-control" value="{{ old('name',$employee->name) }}" required/>
+                    <input type="text" name="name" class="form-control" value="{{ old('name',$employee->user->name) }}" required/>
                 </div>
 
                 <div class="form-group">
                     <label>E-mail</label>
-                    <input type="text" name="email" class="form-control" value="{{ old('email', $employee->email) }}" required/>
+                    <input type="text" name="email" class="form-control" value="{{ old('email', $employee->user->email) }}" required/>
                 </div>
 
                 <div class="form-group">
@@ -63,7 +63,15 @@
 
                 <div class="page-controls">
 
-                    <a href="{{ url('employees') }}" class="btn btn-outline-primary">Voltar</a>
+                    @if (Auth::user()->role==0)
+
+                        <a href="{{ url('employee/'. $employee->id. '/show') }}" class="btn btn-outline-primary">Voltar</a>
+
+                    @else
+
+                        <a class="btn btn-outline-primary" href="{{ url('employees') }}">Voltar</a>
+
+                    @endif
 
                     <button type="submit" class="btn btn-success">Enviar</button>
                 </div>

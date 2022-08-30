@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Employee;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
@@ -161,6 +162,11 @@ class EmployeeController extends Controller
 
         $validator = $this->getInsertUpdateValidator($request);
 
+        if ($request->id != Auth::user()->id && Auth::user()->role == 0) {
+
+            throw new \Exception('Não possui permissão para editar esse perfil');
+        }
+
         if ($validator->fails()) {
 
             $error = $validator->errors()->first();
@@ -182,7 +188,14 @@ class EmployeeController extends Controller
 
                 Session::flash('success', 'O funcionário foi '. ($isEdit ? 'alterado' : 'criado'). ' com sucesso');
 
-                return redirect('employees');
+                if (Auth::user()->role == 0) {
+
+                    return redirect('/');
+
+                } else {
+
+                    return redirect('employees');
+                }
 
             } catch (\Exception $e) {
 
@@ -213,7 +226,7 @@ class EmployeeController extends Controller
             'email' => ['required', 'email'],
             'rg' => ['required', 'string', 'max:14'],
             'cpf' => ['required', 'string', 'max:14'],
-            'address' => ['required', 'string', 'max:250'],
+            'address' => ['string', 'max:250'],
             'phone' => ['required', 'string'],
             'work_code' => ['required', 'string']
         ];
@@ -236,13 +249,14 @@ class EmployeeController extends Controller
      */
     private function save(Employee $employee, Request $request) {
 
-        $employee->name = $request->name;
+        // $employee->name = $request->name;
         $employee->address = $request->address;
         $employee->cpf = $request->cpf;
         $employee->rg = $request->rg;
-        $employee->email = $request->email;
+        // $employee->email = $request->email;
         $employee->phone = $request->phone;
         $employee->work_code = $request->work_code;
+        $employee->is_new = false;
 
         $employee->save();
 

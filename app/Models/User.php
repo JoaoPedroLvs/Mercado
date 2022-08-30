@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -33,4 +32,25 @@ class User extends Authenticatable
         'password'
     ];
 
+
+    public function employee() {
+        return $this->hasOne(Employee::class);
+    }
+
+    // private $roles = [
+    //     1 => ['customer.index', 'customer.insert', 'customer.update'],
+    //     2 => ['employer.index', 'employer.insert']
+    // ];
+
+    // $group = $user->group;
+
+    // $group->hasPermission("customer.index");
+    // $roles = $this->roles[$this->id]
+
+
+    // if (in_array($role, $roles)) {
+    //     return true;
+    // } else {
+    //     return false;
+    // }
 }

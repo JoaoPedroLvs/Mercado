@@ -11,6 +11,7 @@ class Employee extends Model
 
     protected $fillable = [
         'name',
+        'password',
         'email',
         'cpf',
         'rg',
@@ -21,4 +22,12 @@ class Employee extends Model
     protected $casts = [
         'created_at' => 'datetime',
     ];
+
+    protected $hidden = [
+        'password',
+    ];
+
+    public function user() {
+        return $this->belongsTo(User::class);
+    }
 }

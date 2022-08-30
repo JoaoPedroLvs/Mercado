@@ -40,8 +40,8 @@
 
                             <tr>
                                 <td>{{ $employee->id }}</td>
-                                <td>{{ $employee->name }}</td>
-                                <td>{{ $employee->email }}</td>
+                                <td>{{ $employee->user->name }}</td>
+                                <td>{{ $employee->user->email }}</td>
                                 <td>{{ $employee->created_at->format('d/m/Y') }}</td>
                                 <td>
 

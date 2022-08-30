@@ -1,4 +1,4 @@
-$(function(){
+$(function() {
 
     $('.page.page-sale.sale-form').each(function() {
 

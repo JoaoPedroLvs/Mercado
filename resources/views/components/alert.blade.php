@@ -26,7 +26,7 @@
 
     @foreach ($alerts as $alert)
 
-        <div class="alert-dismissible animate__animated animate__fadeInDown alert {{ $alert[0] }}">
+        <div class="alert-dismissible alert {{ $alert[0] }}">
 
             <p class="mb-0">{{ $alert[1] }}</p>
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
