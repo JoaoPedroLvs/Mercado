@@ -24,16 +24,20 @@
 
                 @method($isEdit ? 'PUT' : 'POST')
 
+                @php
+                    $user = $employee->user ?? $employee;
+                @endphp
+
                 <input type="hidden" name="id" value="{{ $employee->id }}">
 
                 <div class="form-group">
                     <label>Nome</label>
-                    <input type="text" name="name" class="form-control" value="{{ old('name',$employee->user->name) }}" required/>
+                    <input type="text" name="name" class="form-control" value="{{ old('name',$user->name) }}" required autofocus/>
                 </div>
 
                 <div class="form-group">
                     <label>E-mail</label>
-                    <input type="text" name="email" class="form-control" value="{{ old('email', $employee->user->email) }}" required/>
+                    <input type="text" name="email" class="form-control" value="{{ old('email', $user->email) }}" required/>
                 </div>
 
                 <div class="form-group">
@@ -60,6 +64,40 @@
                     <label>Carteira de trabalho</label>
                     <input type="text" name="work_code" class="form-control work-code" value="{{ old('work_code', $employee->work_code) }}" required/>
                 </div>
+
+                @if($isEdit)
+
+                    <div class="form-group">
+                        <label for="password">Confirme sua senha</label>
+                        <input type="password" class="form-control" name="password" id="password" required>
+                    </div>
+
+                @else
+
+                    <div class="form-group">
+
+                        <label for="password">Senha</label>
+                        <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required>
+
+                            @error('password')
+
+                                <span class="invalid-feedback" role="alert">
+
+                                    <strong>{{ $message }}</strong>
+
+                                </span>
+
+                            @enderror
+                    </div>
+
+                    <div class="form-group">
+
+                        <label for="password-confirm">Confirmar senha</label>
+                        <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required>
+
+                    </div>
+
+                @endif
 
                 <div class="page-controls">
 

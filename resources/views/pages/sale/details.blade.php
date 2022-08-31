@@ -18,7 +18,13 @@
 
                 <ul>
                     <li><b>Cliente: </b>{{ $sales[0]->client }}</li>
-                    <li><b>Funcionário: </b>{{ $sales[0]->employee }}</li>
+
+                    @if (Auth::user()->role == 1)
+
+                        <li><b>Funcionário: </b>{{ $sales[0]->employee }}</li>
+
+                    @endif
+
                 </ul>
 
             </div>

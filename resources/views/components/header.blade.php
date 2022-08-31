@@ -37,7 +37,7 @@
 
                         <div class="nav-item dropdown-menu">
 
-                            <a href="#" class="nav-link"><i class="fas fa-users"></i> Administração</a>
+                            <a href="{{ url('admins') }}" class="nav-link"><i class="fas fa-users"></i> Administração</a>
 
                             <a href="#" class="nav-link"><i class="fas fa-briefcase"></i> Cargos</a>
 
@@ -82,7 +82,11 @@
 
                     <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
 
-                        <a href="{{ url('/employee/'.Auth::user()->employee->id.'/show') }}" class="dropdown-item"><i class="bi bi-person-fill"></i> Perfil</a>
+                        @if (Auth::user()->role == 0)
+
+                            <a href="{{ url('/employee/'.Auth::user()->employee->id.'/show') }}" class="dropdown-item"><i class="bi bi-person-fill"></i> Perfil</a>
+
+                        @endif
 
                         <a class="dropdown-item" href="{{ route('logout') }}"onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                             <i class="bi bi-box-arrow-right"></i>

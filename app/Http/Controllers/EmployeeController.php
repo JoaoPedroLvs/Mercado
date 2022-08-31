@@ -3,9 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Employee;
+use App\Models\User;
+use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 
@@ -120,7 +123,11 @@ class EmployeeController extends Controller
                 throw new \Exception('Funcionário não encontrado!');
             }
 
+            $user = $employee->user;
+
             $employee->delete();
+
+            $user->delete();
 
             DB::commit();
 
@@ -160,18 +167,18 @@ class EmployeeController extends Controller
      */
     private function insertOrUpdate(Request $request) {
 
+        // dd($request->email);
+
         $validator = $this->getInsertUpdateValidator($request);
 
-        if ($request->id != Auth::user()->id && Auth::user()->role == 0) {
-
-            throw new \Exception('Não possui permissão para editar esse perfil');
-        }
+        $user = Auth::user();
 
         if ($validator->fails()) {
 
             $error = $validator->errors()->first();
 
             return back()->withInput()->withErrors($error);
+
         } else {
 
             try {
@@ -180,15 +187,17 @@ class EmployeeController extends Controller
 
                 $isEdit = $request->method() == 'PUT';
 
-                $employee = $isEdit ? Employee::find($request->id) : new Employee();
+                $employee = $isEdit ? Employee::where('id',$request->id)->first() : new Employee();
 
-                $this->save($employee, $request);
+                $user = $isEdit ? User::find($employee->user->id) : new User();
+
+                $this->save($employee, $request, $user);
 
                 DB::commit();
 
                 Session::flash('success', 'O funcionário foi '. ($isEdit ? 'alterado' : 'criado'). ' com sucesso');
 
-                if (Auth::user()->role == 0) {
+                if ($user->role == 0) {
 
                     return redirect('/');
 
@@ -222,16 +231,42 @@ class EmployeeController extends Controller
         $method = $request->method();
 
         $rules = [
-            'name' => ['required', 'max:250'],
-            'email' => ['required', 'email'],
+            'name' => ['required_if:_method,post','max:250'],
+            'email' => ['required_if:_method,post', 'email'],
             'rg' => ['required', 'string', 'max:14'],
-            'cpf' => ['required', 'string', 'max:14'],
+            'cpf' => ['required_if:_method,post', 'string', 'max:14'],
             'address' => ['string', 'max:250'],
             'phone' => ['required', 'string'],
-            'work_code' => ['required', 'string']
+            'work_code' => ['required', 'string'],
+            'password' => ['required_if:_method,post','confirmed', 'string']
         ];
 
+        $employee = Employee::where('id',$request->id)->first();
+
         $validator = Validator::make($data,$rules);
+
+        $user =  Auth::user();
+
+        $validator->after(function ($validator) use ($request, $employee, $user){
+
+            if ($employee) {
+
+                if ($employee->id !=$user->employee->id) {
+
+                    $validator = $validator->errors()->add('name','Não possui autorização para editar esse usuario');
+                    return false;
+
+                }
+                // dd(Hash::check($employee->user->password, $request->password));
+                if (!Hash::check($request->password, $user->password) && !$employee->is_new) {
+
+                    $validator = $validator->errors()->add('name','Senha incorreta');
+                    return false;
+
+                }
+
+            }
+        });
 
         $validator->sometimes('id', ['required', 'integer', 'exists:employees,id'], function() use ($method){
             return $method == 'PUT';
@@ -247,17 +282,28 @@ class EmployeeController extends Controller
      * @param Request $request
      * @return void
      */
-    private function save(Employee $employee, Request $request) {
+    private function save(Employee $employee, Request $request, User $user) {
 
-        // $employee->name = $request->name;
+
+        $user->name = $request->name;
+        $user->email = $request->email;
+
+        if ($request->password) {
+
+            $user->password = Hash::make($request->password);
+
+        }
+
+        $user->save();
+
+
         $employee->address = $request->address;
         $employee->cpf = $request->cpf;
         $employee->rg = $request->rg;
-        // $employee->email = $request->email;
         $employee->phone = $request->phone;
         $employee->work_code = $request->work_code;
         $employee->is_new = false;
-
+        $employee->user_id = $user->id;
         $employee->save();
 
     }

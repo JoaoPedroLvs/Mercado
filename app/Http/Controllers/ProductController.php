@@ -85,7 +85,7 @@ class ProductController extends Controller
      * @param Request $request
      * @return \Illuminate\Routing\Redirector|\Illuminate\Http\RedirectResponse
      */
-    public function update(Request $request ) {
+    public function update(Request $request) {
 
         return $this->insertOrUpdate($request);
 

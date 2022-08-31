@@ -32,6 +32,9 @@ class User extends Authenticatable
         'password'
     ];
 
+    protected $casts = [
+        'created_at' => 'datetime'
+    ];
 
     public function employee() {
         return $this->hasOne(Employee::class);

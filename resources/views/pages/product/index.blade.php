@@ -49,7 +49,7 @@
                                 <td>{{ $product->name }}</td>
                                 <td>{{ $product->category->name }}</td>
                                 <td>R$ {{ number_format($product->price, '2', ',', ' ' ) }}</td>
-                                <td>{{ $product->current_qty /* > 0 ? $product->current_qty : '-' */ }}</td>
+                                <td>{{ $product->current_qty }}</td>
                                 <td>{{ $product->total_sold }}</td>
                                 <td>{{ $product->created_at->format('d/m/Y') }}</td>
                                 <td>

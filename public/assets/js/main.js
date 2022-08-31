@@ -16,13 +16,6 @@ $(function() {
 
             $modal.modal('hide');
 
-
-            // if ($('form').first().trigger("submit")) {
-
-
-            // }
-
-
         });
     });
 

@@ -59,8 +59,7 @@
 
                                                     <div class="col-md-10">
 
-                                                        <input type="text" name="name" id="name" class="form-control" value="{{ $user->name }}" disabled>
-                                                        <input type="hidden" name="name" value="{{ $user->name }}">
+                                                        <input type="text" name="name" id="name" class="form-control" value="{{ $user->name }}" readonly>
 
                                                     </div>
 
@@ -72,8 +71,7 @@
 
                                                     <div class="col-md-10">
 
-                                                        <input type="email" id="email" class="form-control" value="{{ $user->email }}" disabled>
-                                                        <input type="hidden" name="email" value="{{ $user->email }}">
+                                                        <input type="email" name="email" id="email" class="form-control" value="{{ $user->email }}" readonly>
 
                                                     </div>
 
@@ -85,8 +83,7 @@
 
                                                     <div class="col-md-10">
 
-                                                        <input type="text" name="cpf" id="cpf" class="form-control" value="{{ $user->employee->cpf }}" disabled>
-                                                        <input type="hidden" name="cpf" value="{{ $user->employee->cpf }}">
+                                                        <input type="text" name="cpf" id="cpf" class="form-control" value="{{ $user->employee->cpf }}" readonly>
 
                                                     </div>
 
@@ -141,6 +138,7 @@
                                                 </div>
 
                                                 <input type="hidden" name="id" value="{{ $user->employee->id }}">
+
                                             </div>
 
                                         </div>

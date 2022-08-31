@@ -1,6 +1,5 @@
 <?php
 
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 
@@ -21,9 +20,9 @@ Route::group(['middleware' => 'auth'], function() {
 
         // Teste
         Route::get   ('/employee/{id}/edit',   'EmployeeController@edit');
-
         Route::put   ('/employee',        'EmployeeController@update');
         Route::get   ('/employee/{id}/show', 'EmployeeController@show');
+        //fim teste
     });
 
     /* Rotas para gerenciar os funcionários*/
@@ -34,6 +33,18 @@ Route::group(['middleware' => 'auth'], function() {
         Route::post  ('/employee',       'EmployeeController@insert');
         Route::get   ('/employee/{id}/delete', 'EmployeeController@delete');
 
+
+
+        //admins
+        Route::get   ('/admins', 'AdminController@index');
+        Route::get   ('/admin/create', 'AdminController@create');
+        Route::get   ('/admin/{id}/show', 'AdminController@show');
+        Route::get   ('/admin/{id}/delete', 'AdminController@delete');
+        Route::get   ('/admin/{id}/edit', 'AdminController@edit');
+        Route::post  ('/admin', 'AdminController@insert');
+        Route::put   ('/admin', 'AdminController@update');
+
+        //fim admin
 
     });
 
