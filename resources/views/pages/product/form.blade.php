@@ -28,7 +28,7 @@
 
                 <div class="form-group">
                     <label for="name">Nome</label>
-                    <input type="text" name="name" class="form-control" value="{{ $product->name }}" maxlength="100" required />
+                    <input type="text" name="name" class="form-control" value="{{ old('name',$product->name) }}" maxlength="100" required />
                 </div>
 
                 <div class="form-group">
@@ -60,7 +60,7 @@
                     <div class="input-group">
 
                         <span class="input-group-text">R$</span>
-                        <input type="text" name="price" required step="0.01" class="form-control price" value="{{ $product->price }}">
+                        <input type="text" name="price" required step="0.01" class="form-control price" value="{{ old('price',$product->price) }}">
 
                     </div>
 

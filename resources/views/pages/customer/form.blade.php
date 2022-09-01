@@ -27,27 +27,27 @@
 
                 <div class="form-group">
                     <label>Nome</label>
-                    <input type="text" class="form-control" name="name" value="{{ $customer->name }}" maxlength="100" required />
+                    <input type="text" class="form-control" name="name" value="{{ old('name',$customer->name) }}" maxlength="100" required />
                 </div>
 
                 <div class="form-group">
                     <label>E-mail</label>
-                    <input class="form-control" type="email" name="email" value="{{ $customer->email }}" required />
+                    <input class="form-control" type="email" name="email" value="{{ old('email',$customer->email) }}" required />
                 </div>
 
                 <div class="form-group">
                     <label>Endereço</label>
-                    <input class="form-control" type="text" name="address" value="{{ $customer->address }}" maxlength="250" required />
+                    <input class="form-control" type="text" name="address" value="{{ old('address',$customer->address) }}" maxlength="250" required />
                 </div>
 
                 <div class="form-group">
                     <label>RG</label>
-                    <input class="form-control" type="text" name="rg" value="{{ $customer->rg }}" required />
+                    <input class="form-control" type="text" name="rg" value="{{ old('rg',$customer->rg) }}" required />
                 </div>
 
                 <div class="form-group">
                     <label>CPF</label>
-                    <input class="form-control cpf" type="text" name="cpf" value="{{ $customer->cpf }}" required />
+                    <input class="form-control cpf" type="text" name="cpf" value="{{ old('cpf',$customer->cpf) }}" required />
                 </div>
 
                 <div class="page-controls">

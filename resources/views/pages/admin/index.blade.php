@@ -16,7 +16,7 @@
 
             @include('components.alert')
 
-            <div class="page-controls">
+            <div class="page-controls mb-3">
 
                 <a href="/admin/create" class="btn btn-primary">Criar novo administrador</a>
 

@@ -28,7 +28,7 @@
 
                 <div class="form-group">
                     <label>Nome</label>
-                    <input type="text" name="name" class="form-control" required maxlength="250" value="{{ $category->name }}"/>
+                    <input type="text" name="name" class="form-control" required maxlength="50" value="{{ old('name',$category->name) }}"/>
                 </div>
 
                 <div class="page-controls">

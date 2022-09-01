@@ -10,11 +10,11 @@
             <h1>Clientes <small>Listagem de clientes</small></h1>
         </div>
 
-        <div class="page-body">
+        <div class="page-body mb-3">
 
             @include('components.alert')
 
-            <div class="page-controls">
+            <div class="page-controls mb-3">
                 <a href="{{ url('customer/create') }}" class="btn btn-primary">Novo Cliente</a>
             </div>
 

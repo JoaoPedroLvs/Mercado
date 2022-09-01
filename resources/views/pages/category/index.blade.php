@@ -14,7 +14,7 @@
 
             @include('components.alert')
 
-            <div class="page-controls">
+            <div class="page-controls mb-3">
                 <a href="{{ url('category/create') }}" class="btn btn-primary">Nova categoria</a>
             </div>
 

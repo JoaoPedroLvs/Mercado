@@ -10,7 +10,7 @@
 
     </div>
 
-    <div class="page-body">
+    <div class="page-body mb-3">
 
         @include('components.alert')
 

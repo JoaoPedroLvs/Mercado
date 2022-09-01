@@ -14,7 +14,7 @@
 
             @include('components.alert')
 
-            <div class="page-controls">
+            <div class="page-controls mb-3">
                 <a href="{{ url('user/create') }}" class="btn btn-primary">Criar novo usuário</a>
             </div>
 
@@ -28,6 +28,7 @@
                             <th>ID</th>
                             <th>Nome</th>
                             <th>Email</th>
+                            <th>Data de criação</th>
                             <th>Ações</th>
 
                         </tr>
@@ -42,8 +43,9 @@
                                 <td>{{ $user->id }}</td>
                                 <td>{{ $user->name }}</td>
                                 <td>{{ $user->email }}</td>
+                                <td>{{ $user->created_at ? $user->created_at->format("d/m/Y") : "-"  }}</td>
                                 <td>
-                                    <div class="table-options">
+                                    <div class="page-controls">
 
                                         <a href="{{ url('/employee/'.$user->employee->id.'/show') }}" class="btn btn-secondary"><i class="fas fa-list"></i></a>
                                         <a href="{{ url('/user/'.$user->id.'/edit') }}" class="btn btn-primary"><i class="far fa-edit"></i></a>

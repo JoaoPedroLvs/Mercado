@@ -14,7 +14,7 @@
 
             @include('components.alert')
 
-            <div class="page-controls">
+            <div class="page-controls mb-3">
                 <a href="{{ url('inventory/create') }}" class="btn btn-primary">Novo Estoque</a>
             </div>
 

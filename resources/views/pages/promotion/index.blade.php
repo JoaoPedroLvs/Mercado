@@ -14,7 +14,7 @@
 
             @include('components.alert')
 
-            <div class="page-controls">
+            <div class="page-controls mb-3">
                 <a href="{{ url('promotion/create') }}" class="btn btn-primary">Nova Promoção</a>
             </div>
 

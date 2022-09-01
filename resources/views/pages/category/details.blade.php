@@ -10,7 +10,7 @@
             <h1>Categorias <small>Produtos da categoria</small></h1>
         </div>
 
-        <div class="page-body">
+        <div class="page-body mb-3">
 
             @if (count($category->products) > 0)
 

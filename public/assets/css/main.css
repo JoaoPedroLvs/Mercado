@@ -35,7 +35,7 @@ table {
 }
 
 .buttons {
-    margin-right: 1px;
+    margin-right: 4px;
 }
 
 .page-controls {
@@ -55,3 +55,4 @@ table {
     display: flex;
     justify-content: center;
 }
+
