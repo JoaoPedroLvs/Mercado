@@ -115,6 +115,11 @@ class AdminController extends Controller
 
             $user = User::find($id);
 
+            if (!$user) {
+
+                throw new \Exception('Administrador não encontrado!');
+            }
+
             $user->delete();
 
             DB::commit();
@@ -197,7 +202,7 @@ class AdminController extends Controller
     }
 
     /**
-     * Undocumented function
+     * Valida o $request
      *
      * @param Request $request
      * @return \Illuminate\Contracts\Validation\Validator $validator

@@ -27,13 +27,13 @@
                 <input type="hidden" name="id" value="{{ $product->id }}">
 
                 <div class="form-group">
-                    <label>Nome</label>
+                    <label for="name">Nome</label>
                     <input type="text" name="name" class="form-control" value="{{ $product->name }}" maxlength="100" required />
                 </div>
 
                 <div class="form-group">
-                    <label>Categorias</label>
-                    <select name="category_id"class="form-select">
+                    <label for="category_id">Categorias</label>
+                    <select name="category_id" class="form-select">
 
                         @if (count($categories) > 0)
 

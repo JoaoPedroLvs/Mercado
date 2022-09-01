@@ -177,6 +177,9 @@
         <script src="{{ asset('assets/js/mask.js') }}"></script>
         <script src="{{ asset('assets/js/jquery.mask.js') }}"></script>
         <script src="{{ asset('assets/js/main.js') }}"></script>
+        <script src="{{ asset('assets/js/user.js') }}"></script>
+        <script src="{{ asset('assets/js/admin.js') }}"></script>
+        <script src="{{ asset('assets/js/employee.js') }}"></script>
 
     </body>
 

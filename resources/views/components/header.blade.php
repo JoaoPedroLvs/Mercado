@@ -39,6 +39,8 @@
 
                             <a href="{{ url('admins') }}" class="nav-link"><i class="fas fa-users"></i> Administração</a>
 
+                            <a href="{{ url('users') }}" class="nav-link"><i class="bi bi-people-fill"></i> Usuários</a>
+
                             <a href="#" class="nav-link"><i class="fas fa-briefcase"></i> Cargos</a>
 
                         </div>

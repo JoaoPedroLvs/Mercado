@@ -8,7 +8,7 @@
 
         <div class="page-header">
             <h1>Produtos <small>Listagem de produtos</small></h1>
-            <h3>Produto mais vendido: <small>{{ isset($productMostSold->total_sold) == 0 ? 'Nenhum produto criado' : $productMostSOld->name }}</small></h3>
+            <h3>Produto mais vendido: <small>{{ isset($productMostSold->total_sold) == 0 ? 'Nenhum produto criado' : $productMostSold->name }}</small></h3>
         </div>
 
         <div class="page-body">

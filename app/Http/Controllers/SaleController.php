@@ -8,6 +8,7 @@ use App\Models\Product;
 use App\Models\Promotion;
 use App\Models\Sale;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
@@ -217,7 +218,6 @@ class SaleController extends Controller
 
         $rules = [
             'customer_id' => ['required', 'integer', 'exists:customers,id'],
-            'employee_id' => ['required', 'integer', 'exists:employees,id'],
             'qty_sales' => ['required'],
             'product_id' => ['required', 'exists:products,id']
         ];
@@ -243,7 +243,7 @@ class SaleController extends Controller
     private function save(Sale $sale, Request $request) {
 
         $sale->customer_id = $request->customer_id;
-        $sale->employee_id = $request->employee_id;
+        $sale->employee_id = Auth::user()->employee->id;
 
         $products = $request->product_id;
 

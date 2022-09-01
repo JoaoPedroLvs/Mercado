@@ -42,30 +42,6 @@
                 </div>
 
                 <div class="form-group">
-                    <label>Funcionários</label>
-                    <select name="employee_id" class="form-select" >
-
-                        @if (count($employees) > 0)
-
-                            <option  value="0" selected>Selecione o funcionário</option>
-
-                            @foreach ($employees as $employee)
-
-                                <option value="{{ $employee->id }}">{{ $employee->name }}</option>
-
-                            @endforeach
-
-                        @else
-
-                            <option value="" selected>Nenhum funcionário criado</option>
-
-                        @endif
-
-                    </select>
-
-                </div>
-
-                <div class="form-group">
 
                     <div class="products-sale">
 

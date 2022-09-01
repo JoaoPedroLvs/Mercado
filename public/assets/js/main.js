@@ -1,6 +1,6 @@
 $(function() {
 
-    $self = $(this);
+    var $self = $(this);
 
     $('.modal.new-employee').each(function() {
 
@@ -18,5 +18,6 @@ $(function() {
 
         });
     });
+
 
 });

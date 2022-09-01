@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Route;
 
 
@@ -18,11 +20,16 @@ Route::group(['middleware' => 'auth'], function() {
         Route::put   ('/customer',        'CustomerController@update');
         Route::get   ('/customer/{id}/delete', 'CustomerController@delete');
 
-        // Teste
-        Route::get   ('/employee/{id}/edit',   'EmployeeController@edit');
+
+    });
+
+    /* Rotas que o usuário tem pérmissão para acessar */
+    Route::group([], function(){
+
+        Route::get   ('/employee/{id}/edit',   ['uses' => 'EmployeeController@edit']);
         Route::put   ('/employee',        'EmployeeController@update');
         Route::get   ('/employee/{id}/show', 'EmployeeController@show');
-        //fim teste
+
     });
 
     /* Rotas para gerenciar os funcionários*/
@@ -35,7 +42,7 @@ Route::group(['middleware' => 'auth'], function() {
 
 
 
-        //admins
+        // criar admins
         Route::get   ('/admins', 'AdminController@index');
         Route::get   ('/admin/create', 'AdminController@create');
         Route::get   ('/admin/{id}/show', 'AdminController@show');
@@ -44,7 +51,19 @@ Route::group(['middleware' => 'auth'], function() {
         Route::post  ('/admin', 'AdminController@insert');
         Route::put   ('/admin', 'AdminController@update');
 
-        //fim admin
+        //fim
+
+        // criar atravez do admin um user
+
+        Route::get  ('/users', 'UserController@index');
+        Route::get  ('/user/{id}/show', 'UserController@show');
+        Route::get  ('/user/create', 'UserController@create');
+        Route::get  ('/user/{id}/edit', 'UserController@edit');
+        Route::get  ('/user/{id}/delete', 'UserController@delete');
+        Route::post ('/user', 'UserController@insert');
+        Route::put  ('/user', 'UserController@update');
+
+        //fim
 
     });
 
@@ -109,10 +128,6 @@ Route::group(['middleware' => 'auth'], function() {
 
 /* Rotas para gerenciar os logins e os registros */
 Route::group([], function() {
-
-    // Route::get('/login', /* "Auth\LoginController@showLoginForm", */ function () {
-    //     return 'teste';
-    // })->name('login');
 
     Route::get   ('/login', 'Auth\LoginController@showLoginForm')->name('login');
     Route::post  ('/login', 'Auth\LoginController@login');
