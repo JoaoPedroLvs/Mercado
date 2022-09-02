@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Route;
 
 
-Route::group(['middleware' => 'auth'], function() {
+Route::group(['middleware' => ['auth','user']], function() {
 
     Route::get   ('/', function () {return view('welcome');});
 
@@ -26,46 +26,13 @@ Route::group(['middleware' => 'auth'], function() {
     /* Rotas que o usuário tem pérmissão para acessar */
     Route::group([], function(){
 
-        Route::get   ('/employee/{id}/edit',   ['uses' => 'EmployeeController@edit']);
+        Route::get   ('/employee/{id}/edit',   ['uses' => 'EmployeeController@edit'])->name('edit.employee');
         Route::put   ('/employee',        'EmployeeController@update');
         Route::get   ('/employee/{id}/show', 'EmployeeController@show');
 
     });
 
     /* Rotas para gerenciar os funcionários*/
-    Route::group(['middleware' => ['admin']], function() {
-
-        Route::get   ('/employees',            'EmployeeController@index');
-        Route::get   ('/employee/create',      'EmployeeController@create');
-        Route::post  ('/employee',       'EmployeeController@insert');
-        Route::get   ('/employee/{id}/delete', 'EmployeeController@delete');
-
-
-
-        // criar admins
-        Route::get   ('/admins', 'AdminController@index');
-        Route::get   ('/admin/create', 'AdminController@create');
-        Route::get   ('/admin/{id}/show', 'AdminController@show');
-        Route::get   ('/admin/{id}/delete', 'AdminController@delete');
-        Route::get   ('/admin/{id}/edit', 'AdminController@edit');
-        Route::post  ('/admin', 'AdminController@insert');
-        Route::put   ('/admin', 'AdminController@update');
-
-        //fim
-
-        // criar atravez do admin um user
-
-        Route::get  ('/users', 'UserController@index');
-        Route::get  ('/user/{id}/show', 'UserController@show');
-        Route::get  ('/user/create', 'UserController@create');
-        Route::get  ('/user/{id}/edit', 'UserController@edit');
-        Route::get  ('/user/{id}/delete', 'UserController@delete');
-        Route::post ('/user', 'UserController@insert');
-        Route::put  ('/user', 'UserController@update');
-
-        //fim
-
-    });
 
     /* Rotas para gerenciar as categorias */
     Route::group([], function() {
@@ -134,4 +101,44 @@ Route::group([], function() {
     Route::post  ('/logout', 'Auth\LoginController@logout')->name('logout');
     Route::get   ('/register', 'Auth\RegisterController@showRegistrationForm')->name('register');
     Route::post  ('/register', 'Auth\RegisterController@register');
+
+    Route::get   ('/password/reset/{token}', 'Auth\ResetPasswordController@showResetForm')->name('password.reset');
+    Route::post  ('/password/reset', 'Auth\ResetPasswordController@reset')->name('password.update');
+    Route::get   ('/password/reset', 'Auth\ForgotPasswordController@showLinkRequestForm')->name('password.request');
+    Route::post  ('/password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail')->name('password.email');
+
+});
+
+Route::group(['middleware' => ['auth','admin']], function() {
+
+    Route::get   ('/employees',            'EmployeeController@index');
+    Route::get   ('/employee/create',      'EmployeeController@create');
+    Route::post  ('/employee',       'EmployeeController@insert');
+    Route::get   ('/employee/{id}/delete', 'EmployeeController@delete');
+
+
+
+    // criar admins
+    Route::get   ('/admins', 'AdminController@index');
+    Route::get   ('/admin/create', 'AdminController@create');
+    Route::get   ('/admin/{id}/show', 'AdminController@show');
+    Route::get   ('/admin/{id}/delete', 'AdminController@delete');
+    Route::get   ('/admin/{id}/edit', 'AdminController@edit');
+    Route::post  ('/admin', 'AdminController@insert');
+    Route::put   ('/admin', 'AdminController@update');
+
+    //fim
+
+    // criar atravez do admin um user
+
+    Route::get  ('/users', 'UserController@index');
+    Route::get  ('/user/{id}/show', 'UserController@show');
+    Route::get  ('/user/create', 'UserController@create');
+    Route::get  ('/user/{id}/edit', 'UserController@edit');
+    Route::get  ('/user/{id}/delete', 'UserController@delete');
+    Route::post ('/user', 'UserController@insert');
+    Route::put  ('/user', 'UserController@update');
+
+    //fim
+
 });

@@ -6,6 +6,8 @@ $(function() {
 
         var $btnNewProduct = $self.find('.btn-new-product');
 
+        var $select = $self.find('.select');
+
         $btnNewProduct.on('click', function() {
 
             var $btn = $(this);
@@ -31,5 +33,23 @@ $(function() {
 
         });
 
+
+        $select.on('change', function() {
+
+            var price = $select.find('option:selected').data('price');
+            $span = $(this).parent().find('.span');
+
+            $span.text('R$ ' + price);
+
+            if (price) {
+
+                $span.removeClass('d-none');
+
+            } else {
+
+                $span.addClass('d-none')
+            }
+
+        })
     });
 });

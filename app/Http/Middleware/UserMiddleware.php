@@ -2,12 +2,13 @@
 
 namespace App\Http\Middleware;
 
+use App\Http\Controllers\EmployeeController;
+use App\Models\Employee;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Session;
 
-class AdminMiddleware
+class UserMiddleware
 {
     /**
      * Handle an incoming request.
@@ -21,20 +22,21 @@ class AdminMiddleware
 
         if (Auth::check()) {
 
-            if (Auth::user()->role == '1') {
+            if (Auth::user()->role==0) {
 
-                return $next($request);
+                if (Auth::user()->employee->is_new == true && !$request->is('employee/'.Auth::user()->employee->id.'/edit')) {
+
+                    return redirect('/employee/'.Auth::user()->employee->id.'/edit');
+
+                } else {
+
+                    return $next($request);
+                }
 
             } else {
 
-                Session::flash('error', 'O usuário não possui permissão para acessar aquela página!');
-                return back();
-
+                return route('login');
             }
-
-        } else {
-
-            return route('login');
 
         }
 

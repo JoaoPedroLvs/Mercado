@@ -231,7 +231,6 @@ class PromotionController extends Controller
 
         $promotion->product_id = $request->product_id;
         $promotion->price = floatval(str_replace(',','.',$request->price));
-        // dd($promotion->price);
         $promotion->started_at = $request->started_at;
         $promotion->is_active = $request->is_active ?? false;
         $promotion->ended_at = $request->ended_at;

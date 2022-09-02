@@ -9,7 +9,7 @@
             $route = Route::current()->getName();
         @endphp
 
-        @if ($route != "login" && $route != "register")
+        @if ($route != "login" && $route != "register" && $route != "password.reset" && $route != "password.request")
 
             @include('components.header')
 
@@ -23,7 +23,7 @@
 
             @endphp
 
-            @if ($user->role == 0 && $user->employee->is_new)
+            {{-- @if ($user->role == 0 && $user->employee->is_new)
 
                 <div class="modal fade new-employee" id="exampleModal">
 
@@ -149,9 +149,9 @@
 
                             </div>
 
-                            <div class="modal-footer d-flex justify-content-center">
+                            <div class="modal-footer d-flex justify-content-center"> --}}
                             {{-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> --}}
-                                <button type="button" class="btn btn-primary btn-save-employee">Save changes</button>
+                                {{-- <button type="button" class="btn btn-primary btn-save-employee">Save changes</button>
 
                             </div>
 
@@ -161,7 +161,7 @@
 
                 </div>
 
-            @endif
+            @endif --}}
 
         @endif
 

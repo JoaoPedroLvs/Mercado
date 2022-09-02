@@ -245,11 +245,22 @@ class ProductController extends Controller
      * @param Request $request
      * @return void
      */
-    private function save(Product $product, Request $request){
+    private function save(Product $product, Request $request) {
 
         $product->name = $request->name;
 
-        $product->price = floatval(str_replace(',','.',$request->price));
+        //Vetores para substituir espaçe em branco e virgula no banco de dados
+        $string = [
+            ' ',
+            ','
+        ];
+
+        $stringR = [
+            '',
+            '.'
+        ];
+
+        $product->price = floatval(str_replace($string,$stringR,$request->price));
         $product->category_id = $request->category_id;
 
         $product->save();

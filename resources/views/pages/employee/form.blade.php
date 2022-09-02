@@ -11,7 +11,7 @@
     <div class="page page-employee page-form">
 
         <div class="page-header">
-            <h1>Funcionários <small>{{ $isEdit ? 'Editar funcionário' : 'Novo funcionário' }}</small></h1>
+            <h1>Funcionários <small>{{ $employee->is_new ? 'Complete o cadastro' : ($isEdit ? 'Editar funcionário' : 'Novo funcionário') }}</small></h1>
         </div>
 
         <div class="page-body">

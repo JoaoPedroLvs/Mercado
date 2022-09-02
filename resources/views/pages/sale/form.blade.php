@@ -55,19 +55,21 @@
 
                             <div class="products-itens">
 
-                                <div class="input-group">
+                                <div class="input-group select">
 
                                     <select name="product_id[]" class="form-select">
 
-                                        <option  value="" selected>Selecione um produto</option>
+                                        <option  value="">Selecione um produto</option>
 
                                         @foreach ($products as $product)
 
-                                            <option value="{{$product->id}}">{{$product->name}}</option>
+                                            <option value="{{$product->id}}" data-price="{{ $product->price }}">{{$product->name}}</option>
 
                                         @endforeach
 
                                     </select>
+
+                                    <span class="input-group-text d-none span"></span>
 
                                     <input type="number" placeholder="Quantidade" name="qty_sales[]" class="form-control">
 
