@@ -17,7 +17,7 @@ class CreateSalesTable extends Migration
 
             $table->id();
 
-            $table->unsignedInteger('employee_id');
+            $table->unsignedInteger('employee_id')->nullable();
             $table->unsignedInteger('customer_id');
             $table->double('total')->default(0);
             $table->double('total_no_promotion')->default(0);

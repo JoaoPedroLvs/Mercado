@@ -30,8 +30,8 @@ class Sale extends Model
         ->join("product_sale as ps", "pr.id", "ps.product_id")
         ->join("sales as sa", "sa.id", "ps.sale_id")
         ->join("customers as c", "c.id", "sa.customer_id")
-        ->join("employees as em", "em.id", "sa.employee_id")
-        ->join("users as us" , "us.id", "em.user_id")
+        ->leftJoin("employees as em", "em.id", "sa.employee_id")
+        ->leftJoin("users as us" , "us.id", "em.user_id")
         ->leftJoin("promotions as pm", "pm.product_id", "pr.id")
         ->where("ps.sale_id", $id);
 

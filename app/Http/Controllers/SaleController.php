@@ -243,7 +243,14 @@ class SaleController extends Controller
     private function save(Sale $sale, Request $request) {
 
         $sale->customer_id = $request->customer_id;
-        $sale->employee_id = Auth::user()->employee->id;
+
+        if (!Auth::user()->role == 1) {
+
+            $sale->employee_id = Auth::user()->employee->id;
+        } else {
+            $sale->employee_id = null;
+        }
+
 
         $products = $request->product_id;
 
