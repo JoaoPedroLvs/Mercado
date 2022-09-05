@@ -33,9 +33,6 @@ class UserMiddleware
                     return $next($request);
                 }
 
-            } else {
-
-                return route('login');
             }
 
         }
