@@ -67,63 +67,75 @@
 
                 @if (Auth::user()->role == 0)
 
-                    @if($isEdit)
+                    @if (Auth::user()->employee->is_new == false)
 
-                        <div class="page-controls">
-                            <div class="form-check form-switch">
-                                <input class="form-check-input switch" type="checkbox" role="switch" id="flexSwitchCheckDefault">
-                                <label class="form-check-label" for="flexSwitchCheckDefault">Editar senha</label>
+                        @if($isEdit)
+
+                            <div class="page-controls">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input switch" type="checkbox" role="switch" id="flexSwitchCheckDefault">
+                                    <label class="form-check-label" for="flexSwitchCheckDefault">Editar senha</label>
+                                </div>
+
                             </div>
 
-                        </div>
+                            <div class="form-group d-none password">
 
-                        <div class="form-group d-none password">
+                                <label for="password">Senha</label>
+                                <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" >
 
-                            <label for="password">Senha</label>
-                            <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" >
+                                    @error('password')
 
-                                @error('password')
+                                        <span class="invalid-feedback" role="alert">
 
-                                    <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
 
-                                        <strong>{{ $message }}</strong>
+                                        </span>
 
-                                    </span>
+                                    @enderror
+                            </div>
 
-                                @enderror
-                        </div>
+                            <div class="form-group d-none password">
 
-                        <div class="form-group d-none password">
+                                <label for="password-confirm">Confirmar senha</label>
+                                <input id="password-confirm" type="password" class="form-control" name="password_confirmation" >
 
-                            <label for="password-confirm">Confirmar senha</label>
-                            <input id="password-confirm" type="password" class="form-control" name="password_confirmation" >
+                            </div>
 
-                        </div>
+                        @else
 
-                    @else
+                            <div class="page-controls">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input switch" type="checkbox" role="switch" id="flexSwitchCheckDefault">
+                                    <label class="form-check-label" for="flexSwitchCheckDefault">Editar senha</label>
+                                </div>
 
-                        <div class="form-group">
+                            </div>
 
-                            <label for="password">Senha</label>
-                            <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required>
+                            <div class="form-group">
 
-                                @error('password')
+                                <label for="password">Senha</label>
+                                <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required>
 
-                                    <span class="invalid-feedback" role="alert">
+                                    @error('password')
 
-                                        <strong>{{ $message }}</strong>
+                                        <span class="invalid-feedback" role="alert">
 
-                                    </span>
+                                            <strong>{{ $message }}</strong>
 
-                                @enderror
-                        </div>
+                                        </span>
 
-                        <div class="form-group">
+                                    @enderror
+                            </div>
 
-                            <label for="password-confirm">Confirmar senha</label>
-                            <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required>
+                            <div class="form-group">
 
-                        </div>
+                                <label for="password-confirm">Confirmar senha</label>
+                                <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required>
+
+                            </div>
+
+                        @endif
 
                     @endif
 

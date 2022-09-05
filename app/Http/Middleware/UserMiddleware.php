@@ -24,7 +24,7 @@ class UserMiddleware
 
             if (Auth::user()->role==0) {
 
-                if (Auth::user()->employee->is_new == true && !$request->is('employee/'.Auth::user()->employee->id.'/edit')) {
+                if (Auth::user()->employee->is_new == true && !$request->is('employee/'.Auth::user()->employee->id.'/edit') && $request->address == null) {
 
                     return redirect('/employee/'.Auth::user()->employee->id.'/edit');
 

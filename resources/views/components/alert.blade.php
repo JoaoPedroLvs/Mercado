@@ -22,7 +22,7 @@
 
 @endphp
 
-<div class="alert-container">
+<div class="alert-container p-4">
 
     @foreach ($alerts as $alert)
 

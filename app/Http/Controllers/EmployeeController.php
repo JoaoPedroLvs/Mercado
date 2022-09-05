@@ -238,7 +238,7 @@ class EmployeeController extends Controller
             'address' => ['string', 'max:250'],
             'phone' => ['required', 'string'],
             'work_code' => ['required', 'string'],
-            'password' => ['required_if:_method,post','confirmed', 'string']
+            'password' => ['required_if:_method,post','confirmed', 'password']
         ];
 
         $employee = Employee::where('id',$request->id)->first();

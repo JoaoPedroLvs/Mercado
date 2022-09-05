@@ -1,3 +1,27 @@
+html, body {
+    margin: 0;
+    height: 100%;
+}
+
+body > .container {
+    height: 100%;
+}
+
+.page-auth {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.background {
+    background-image: url('/assets/img/minimercado.jpg');
+}
+
+.page-auth .content {
+    background-color: none !important;
+}
+
 .page-header {
     margin-bottom: 30px;
 }
@@ -51,8 +75,18 @@ table {
     margin-right: 10px;
 }
 
-.page-auth > .page-header h1{
+.page-auth .page-header h1{
     display: flex;
+    margin-top: 15px;
     justify-content: center;
 }
 
+.page-auth .content {
+    background-color: #ffffff;
+    border-radius: 25px;
+}
+
+.card {
+    margin-top: 15px;
+    margin-bottom: 15px;
+}

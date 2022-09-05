@@ -3,7 +3,7 @@
 
     @include('components.head')
 
-    <body>
+    <body class="{{ $background ?? '' }}">
 
         @php
             $route = Route::current()->getName();
@@ -165,7 +165,7 @@
 
         @endif
 
-        <div class="container pt-4 pb-4">
+        <div class="container pt-4 pb-4 {{$teste ?? ''}}">
             @yield('content')
         </div>
 
