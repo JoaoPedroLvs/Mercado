@@ -6,6 +6,7 @@
 
     <div class="page page-promotions page-index">
 
+
         <div class="page-header">
             <h1>Promoções <small>Listagem de promoções</small></h1>
         </div>
@@ -14,9 +15,13 @@
 
             @include('components.alert')
 
-            <div class="page-controls mb-3">
-                <a href="{{ url('promotion/create') }}" class="btn btn-primary">Nova Promoção</a>
-            </div>
+            @if (Auth::user()->role != 2)
+
+                <div class="page-controls mb-3">
+                    <a href="{{ url('promotion/create') }}" class="btn btn-primary">Nova Promoção</a>
+                </div>
+
+            @endif
 
             @if (count($promotions) > 0)
 
@@ -31,7 +36,11 @@
                             <th>Status</th>
                             <th>Data Inicial</th>
                             <th>Data Final</th>
-                            <th>Ações</th>
+                            @if (Auth::user()->role != 2)
+
+                                <th>Ações</th>
+
+                            @endif
                         </tr>
 
                     </thead>
@@ -47,14 +56,18 @@
                                 <td>{{ $promotion->is_active ? 'Ativa' : 'Desativa' }}</td>
                                 <td>{{ $promotion->started_at->format('d/m/Y') }}</td>
                                 <td>{{ $promotion->ended_at->format('d/m/Y') }}</td>
-                                <td>
-                                    <div class="table-options">
+                                @if (Auth::user()->role != 2)
 
-                                        <a href="{{ url('promotion/'.$promotion->id.'/edit') }}" class="btn btn-primary buttons" ><i class="far fa-edit"></i></a><br>
-                                        <a href="{{ url('promotion/'.$promotion->id.'/delete') }}" class="btn btn-danger buttons" ><i class="fas fa-trash"></i></a>
+                                    <td>
+                                        <div class="table-options">
 
-                                    </div>
-                                </td>
+                                            <a href="{{ url('promotion/'.$promotion->id.'/edit') }}" class="btn btn-primary buttons" ><i class="far fa-edit"></i></a><br>
+                                            <a href="{{ url('promotion/'.$promotion->id.'/delete') }}" class="btn btn-danger buttons" ><i class="fas fa-trash"></i></a>
+
+                                        </div>
+                                    </td>
+
+                                @endif
                             </tr>
 
                         </tbody>

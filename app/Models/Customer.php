@@ -10,14 +10,17 @@ class Customer extends Model
     use HasFactory;
 
     protected $fillable = [
-        'name',
-        'email',
         'address',
         'rg',
-        'cpf'
+        'cpf',
+        'phone'
     ];
 
     protected $casts = [
         'created_at' => 'datetime',
     ];
+
+    public function user() {
+        return $this->belongsTo(User::class);
+    }
 }

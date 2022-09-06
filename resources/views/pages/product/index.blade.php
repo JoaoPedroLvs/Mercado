@@ -8,18 +8,20 @@
 
         <div class="page-header">
             <h1>Produtos <small>Listagem de produtos</small></h1>
-            <h3>Produto mais vendido: <small>{{ isset($productMostSold->total_sold) == 0 ? 'Nenhum produto criado' : $productMostSold->name }}</small></h3>
         </div>
 
         <div class="page-body">
 
             @include('components.alert')
 
-            <div class="page-controls mb-3">
+            @if(Auth::user()->role != 2)
 
-                <a href="{{ url('product/create') }}" class="btn btn-primary">Novo Produto</a>
+                <div class="page-controls mb-3">
 
-            </div>
+                    <a href="{{ url('product/create') }}" class="btn btn-primary">Novo Produto</a>
+
+                </div>
+            @endif
 
             @if (count($products) > 0)
 
@@ -33,7 +35,11 @@
                             <th>Categoria</th>
                             <th>Preço</th>
                             <th>Quantidade</th>
-                            <th>Vendido</th>
+                            @if (Auth::user()->role != 2)
+
+                                <th>Vendido</th>
+
+                            @endif
                             <th>Data de criação</th>
                             <th>Ações</th>
                         </tr>
@@ -48,17 +54,30 @@
                                 <td>{{ $product->id }}</td>
                                 <td>{{ $product->name }}</td>
                                 <td>{{ $product->category->name }}</td>
-                                <td>R$ {{ number_format($product->price, '2', ',', ' ' ) }}</td>
+                                <td>R$ {{$product->promotion ? number_format($product->promotion, '2', ',', ' ') : number_format($product->price, '2', ',', ' ' ) }}</td>
                                 <td>{{ $product->current_qty }}</td>
-                                <td>{{ $product->total_sold }}</td>
+                                @if (Auth::user()->role != 2)
+
+                                    <td>{{ $product->total_sold }}</td>
+
+                                @endif
                                 <td>{{ $product->created_at->format('d/m/Y') }}</td>
                                 <td>
-                                    <div class="table-options">
+                                    @if (Auth::user()->role != 2)
 
-                                        <a href="{{ url('product/'.$product->id.'/edit') }}" class="btn btn-primary buttons" ><i class="far fa-edit"></i></a><br>
-                                        <a href="{{ url('product/'.$product->id.'/delete') }}" class="btn btn-danger buttons" ><i class="fas fa-trash"></i></a>
+                                        <div class="table-options">
 
-                                    </div>
+                                            <a href="{{ url('product/'.$product->id.'/edit') }}" class="btn btn-primary buttons" ><i class="far fa-edit"></i></a><br>
+                                            <a href="{{ url('product/'.$product->id.'/delete') }}" class="btn btn-danger buttons" ><i class="fas fa-trash"></i></a>
+
+                                        </div>
+                                    @else
+
+                                        <div class="table-options">
+                                            <button type="button" class="btn btn-primary btn-cart-add"><i class="bi bi-plus"></i></button>
+                                            <button type="button" class="btn btn-danger d-none btn-cart-remove"><i class="bi bi-x-lg"></i></button>
+                                        </div>
+                                    @endif
                                 </td>
                             </tr>
 

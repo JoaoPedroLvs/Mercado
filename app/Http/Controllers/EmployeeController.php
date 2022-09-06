@@ -238,7 +238,7 @@ class EmployeeController extends Controller
             'address' => ['string', 'max:250'],
             'phone' => ['required', 'string'],
             'work_code' => ['required', 'string'],
-            'password' => ['required_if:_method,post','confirmed', 'password']
+            'password' => ['required_if:_method,post','confirmed']
         ];
 
         $employee = Employee::where('id',$request->id)->first();
@@ -247,25 +247,19 @@ class EmployeeController extends Controller
 
         $user =  Auth::user();
 
-        $validator->after(function ($validator) use ($request, $employee, $user){
+        $validator->after(function ($validator) use ($request, $employee, $user) {
 
             if ($employee) {
 
-                if ($employee->id !=$user->employee->id) {
+                if ($employee->id != $user->employee->id) {
 
                     $validator = $validator->errors()->add('name','Não possui autorização para editar esse usuario');
                     return false;
 
                 }
-                // dd(Hash::check($employee->user->password, $request->password));
-                if (!Hash::check($request->password, $user->password) && !$employee->is_new) {
-
-                    $validator = $validator->errors()->add('name','Senha incorreta');
-                    return false;
-
-                }
 
             }
+            // dd($validator);
         });
 
         $validator->sometimes('id', ['required', 'integer', 'exists:employees,id'], function() use ($method){
@@ -293,6 +287,7 @@ class EmployeeController extends Controller
             $user->password = Hash::make($request->password);
 
         }
+        $user->role = 0;
 
         $user->save();
 

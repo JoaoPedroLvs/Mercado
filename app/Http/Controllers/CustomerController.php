@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Customer;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 
@@ -177,13 +180,24 @@ class CustomerController extends Controller
 
                 $customer = $isEdit ? Customer::find($request->id) : new Customer();
 
-                $this->save($customer, $request);
+                $user = $isEdit ? User::find($customer->user->id) : new User();
+
+                $this->save($customer, $request, $user);
 
                 DB::commit();
 
                 Session::flash('success', 'O cliente foi '. ($isEdit ? 'alterado' : 'criado'). ' com sucesso!');
 
-                return redirect('customers');
+                if ($user->role == 2) {
+
+                    return redirect('/customer/'.$customer->id.'/show');
+
+                } else {
+
+                    return redirect('customers');
+
+                }
+
 
             } catch (\Exception $e) {
 
@@ -213,10 +227,28 @@ class CustomerController extends Controller
             'email' => ['required', 'email'],
             'rg' => ['required', 'string', 'max:14'],
             'cpf' => ['required', 'string', 'max:14'],
-            'address' => ['required', 'string', 'max:250']
+            'address' => ['required', 'string', 'max:250'],
+            'phone' => ['required', 'string'],
+            'password' => ['required_if:_method,post','confirmed']
         ];
 
         $validator = Validator::make($data, $rules);
+
+        $customer = Customer::where('id',$request->id)->first();
+
+        $user = Auth::user();
+
+        $validator->after(function ($validator) use ($request, $customer, $user) {
+
+            if ($customer) {
+
+                if ($customer->id != $user->customer->id) {
+
+                    $validator = $validator->errors()->add('name', 'Não possui autorização para editar esse cliente');
+                    return false;
+                }
+            }
+        });
 
         $validator->sometimes('id', ['required', 'integer', 'exists:customers,id'], function() use ($method){
             return $method == 'PUT';
@@ -232,13 +264,33 @@ class CustomerController extends Controller
      * @param Customer $customer
      * @return void
      */
-    private function save(Customer $customer, Request $request) {
+    private function save(Customer $customer, Request $request, User $user) {
 
-        $customer->name = $request->name;
-        $customer->email = $request->email;
+        $user->name = $request->name;
+        $user->email = $request->email;
+
+        if ($request->password) {
+
+            $user->password = Hash::make($request->password);
+        }
+
+        if ($request->file('image')) {
+
+            $file = $request->image;
+            $filename = date('YmdHi').$user->name;
+            $file->move(public_path('/assets/img'), $filename);
+            $user->image = $filename;
+
+        }
+
+        $user->save();
+
         $customer->rg = $request->rg;
         $customer->cpf = $request->cpf;
         $customer->address = $request->address;
+        $customer->phone = $request->phone;
+
+        $customer->is_new = false;
 
         $customer->save();
 

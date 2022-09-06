@@ -58,6 +58,10 @@ table {
     justify-content: center;
 }
 
+.table-options > .btn {
+    margin-right: 3px;
+}
+
 .buttons {
     margin-right: 4px;
 }

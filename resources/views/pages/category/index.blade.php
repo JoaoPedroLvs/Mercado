@@ -14,9 +14,13 @@
 
             @include('components.alert')
 
-            <div class="page-controls mb-3">
-                <a href="{{ url('category/create') }}" class="btn btn-primary">Nova categoria</a>
-            </div>
+            @if (Auth::user()->role != 2)
+
+                <div class="page-controls mb-3">
+                    <a href="{{ url('category/create') }}" class="btn btn-primary">Nova categoria</a>
+                </div>
+
+            @endif
 
             @if (count($categories) > 0)
 
@@ -45,10 +49,14 @@
                                 <td>{{ $category->created_at->format('d/m/Y') }}</td>
                                 <td>
                                     <div class="table-options">
-
                                         <a href="{{ url('category/'.$category->id.'/products') }}" class="btn btn-secondary buttons" ><i class="fas fa-list"></i></a><br>
-                                        <a href="{{ url('category/'.$category->id.'/edit') }}" class="btn btn-primary buttons" ><i class="far fa-edit"></i></a><br>
-                                        <a href="{{ url('category/'.$category->id.'/delete') }}" class="btn btn-danger buttons" ><i class="fas fa-trash"></i></a>
+
+                                        @if (Auth::user()->role != 2)
+
+                                            <a href="{{ url('category/'.$category->id.'/edit') }}" class="btn btn-primary buttons" ><i class="far fa-edit"></i></a><br>
+                                            <a href="{{ url('category/'.$category->id.'/delete') }}" class="btn btn-danger buttons" ><i class="fas fa-trash"></i></a>
+
+                                        @endif
 
                                     </div>
                                 </td>

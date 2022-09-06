@@ -23,6 +23,12 @@
                             <th>Nome</th>
                             <th>Quantidade</th>
                             <th>Data de criação</th>
+
+                            @if (Auth::user()->role == 2)
+
+                                <th>Ações</th>
+
+                            @endif
                         </tr>
 
                     </thead>
@@ -36,6 +42,13 @@
                                 <td>{{ $product->name }}</td>
                                 <td>{{ $product->current_qty }}</td>
                                 <td>{{ (string) $product->created_at->format('d/m/Y') }}</td>
+
+                                @if (Auth::user()->role == 2)
+                                    <td>
+                                        <button type="button" class="btn btn-primary btn-cart-add"><i class="bi bi-plus"></i></button>
+                                        <button type="button" class="btn btn-danger d-none btn-cart-remove"><i class="bi bi-x-lg"></i></button>
+                                    </td>
+                                @endif
                             </tr>
 
                         </tbody>

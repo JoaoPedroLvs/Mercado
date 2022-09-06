@@ -180,6 +180,7 @@
         <script src="{{ asset('assets/js/user.js') }}"></script>
         <script src="{{ asset('assets/js/admin.js') }}"></script>
         <script src="{{ asset('assets/js/employee.js') }}"></script>
+        <script src="{{ asset('assets/js/customer.js') }}"></script>
 
     </body>
 

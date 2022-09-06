@@ -19,5 +19,14 @@ $(function() {
         });
     });
 
+    $('.dropdown, .dropdown-menu').on('mouseover', function() {
+
+        // console.log($(this));
+        $(this).find('.dropdown-menu').show();
+
+    }).on('mouseout', function() {
+
+        $('.dropdown-menu').hide()
+    });
 
 });

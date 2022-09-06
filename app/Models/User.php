@@ -36,10 +36,13 @@ class User extends Authenticatable
         'created_at' => 'datetime'
     ];
 
+    public function customer() {
+        return $this->hasOne(Customer::class);
+    }
+
     public function employee() {
         return $this->hasOne(Employee::class);
     }
-
     // private $roles = [
     //     1 => ['customer.index', 'customer.insert', 'customer.update'],
     //     2 => ['employer.index', 'employer.insert']

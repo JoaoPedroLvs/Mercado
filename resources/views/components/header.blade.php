@@ -12,7 +12,6 @@
     ];
 
 @endphp
-
 <nav class="navbar navbar-expand-lg bg-light">
 
     <div class="container-fluid">
@@ -37,9 +36,9 @@
 
                         <div class="nav-item dropdown-menu">
 
-                            <a href="{{ url('admins') }}" class="nav-link"><i class="fas fa-users"></i> Administração</a>
+                            <a href="{{ url('admins') }}" class="dropdown-item"><i class="fas fa-users"></i> Administração</a>
 
-                            <a href="{{ url('users') }}" class="nav-link"><i class="bi bi-people-fill"></i> Usuários</a>
+                            <a href="{{ url('users') }}" class="dropdown-item"><i class="bi bi-people-fill"></i> Usuários</a>
 
                         </div>
 
@@ -61,9 +60,23 @@
 
                     @else
 
-                        <li class="nav-item">
-                            <a href="{{ url($page[1]) }}" aria-current="page" class="nav-link">{{ $page[0] }}</a>
-                        </li>
+                        @if (Auth::user()->role == 2)
+
+                            @if ($page[0] == 'Produtos' || $page[0] == 'Categorias' || $page[0] == 'Promoção')
+
+                                <li class="nav-item">
+                                    <a href="{{ url($page[1]) }}" aria-current="page" class="nav-link">{{ $page[0] }}</a>
+                                </li>
+
+                            @endif
+
+                        @else
+
+                            <li class="nav-item">
+                                <a href="{{ url($page[1]) }}" aria-current="page" class="nav-link">{{ $page[0] }}</a>
+                            </li>
+
+                        @endif
 
                     @endif
 
@@ -72,36 +85,92 @@
 
             </ul>
 
-            <ul class="navbar-nav ms-auto">
+            @if (Auth::user()->role == 2)
 
-                <li class="nav-item dropdown">
-                    {{-- @dd(Auth::user()->employee->id) --}}
-                    <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                        {{ Auth::user()->name }}
-                    </a>
+                <ul class="navbar-nav ms-auto">
+                    <div class="position-relative">
 
-                    <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                        <button type="button" class="btn btn-light"><i class="bi bi-basket"></i>
 
-                        @if (Auth::user()->role == 0)
+                            @if(Session::has('itens'))
 
-                            <a href="{{ url('/employee/'.Auth::user()->employee->id.'/show') }}" class="dropdown-item"><i class="bi bi-person-fill"></i> Perfil</a>
+                                <span class="position-absolute badge rounded-pill bg-danger">{{ count(Session::get('itens')) }}</span>
 
-                        @endif
+                            @endif
 
-                        <a class="dropdown-item" href="{{ route('logout') }}"onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                            <i class="bi bi-box-arrow-right"></i>
-                            Sair
-                        </a>
+                        </button>
 
-                        <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                            @csrf
-                        </form>
 
                     </div>
 
-                </li>
+                </ul>
 
-            </ul>
+                <ul class="navbar-nav ms-end">
+
+                    <li class="nav-item dropdown">
+                        {{-- @dd(Auth::user()->employee->id) --}}
+                        <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                            {{ Auth::user()->name }}
+                        </a>
+
+                        <div class="nav-item dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+
+                            @if (Auth::user()->role == 2)
+
+                                <a href="{{ url('/customer/'.Auth::user()->customer->id.'/show') }}" class="dropdown-item"><i class="bi bi-person-fill"></i> Perfil</a>
+
+                            @endif
+
+                            <a class="dropdown-item" class="dropdown-item" href="{{ route('logout') }}"onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                <i class="bi bi-box-arrow-right"></i>
+                                Sair
+                            </a>
+
+                            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                @csrf
+                            </form>
+
+                        </div>
+
+                    </li>
+
+                </ul>
+
+            @else
+
+                <ul class="navbar-nav ms-auto ms-end">
+
+                    <li class="nav-item dropdown">
+                        {{-- @dd(Auth::user()->employee->id) --}}
+                        <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                            {{ Auth::user()->name }}
+                        </a>
+
+                        <div class="nav-item dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+
+                            @if (Auth::user()->role == 0)
+
+                                <a href="{{ url('/employee/'.Auth::user()->employee->id.'/show') }}" class="dropdown-item"><i class="bi bi-person-fill"></i> Perfil</a>
+
+                            @endif
+
+                            <a class="dropdown-item" class="dropdown-item" href="{{ route('logout') }}"onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                <i class="bi bi-box-arrow-right"></i>
+                                Sair
+                            </a>
+
+                            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                @csrf
+                            </form>
+
+                        </div>
+
+                    </li>
+
+                </ul>
+
+            @endif
+
 
         </div>
 

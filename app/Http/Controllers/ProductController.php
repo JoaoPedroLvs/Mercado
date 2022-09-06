@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\Inventory;
 use App\Models\Product;
 use App\Models\Promotion;
 use Illuminate\Http\Request;
@@ -29,12 +30,9 @@ class ProductController extends Controller
 
         $products = Product::search()->orderBy('id', 'asc')->paginate(10);
 
-        $productMostSold = Product::search()->orderBy('total_sold', 'desc')->first();
-
         $data = [
             'request' => $request,
-            'products' => $products,
-            'productMostSold' => $productMostSold
+            'products' => $products
         ];
 
         return view('pages.product.index', $data);
@@ -233,8 +231,8 @@ class ProductController extends Controller
             throw new \Exception('ele está presente em pelo menos uma venda');
         }
 
+        Inventory::where('product_id', $product->id)->delete();
         Promotion::where('product_id', $product->id)->delete();
-
 
     }
 

@@ -2,13 +2,11 @@
 
 namespace App\Http\Middleware;
 
-use App\Http\Controllers\EmployeeController;
-use App\Models\Employee;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class UserMiddleware
+class CustomerMiddleware
 {
     /**
      * Handle an incoming request.
@@ -19,14 +17,13 @@ class UserMiddleware
      */
     public function handle(Request $request, Closure $next)
     {
-
         if (Auth::check()) {
 
-            if (Auth::user()->role==0) {
+            if (Auth::user()->role==2) {
 
-                if (Auth::user()->employee->is_new == true && !$request->is('employee/'.Auth::user()->employee->id.'/edit') && $request->address == null) {
+                if (Auth::user()->customer->is_new == true && !$request->is('customer/'.Auth::user()->customer->id.'/edit') && $request->address == null) {
 
-                    return redirect('/employee/'.Auth::user()->employee->id.'/edit');
+                    return redirect('/customer/'.Auth::user()->customer->id.'/edit');
 
                 } else {
 
@@ -36,7 +33,6 @@ class UserMiddleware
             }
 
         }
-
         return $next($request);
     }
 }

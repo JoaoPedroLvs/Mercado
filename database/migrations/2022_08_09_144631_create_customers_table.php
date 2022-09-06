@@ -17,12 +17,15 @@ class CreateCustomersTable extends Migration
 
             $table->id();
 
-            $table->string('name', 50);
-            $table->string('address', 300);
-            $table->string('rg', 11)->unique();
+            $table->bigInteger('user_id');
+            $table->string('address', 300)->nullable();
+            $table->string('rg', 11)->unique()->nullable();
             $table->string('cpf', 14)->unique();
-            $table->string('email', 50)->unique();
+            $table->string('phone')->nullable();
+            $table->boolean('is_new')->default(true);
             $table->timestamps();
+
+            $table->foreign('user_id')->on('users')->references('id');
 
         });
     }

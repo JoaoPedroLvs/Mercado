@@ -26,8 +26,7 @@ class CreateEmployeesTable extends Migration
             $table->boolean('is_new')->default(true);
             $table->timestamps();
 
-            $table->foreign('user_id')->references('id')->on('users');
-
+            $table->foreign('user_id')->on('users')->references('id');
         });
     }
 

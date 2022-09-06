@@ -47,14 +47,14 @@ class Product extends Model
 
         $query->from('products as p');
 
-        $query->leftJoin('product_sale as ps', 'ps.product_id', 'p.id');
+        $query->leftJoin('promotions as pm', 'pm.product_id', DB::raw('p.id and pm.is_active = true'));
+
+        // $query->where('pm.is_active', 'true');
 
         $query->select(
             'p.*',
-            DB::raw('count(ps.id) as total_sold')
+            'pm.price as promotion'
         );
-
-        $query->groupBy('p.id');
 
         return $query;
     }

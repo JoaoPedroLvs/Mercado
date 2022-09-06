@@ -15,24 +15,26 @@
 
         }
     }
-
     if (count($errors) > 0) {
         array_push($alerts, [$alertTypes["error"], $errors->all()[0]]);
     }
-
 @endphp
 
-<div class="alert-container p-4">
+@if (count($alerts) > 0)
 
-    @foreach ($alerts as $alert)
+    <div class="alert-container p-4">
 
-        <div class="alert-dismissible alert {{ $alert[0] }}">
+        @foreach ($alerts as $alert)
 
-            <p class="mb-0">{{ $alert[1] }}</p>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            <div class="alert-dismissible alert {{ $alert[0] }}">
 
-        </div>
+                <p class="mb-0">{{ $alert[1] }}</p>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 
-    @endforeach
+            </div>
 
-</div>
+        @endforeach
+
+    </div>
+
+@endif
