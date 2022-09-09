@@ -32,11 +32,13 @@ class ProductController extends Controller
         $order = $request->order ?? "asc";
         $column = $request->column ?? "id";
         $search = $request->search;
+        $qtyPaginate = $request->qtyPaginate ?? 10;
 
 
-        $products = Product::search($search)->orderBy($column, $order)->paginate(10);
+        $products = Product::search($search)->orderBy($column, $order)->paginate($qtyPaginate);
 
         $data = [
+            'qtyPaginate' => $qtyPaginate,
             'search' => $search,
             'order' => $order,
             'request' => $request,

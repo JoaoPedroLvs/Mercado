@@ -18,16 +18,46 @@
                 <a href="{{ url('customer/create') }}" class="btn btn-primary">Novo Cliente</a>
             </div>
 
-            <form action="/customers" method="get">
+            <div class="row g-3">
 
-                @csrf
+                <div class="col-md-6">
+                    <form action="/customers" method="get">
 
-                <div class="input-group mb-3">
-                    <input type="text" name="search" class="form-control" placeholder="Pesquisar"/>
-                    <button type="submit" class="btn btn-success"><i class="bi bi-search"></i></button>
+                        @csrf
+
+                        <div class="input-group">
+                            <input type="text" name="search" class="form-control" placeholder="Pesquisar"/>
+                            <button type="submit" class="btn btn-success"><i class="bi bi-search"></i></button>
+                        </div>
+
+                    </form>
                 </div>
 
-            </form>
+                <div class="col-md-6">
+
+                    <form action="/customers" method="get">
+                        @csrf
+
+
+                        <div class="input-group">
+
+                            <select name="qtyPaginate" id="qtyPaginate" class="form-select select-qty" data-url="/customers">
+
+                                <option {{ $qtyPaginate == 10 ? 'selected' : '' }}>Quantos itens deseja aparecer</option>
+                                <option data-value="10">10</option>
+                                <option data-value="25" {{ $qtyPaginate == 25 ? 'selected' : '' }}>25</option>
+                                <option data-value="50" {{ $qtyPaginate == 50 ? 'selected' : '' }}>50</option>
+
+                            </select>
+
+                        </div>
+
+
+                    </form>
+
+                </div>
+
+            </div>
 
             @if ($search)
 

@@ -33,10 +33,12 @@ class EmployeeController extends Controller
         $column = $request->column  ?? 'id';
         $order = $request->order  ?? 'asc';
         $search = $request->search;
+        $qtyPaginate = $request->qtyPaginate ?? 10;
 
-        $employees = Employee::search($column, $order, $search)->paginate(10);
+        $employees = Employee::search($column, $order, $search)->paginate($qtyPaginate);
 
         $data = [
+            'qtyPaginate' => $qtyPaginate,
             'search' => $search,
             'order' => $order,
             'employees' => $employees

@@ -50,6 +50,6 @@ $(function() {
                 $span.addClass('d-none')
             }
 
-        })
+        });
     });
 });

@@ -70,4 +70,20 @@ $(function() {
         window.location.href = url;
     })
 
+    $('.select-qty').on('change', function() {
+
+        var $this = $(this);
+
+        var qty = $this.find('option:selected').data('value');
+        var url = $this.data('url');
+
+        if (qty) {
+
+            url = url+'?qtyPaginate='+encodeURIComponent(qty);
+
+            window.location.href = url;
+        }
+
+    });
+
 });

@@ -22,16 +22,47 @@
 
             @endif
 
-            <form action="/categories" method="get">
+            <div class="row g-3">
 
-                @csrf
+                <div class="col-md-6">
 
-                <div class="input-group mb-3">
-                    <input type="text" name="search" class="form-control" placeholder="Pesquisar"/>
-                    <button type="submit" class="btn btn-success"><i class="bi bi-search"></i></button>
+                    <form action="/categories" method="get">
+
+                        @csrf
+
+                        <div class="input-group mb-3">
+                            <input type="text" name="search" class="form-control" placeholder="Pesquisar"/>
+                            <button type="submit" class="btn btn-success"><i class="bi bi-search"></i></button>
+                        </div>
+
+                    </form>
+
                 </div>
 
-            </form>
+                <div class="col-md-6">
+
+                    <form action="/categories" method="get">
+                        @csrf
+
+
+                        <div class="input-group">
+
+                            <select name="qtyPaginate" id="qtyPaginate" class="form-select select-qty" data-url="/categories">
+
+                                <option {{ $qtyPaginate == 10 ? 'selected' : '' }}>Quantos itens deseja aparecer</option>
+                                <option data-value="10">10</option>
+                                <option data-value="25" {{ $qtyPaginate == 25 ? 'selected' : '' }}>25</option>
+                                <option data-value="50" {{ $qtyPaginate == 50 ? 'selected' : '' }}>50</option>
+
+                            </select>
+
+                        </div>
+
+
+                    </form>
+
+                </div>
+            </div>
 
             @if ($search)
 

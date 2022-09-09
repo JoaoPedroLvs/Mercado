@@ -23,7 +23,7 @@ Route::group([], function() {
 
 /* Rotas os usuários tem acesso */
 
-Route::group(['middleware' => ['auth','permission:customer']], function() {
+Route::group(['middleware' => ['auth'/* ,'permission:customer '*/]], function() {
 
     // Página inicial
     Route::get   ('/', function () {return view('welcome');});
@@ -39,7 +39,7 @@ Route::group(['middleware' => ['auth','permission:customer']], function() {
 });
 
 /* Rotas que os funcionários tem acesso */
-Route::group(['middleware' => ['auth', 'permission:employee']], function() {
+Route::group(['middleware' => ['auth'/* , 'permission:employee' */]], function() {
 
 
     /* Rotas para gerenciar clientes */
@@ -88,7 +88,7 @@ Route::group(['middleware' => ['auth', 'permission:employee']], function() {
 });
 
 
-Route::group(['middleware' => ['auth', 'permission:manager']], function() {
+Route::group(['middleware' => ['auth'/* , 'permission:manager' */]], function() {
 
     /* Rotas para gerenciar os funcionários */
     Route::get   ('/employees',            'EmployeeController@index');

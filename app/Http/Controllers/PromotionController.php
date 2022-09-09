@@ -29,10 +29,12 @@ class PromotionController extends Controller
         $order = $request->order ?? 'asc';
         $column = $request->column ?? 'id';
         $search = $request->search;
+        $qtyPaginate = $request->qtyPaginate ?? 10;
 
-        $promotions = Promotion::search($column,$order, $search)->paginate(10);
+        $promotions = Promotion::search($column,$order, $search)->paginate($qtyPaginate);
 
         $data = [
+            'qtyPaginate' => $qtyPaginate,
             'search' => $search,
             'order' => $order,
             'promotions' => $promotions
