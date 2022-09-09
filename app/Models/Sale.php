@@ -23,6 +23,7 @@ class Sale extends Model
 
     }
 
+
     public function scopeSearch($query, $id) {
 
         $query->select("ps.id", "pr.name as product", "ps.qty_sales", "ps.total_price", "c.name as client", "us.name as employee", "ps.sale_id", "pr.price", "sa.total_no_promotion")

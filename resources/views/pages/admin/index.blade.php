@@ -8,7 +8,7 @@
 
         <div class="page-header">
 
-            <h1>Administração <small>Listagem de administradores</small></h1>
+            <h1><a href="/admins">Administração</a> <small>Listagem de administradores</small></h1>
 
         </div>
 
@@ -22,6 +22,24 @@
 
             </div>
 
+            <form action="/admins" method="get">
+
+                @csrf
+
+                <div class="input-group mb-3">
+                    <input type="text" name="search" class="form-control" placeholder="Pesquisar"/>
+                    <button type="submit" class="btn btn-success"><i class="bi bi-search"></i></button>
+                </div>
+
+            </form>
+
+            @if ($search)
+
+                <div class="page-message">
+                    <h4>Procurando por: <small>{{ $search}}</small></h4>
+                </div>
+
+            @endif
             @if (count($users) > 0)
 
                 <table class="table table-striped">
@@ -30,10 +48,10 @@
 
                         <tr>
 
-                            <th>ID</th>
-                            <th>Nome</th>
-                            <th>E-mail</th>
-                            <th>Data de criação</th>
+                            <th class="order" data-url="/admins" data-field="id" data-order="{{ $order == 'asc' ? 'desc' : 'asc' }}">ID <span><small><i class="bi bi-caret-down d-none id"></i><i class="bi bi-caret-up d-none id"></i></small></span></th>
+                            <th class="order" data-url="/admins" data-field="name" data-order="{{ $order == 'asc' ? 'desc' : 'asc' }}">Nome <span><small><i class="bi bi-caret-down d-none name"></i><i class="bi bi-caret-up d-none name"></i></small></span></th>
+                            <th class="order" data-url="/admins" data-field="email" data-order="{{ $order == 'asc' ? 'desc' : 'asc' }}">E-mail <span><small><i class="bi bi-caret-down d-none email"></i><i class="bi bi-caret-up d-none email"></i></small></span></th>
+                            <th class="order" data-url="/admins" data-field="created_at" data-order="{{ $order == 'asc' ? 'desc' : 'asc' }}">Data de criação <span><small><i class="bi bi-caret-down d-none created_at"></i><i class="bi bi-caret-up d-none created_at"></i></small></span></th>
                             <th>Ações</th>
 
                         </tr>

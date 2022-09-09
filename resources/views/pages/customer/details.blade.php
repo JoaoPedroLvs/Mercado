@@ -10,6 +10,7 @@
         <div class="page-body">
 
             <ul>
+                <img src="{{ asset($customer->user->image) }}" alt="Foto de perfil" height="100px" width="100px">
                 <li><b>Nome: </b>{{ $customer->user->name }}</li>
                 <li><b>E-mail: </b>{{ $customer->user->email }}</li>
                 <li><b>Endereço: </b>{{ $customer->address }}</li>

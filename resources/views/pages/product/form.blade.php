@@ -8,7 +8,7 @@
         $isEdit = !empty($product->id);
     @endphp
 
-    <div class="page page-customer page-form">
+    <div class="page page-product page-form">
 
         <div class="page-header">
             <h1>Produtos <small>{{ $isEdit ? 'Editar produto' : 'Criar produto' }}</small></h1>
@@ -18,13 +18,18 @@
 
             @include('components.alert')
 
-            <form action="{{ url('product') }}" method="post">
+            <form action="{{ url('product') }}" method="post" enctype="multipart/form-data">
 
                 @csrf
 
                 @method($isEdit ? 'PUT' : 'POST')
 
                 <input type="hidden" name="id" value="{{ $product->id }}">
+
+                <div class="form-group">
+                    <label for="image" class="btn btn-primary">Selecione uma imagem</label>
+                    <input type="file" class="d-none input-image" name="image" id="image" accept="image/*"><span class="file-input">Nenhum arquivo selecionado</span>
+                </div>
 
                 <div class="form-group">
                     <label for="name">Nome</label>

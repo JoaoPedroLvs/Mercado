@@ -49,6 +49,11 @@ body > .container {
     margin-bottom: 15px;
 }
 
+a, a:hover, a:focus, a:active {
+    color: inherit;
+    text-decoration: inherit;
+  }
+
 table {
     text-align: center;
 }
@@ -68,6 +73,10 @@ table {
 
 .page-controls {
     margin-bottom: 10px;
+}
+
+.page-message > h4 small {
+    opacity: 0.6;
 }
 
 .paginate {

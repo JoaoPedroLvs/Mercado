@@ -19,7 +19,8 @@
 
             @include('components.alert')
 
-            <form action="{{ url('customer') }}" method="POST">
+            <form action="{{ url('customer') }}" method="POST" enctype="multipart/form-data">
+
                 @csrf
 
                 @method($isEdit ? 'PUT' : 'POST')

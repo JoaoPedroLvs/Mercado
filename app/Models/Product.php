@@ -43,13 +43,17 @@ class Product extends Model
 
     }
 
-    public function scopeSearch($query) {
+    public function scopeSearch($query, $search) {
 
         $query->from('products as p');
 
         $query->leftJoin('promotions as pm', 'pm.product_id', DB::raw('p.id and pm.is_active = true'));
 
-        // $query->where('pm.is_active', 'true');
+        if ($search) {
+
+            $query->whereRaw("name ilike '%".$search."%'");
+
+        }
 
         $query->select(
             'p.*',

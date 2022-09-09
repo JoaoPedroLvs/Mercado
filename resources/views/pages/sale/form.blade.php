@@ -27,7 +27,7 @@
 
                             @foreach ($customers as $customer)
 
-                                <option value="{{ $customer->id }}">{{ $customer->name }}</option>
+                                <option value="{{ $customer->id }}">{{ $customer->user->name }}</option>
 
                             @endforeach
 

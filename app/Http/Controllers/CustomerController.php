@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Customer;
+use App\Models\Person;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
@@ -26,11 +28,17 @@ class CustomerController extends Controller
      *
      * @return \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
      */
-    public function index() {
+    public function index(Request $request) {
 
-        $customers = Customer::orderBy('id','asc')->paginate(10);
+        $order = $request->order ?? 'asc';
+        $column = $request->column ?? 'id';
+        $search = $request->search;
+
+        $customers = Customer::search($column,$order,$search)->paginate(10);
 
         $data = [
+            'search' => $search,
+            'order' => $order,
             'customers' => $customers
         ];
 
@@ -123,7 +131,13 @@ class CustomerController extends Controller
                 throw new \Exception('Cliente não encontrado!');
             }
 
+            File::delete($customer->user->image);
+
+            $user = $customer->user;
+
             $customer->delete();
+
+            $user->delete();
 
             DB::commit();
 
@@ -180,9 +194,11 @@ class CustomerController extends Controller
 
                 $customer = $isEdit ? Customer::find($request->id) : new Customer();
 
-                $user = $isEdit ? User::find($customer->user->id) : new User();
+                $user = $customer->user ?? new User();
 
-                $this->save($customer, $request, $user);
+                $person = $customer->person ?? new Person();
+
+                $this->save($customer, $request, $user, $person);
 
                 DB::commit();
 
@@ -258,15 +274,40 @@ class CustomerController extends Controller
     }
 
     /**
-     * Salvar alterações do cliente
+     * Salva alterações do cliente
      *
-     * @param Request $request
      * @param Customer $customer
+     * @param Request $request
+     * @param User $user
+     * @param Person $person
      * @return void
      */
-    private function save(Customer $customer, Request $request, User $user) {
+    private function save(Customer $customer, Request $request, User $user, Person $person) {
 
-        $user->name = $request->name;
+        $person->name = $request->name;
+        $person->cpf = $request->cpf;
+        $person->rg = $request->rg;
+        $person->address = $request->address;
+        $person->phone = $request->pohne;
+        $person->gender = $request->gender;
+
+        $person->save();
+
+        if (!$customer->person_id) {
+
+            $customer->person_id = $person->id;
+
+        }
+
+        $customer->is_new = false;
+        $customer->save();
+
+        if (!$user->customer_id) {
+
+            $user->customer_id = $customer->id;
+
+        }
+
         $user->email = $request->email;
 
         if ($request->password) {
@@ -274,25 +315,16 @@ class CustomerController extends Controller
             $user->password = Hash::make($request->password);
         }
 
-        if ($request->file('image')) {
+        if ($request->hasFile('image')) {
 
-            $file = $request->image;
-            $filename = date('YmdHi').$user->name;
-            $file->move(public_path('/assets/img'), $filename);
-            $user->image = $filename;
+            $extension = $request->file('image')->getClientOriginalExtension();
+            $filename = date('Y-m-d-H-i').'.'.$extension;
+            $image = $request->image->move('assets/img/profile/', $filename);
+            $user->image = $image;
 
         }
 
         $user->save();
-
-        $customer->rg = $request->rg;
-        $customer->cpf = $request->cpf;
-        $customer->address = $request->address;
-        $customer->phone = $request->phone;
-
-        $customer->is_new = false;
-
-        $customer->save();
 
     }
 

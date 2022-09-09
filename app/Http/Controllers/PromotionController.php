@@ -24,12 +24,17 @@ class PromotionController extends Controller
      *
      * @return \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
      */
-    public function index() {
+    public function index(Request $request) {
 
-        $promotions = Promotion::orderBy('id','asc')->paginate(10);
+        $order = $request->order ?? 'asc';
+        $column = $request->column ?? 'id';
+        $search = $request->search;
+
+        $promotions = Promotion::search($column,$order, $search)->paginate(10);
 
         $data = [
-
+            'search' => $search,
+            'order' => $order,
             'promotions' => $promotions
 
         ];

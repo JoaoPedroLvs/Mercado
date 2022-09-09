@@ -8,17 +8,36 @@
 
 
         <div class="page-header">
-            <h1>Promoções <small>Listagem de promoções</small></h1>
+            <h1><a href="/promotions">Promoções</a> <small>Listagem de promoções</small></h1>
         </div>
 
         <div class="page-body">
 
             @include('components.alert')
 
-            @if (Auth::user()->role != 2)
+            {{-- @if (Auth::user() != 'user') --}}
 
                 <div class="page-controls mb-3">
                     <a href="{{ url('promotion/create') }}" class="btn btn-primary">Nova Promoção</a>
+                </div>
+
+            {{-- @endif --}}
+
+            <form action="/promotions" method="get">
+
+                @csrf
+
+                <div class="input-group mb-3">
+                    <input type="text" name="search" class="form-control" placeholder="Pesquisar"/>
+                    <button type="submit" class="btn btn-success"><i class="bi bi-search"></i></button>
+                </div>
+
+            </form>
+
+            @if ($search)
+
+                <div class="page-message">
+                    <h4>Pesquisando por: <small>{{ $search }}</small></h4>
                 </div>
 
             @endif
@@ -30,10 +49,10 @@
                     <thead>
 
                         <tr>
-                            <th>ID</th>
-                            <th>Produto</th>
-                            <th>Preço</th>
-                            <th>Status</th>
+                            <th class="order" data-url="/promotions" data-field="id" data-order="{{ $order == 'asc' ? 'desc' : 'asc' }}">ID <span><small><i class="bi bi-caret-down d-none id"></i><i class="bi bi-caret-up d-none id"></i></small></span></th>
+                            <th class="order" data-url="/promotions" data-field="name" data-order="{{ $order == 'asc' ? 'desc' : 'asc' }}">Produto <span><small><i class="bi bi-caret-down d-none name"></i><i class="bi bi-caret-up d-none name"></i></small></span></th>
+                            <th class="order" data-url="/promotions" data-field="price" data-order="{{ $order == 'asc' ? 'desc' : 'asc' }}">Preço <span><small><i class="bi bi-caret-down d-none price"></i><i class="bi bi-caret-up d-none price"></i></small></span></th>
+                            <th class="order" data-url="/promotions" data-field="is_active" data-order="{{ $order == 'asc' ? 'desc' : 'asc' }}">Status <span><small><i class="bi bi-caret-down d-none is_active"></i><i class="bi bi-caret-up d-none is_active"></i></small></span></th>
                             <th>Data Inicial</th>
                             <th>Data Final</th>
                             @if (Auth::user()->role != 2)
@@ -51,7 +70,7 @@
 
                             <tr>
                                 <td>{{ $promotion->id }}</td>
-                                <td>{{ $promotion->product->name }}</td>
+                                <td>{{ $promotion->name }}</td>
                                 <td>R$ {{ number_format($promotion->price, 2, ',', ' ') }}</td>
                                 <td>{{ $promotion->is_active ? 'Ativa' : 'Desativa' }}</td>
                                 <td>{{ $promotion->started_at->format('d/m/Y') }}</td>

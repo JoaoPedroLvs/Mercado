@@ -23,11 +23,17 @@ class AdminController extends Controller
      *
      * @return \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
      */
-    public function index() {
+    public function index(Request $request) {
 
-        $users = User::where('role',1)->orderBy('id','asc')->paginate(10);
+        $column = $request->column ?? 'id';
+        $order = $request->order ?? 'asc';
+        $search = $request->search;
+
+        $users = User::searchAdmin($column,$order,$search)->paginate(10);
 
         $data = [
+            'search' => $search,
+            'order' => $order,
             'users' => $users
         ];
 

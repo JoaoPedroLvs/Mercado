@@ -7,7 +7,7 @@
     <div class="page page-categories page-index">
 
         <div class="page-header">
-            <h1>Categorias <small>Listagem de categorias</small></h1>
+            <h1><a href="/categories">Categorias </a><small>Listagem de categorias</small></h1>
         </div>
 
         <div class="page-body">
@@ -22,6 +22,25 @@
 
             @endif
 
+            <form action="/categories" method="get">
+
+                @csrf
+
+                <div class="input-group mb-3">
+                    <input type="text" name="search" class="form-control" placeholder="Pesquisar"/>
+                    <button type="submit" class="btn btn-success"><i class="bi bi-search"></i></button>
+                </div>
+
+            </form>
+
+            @if ($search)
+
+                <div class="page-message">
+                    <h4>Procurando por: <small>{{ $search }}</small></h4>
+                </div>
+
+            @endif
+
             @if (count($categories) > 0)
 
                 <table class="table table-striped">
@@ -29,8 +48,8 @@
                     <thead>
 
                         <tr>
-                            <th>ID</th>
-                            <th>Nome</th>
+                            <th class="order" data-url="/categories" data-field="id" data-order="{{ $order == 'asc' ? 'desc' : 'asc' }}">ID <span><small><i class="bi bi-caret-down d-none id"></i><i class="bi bi-caret-up d-none id"></i></small></span></th>
+                            <th class="order" data-url="/categories" data-field="name" data-order="{{ $order == 'asc' ? 'desc' : 'asc' }}">Nome <span><small><i class="bi bi-caret-down d-none name"></i><i class="bi bi-caret-up d-none name"></i></small></span></th>
                             <th>Quantidade de produtos</th>
                             <th>Data de criação</th>
                             <th>Ações</th>

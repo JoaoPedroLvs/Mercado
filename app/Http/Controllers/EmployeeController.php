@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Employee;
+use App\Models\Person;
 use App\Models\User;
 use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Http\Request;
@@ -27,11 +28,17 @@ class EmployeeController extends Controller
      *
      * @return \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
      */
-    public function index() {
+    public function index(Request $request) {
 
-        $employees = Employee::orderBy('id','asc')->paginate(10);
+        $column = $request->column  ?? 'id';
+        $order = $request->order  ?? 'asc';
+        $search = $request->search;
+
+        $employees = Employee::search($column, $order, $search)->paginate(10);
 
         $data = [
+            'search' => $search,
+            'order' => $order,
             'employees' => $employees
         ];
 
@@ -189,9 +196,11 @@ class EmployeeController extends Controller
 
                 $employee = $isEdit ? Employee::where('id',$request->id)->first() : new Employee();
 
-                $user = $isEdit ? User::find($employee->user->id) : new User();
+                $user = $employee->user ?? new User();
 
-                $this->save($employee, $request, $user);
+                $person = $employee->person ?? new Person();
+
+                $this->save($employee, $request, $user, $person);
 
                 DB::commit();
 
@@ -276,30 +285,39 @@ class EmployeeController extends Controller
      * @param Request $request
      * @return void
      */
-    private function save(Employee $employee, Request $request, User $user) {
+    private function save(Employee $employee, Request $request, User $user, Person $person) {
 
+        $person->name = $request->name;
+        $person->cpf = $request->cpf;
+        $person->rg = $request->rg;
+        $person->phone = $request->phone;
+        $person->gender = $request->gender;
+        $person->address = $request->address;
 
-        $user->name = $request->name;
+        $person->save();
+
+        if (!$employee->person_id) {
+
+            $employee->person_id = $person->id;
+
+        }
+
+        $employee->save();
+
         $user->email = $request->email;
+
+        if (!$user->employee_id) {
+
+            $user->employee_id = $employee->id;
+
+        }
 
         if ($request->password) {
 
             $user->password = Hash::make($request->password);
 
         }
-        $user->role = 0;
-
         $user->save();
-
-
-        $employee->address = $request->address;
-        $employee->cpf = $request->cpf;
-        $employee->rg = $request->rg;
-        $employee->phone = $request->phone;
-        $employee->work_code = $request->work_code;
-        $employee->is_new = false;
-        $employee->user_id = $user->id;
-        $employee->save();
 
     }
 

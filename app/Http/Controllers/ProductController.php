@@ -8,6 +8,7 @@ use App\Models\Product;
 use App\Models\Promotion;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 
@@ -28,9 +29,16 @@ class ProductController extends Controller
      */
     public function index(Request $request) {
 
-        $products = Product::search()->orderBy('id', 'asc')->paginate(10);
+        $order = $request->order ?? "asc";
+        $column = $request->column ?? "id";
+        $search = $request->search;
+
+
+        $products = Product::search($search)->orderBy($column, $order)->paginate(10);
 
         $data = [
+            'search' => $search,
+            'order' => $order,
             'request' => $request,
             'products' => $products
         ];
@@ -230,7 +238,7 @@ class ProductController extends Controller
         if (count($product->sales) > 0) {
             throw new \Exception('ele está presente em pelo menos uma venda');
         }
-
+        File::delete($product->image);
         Inventory::where('product_id', $product->id)->delete();
         Promotion::where('product_id', $product->id)->delete();
 
@@ -246,6 +254,16 @@ class ProductController extends Controller
     private function save(Product $product, Request $request) {
 
         $product->name = $request->name;
+
+        if ($request->hasFile('image')) {
+
+            $extension = $request->file('image')->getClientOriginalExtension();
+            $filename = date('Y-m-d-H-i').'.'.$extension;
+            $image = $request->image->move('assets/img/products', $filename);
+            $product->image = $image;
+
+        }
+
 
         //Vetores para substituir espaçe em branco e virgula no banco de dados
         $string = [

@@ -7,7 +7,7 @@
     <div class="page page-sale page-index">
 
         <div class="page-header">
-            <h1>Vendas <small>Listagem de vendas</small></h1>
+            <h1><a href="/sales">Vendas</a> <small>Listagem de vendas</small></h1>
             <h3>Valor total de vendas: <small>R$ {{ number_format($total,2,',','.') }}</small></h3>
         </div>
 
@@ -26,10 +26,10 @@
                     <thead>
 
                         <tr>
-                            <th>ID</th>
-                            <th>Valor</th>
+                            <th class="order" data-url="/sales" data-field="id" data-order="{{ $order == 'asc' ? 'desc' : 'asc' }}">ID <span><small><i class="bi bi-caret-down d-none id"></i><i class="bi bi-caret-up d-none id"></i></small></span></th>
+                            <th class="order" data-url="/sales" data-field="total" data-order="{{ $order == 'asc' ? 'desc' : 'asc' }}">Valor <span><small><i class="bi bi-caret-down d-none total"></i><i class="bi bi-caret-up d-none total"></i></small></span></th>
                             <th>Quantidade de produtos</th>
-                            <th>Data da venda</th>
+                            <th class="order" data-url="/sales" data-field="created_at" data-order="{{ $order == 'asc' ? 'desc' : 'asc' }}">Data da venda <span><small><i class="bi bi-caret-down d-none created_at"></i><i class="bi bi-caret-up d-none created_at"></i></small></span></th>
                             <th>Ações</th>
                         </tr>
 

@@ -24,11 +24,17 @@ class CategoryController extends Controller
      *
      * @return \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
      */
-    public function index() {
+    public function index(Request $request) {
 
-        $categories = Category::orderBy('id','asc')->paginate(10);
+        $column = $request->column ?? 'id';
+        $order = $request->order ?? 'asc';
+        $search = $request->search;
+
+        $categories = Category::search($column,$order,$search)->paginate(10);
 
         $data = [
+            'search' => $search,
+            'order' => $order,
             'categories' => $categories
         ];
 

@@ -28,6 +28,23 @@ class Promotion extends Model
 
     }
 
+    public function scopeSearch($query, $column, $order, $search) {
+        $query->select('pm.*', 'pr.name')
+        ->from('promotions as pm');
+
+        $query->join('products as pr', 'pr.id', 'pm.product_id');
+
+        if ($search) {
+
+            $query->whereRaw("name ilike '%".$search."%'");
+
+        }
+
+        $query->orderBy($column,$order);
+
+        return $query;
+    }
+
     public function scopeSearchPrice($query, Product $product) {
 
         $query->select("pd.price as product", "pm.price as promotion", "pm.is_active")

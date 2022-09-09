@@ -17,16 +17,13 @@ class CreateEmployeesTable extends Migration
 
             $table->id();
 
-            $table->bigInteger('user_id');
-            $table->string('address')->nullable();
-            $table->string('cpf', 14)->unique();
-            $table->string('rg', 11)->unique()->nullable();
-            $table->string('phone', 15)->nullable();
-            $table->string('work_code')->unique()->nullable();
-            $table->boolean('is_new')->default(true);
+            $table->bigInteger('person_id');
+            $table->bigInteger('role_id');
+            $table->json('work_point')->nullable();
             $table->timestamps();
 
-            $table->foreign('user_id')->on('users')->references('id');
+            $table->foreign('person_id')->references('id')->on('people');
+            $table->foreign('role_id')->references('id')->on('employee_roles');
         });
     }
 

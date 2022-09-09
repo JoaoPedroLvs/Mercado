@@ -17,10 +17,8 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
         'email',
         'password',
-        'role'
     ];
 
     /**
@@ -37,26 +35,48 @@ class User extends Authenticatable
     ];
 
     public function customer() {
-        return $this->hasOne(Customer::class);
+        return $this->belongsTo(Customer::class);
     }
 
     public function employee() {
-        return $this->hasOne(Employee::class);
+        return $this->belongsTo(Employee::class);
     }
-    // private $roles = [
-    //     1 => ['customer.index', 'customer.insert', 'customer.update'],
-    //     2 => ['employer.index', 'employer.insert']
-    // ];
 
-    // $group = $user->group;
+    public function manager() {
+        return $this->belongsTo(Manager::class);
+    }
 
-    // $group->hasPermission("customer.index");
-    // $roles = $this->roles[$this->id]
+    public function scopeSearch($query, $column, $order, $search) {
 
+        $query->select('u.*')->from('users as u');
 
-    // if (in_array($role, $roles)) {
-    //     return true;
-    // } else {
-    //     return false;
-    // }
+        if ($search) {
+            $query->whereRaw("email ilike '%".$search."%'");
+        }
+
+        $query->orderBy($column, $order);
+
+        return $query;
+    }
+
+    public function scopeSearchAdmin($query, $column, $order, $search) {
+
+        $query->select('u.*', 'p.name')->from('users as u');
+
+        $query->join('managers as ma', 'ma.id', 'u.manager_id');
+
+        $query->join('people as p', 'p.id', 'ma.person_id');
+
+        $query->whereRaw("exists (select * from managers as ma where ma.id = u.manager_id)");
+
+        if ($search) {
+
+            $query->whereRaw("name ilike '%".$search."%' or email ilike '%".$search."%'");
+        }
+
+        $query->orderBy($column, $order);
+
+        return $query;
+
+    }
 }

@@ -20,4 +20,20 @@ class Category extends Model
     public function products() {
         return $this->hasMany(Product::class);
     }
+
+    public function scopeSearch($query, $column, $order, $search) {
+
+        $query->select('c.*')->from('categories as c');
+
+        if ($search) {
+
+            $query->whereRaw("name ilike '%".$search."%'");
+
+        }
+
+        $query->orderBy($column, $order);
+
+        return $query;
+
+    }
 }

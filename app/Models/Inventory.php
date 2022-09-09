@@ -23,4 +23,19 @@ class Inventory extends Model
     public function product() {
         return $this->belongsTo(Product::class);
     }
+
+    public function scopeSearch($query, $column, $order, $search) {
+        $query->select('in.*', 'pr.name')
+        ->from('inventories as in');
+
+        $query->join('products as pr', 'pr.id', 'in.product_id');
+
+        if ($search) {
+            $query->whereRaw("name ilike '%".$search."%'");
+        }
+
+        $query->orderBy($column,$order);
+
+        return $query;
+    }
 }

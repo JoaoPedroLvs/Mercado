@@ -23,6 +23,7 @@
         "vue-template-compiler": "^2.6.12"
     },
     "dependencies": {
+        "@fancyapps/ui": "^4.0.31",
         "jquery-mask-plugin": "^1.14.16"
     }
 }

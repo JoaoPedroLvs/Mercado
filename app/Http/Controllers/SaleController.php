@@ -27,9 +27,12 @@ class SaleController extends Controller
      *
      * @return \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
      */
-    public function index() {
+    public function index(Request $request) {
 
-        $sales = Sale::orderBy('id', 'asc')->paginate(10);
+        $column = $request->column ?? 'id';
+        $order = $request->order ?? 'asc';
+
+        $sales = Sale::orderBy($column, $order)->paginate(10);
 
         $salesPrice = Sale::get();
 
@@ -42,6 +45,7 @@ class SaleController extends Controller
         }
 
         $data = [
+            'order' => $order,
             'sales' => $sales,
             'total' => $total
         ];

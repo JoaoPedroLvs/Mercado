@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\Customer;
+use App\Models\Person;
 use App\Models\User;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\RegistersUsers;
@@ -56,7 +57,7 @@ class RegisterController extends Controller
         return Validator::make($data, [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'cpf' => ['required', 'string', 'max:14', 'unique:employees'],
+            'cpf' => ['required', 'string', 'max:14', 'unique:people'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
         ]);
     }
@@ -76,18 +77,7 @@ class RegisterController extends Controller
 
             $request = (object) $data;
 
-            $user = new User();
-
-            $user->name = $request->name;
-            $user->email = $request->email;
-            $user->password = Hash::make($request->password);
-            $user->save();
-
-            $customer = new Customer();
-            $customer->user_id = $user->id;
-            $customer->cpf = $request->cpf;
-
-            $customer->save();
+            $this->save($request);
 
             DB::commit();
 
@@ -100,6 +90,34 @@ class RegisterController extends Controller
             return back()->withInput()->withErrors($error);
 
         }
+
+    }
+
+    /**
+     * Salva no banco de dados um novo cliente
+     *
+     * @param object $request
+     * @return void
+     */
+    private function save(object $request) {
+
+        $person = new Person();
+        $person->name = $request->name;
+        $person->cpf = $request->cpf;
+
+        $person->save();
+
+        $customer = new Customer();
+
+        $customer->person_id = $person->id;
+        $customer->save();
+
+        $user = new User();
+
+        $user->customer_id = $customer->id;
+        $user->email = $request->email;
+        $user->password = Hash::make($request->password);
+        $user->save();
 
     }
 }

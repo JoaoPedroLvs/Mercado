@@ -7,7 +7,7 @@
     <div class="page page-product page-index">
 
         <div class="page-header">
-            <h1>Produtos <small>Listagem de produtos</small></h1>
+            <h1><a href="/products">Produtos</a> <small>Listagem de produtos</small></h1>
         </div>
 
         <div class="page-body">
@@ -20,7 +20,31 @@
 
                     <a href="{{ url('product/create') }}" class="btn btn-primary">Novo Produto</a>
 
+
                 </div>
+
+
+            @endif
+
+            <form action="/products" method="get">
+
+                @csrf
+
+                <div class="input-group mb-3">
+                    <input type="text" name="search" class="form-control" placeholder="Pesquisar"/>
+                    <button type="submit" class="btn btn-success"><i class="bi bi-search"></i></button>
+                </div>
+
+            </form>
+
+            @if ($search)
+
+                <div class="page-message">
+
+                    <h4>Pesquisando por: <small>{{ $search }}</small></h4>
+
+                </div>
+
             @endif
 
             @if (count($products) > 0)
@@ -30,16 +54,12 @@
                     <thead>
 
                         <tr>
-                            <th>ID</th>
-                            <th>Nome</th>
+                            <th class="order" data-url="/products" data-field="id" data-order="{{ $order == 'asc' ? 'desc' : 'asc' }}">ID <span><small><i class="bi bi-caret-down d-none id"></i><i class="bi bi-caret-up d-none id"></i></small></span></th>
+                            <th>Imagem</th>
+                            <th class="order" data-url="/products" data-field="name" data-order="{{ $order == 'asc' ? 'desc' : 'asc' }}">Nome <span><small><i class="bi bi-caret-down d-none name"></i><i class="bi bi-caret-up d-none name"></i></small></span></th>
                             <th>Categoria</th>
-                            <th>Preço</th>
+                            <th class="order" data-url="/products" data-field="price" data-order="{{ $order == 'asc' ? 'desc' : 'asc' }}">Preço <span><small><i class="bi bi-caret-down d-none price"></i><i class="bi bi-caret-up d-none price"></i></small></span></th>
                             <th>Quantidade</th>
-                            @if (Auth::user()->role != 2)
-
-                                <th>Vendido</th>
-
-                            @endif
                             <th>Data de criação</th>
                             <th>Ações</th>
                         </tr>
@@ -52,15 +72,20 @@
 
                             <tr>
                                 <td>{{ $product->id }}</td>
+
+                                <td>
+
+                                    <a data-fancybox data-src="{{ asset($product->image) }}" data-caption="{{ $product->name }}">
+
+                                        <img src="{{ asset($product->image) }}" alt="Imagem do produto" height="50px" class="image">
+
+                                    </a>
+
+                                </td>
                                 <td>{{ $product->name }}</td>
                                 <td>{{ $product->category->name }}</td>
                                 <td>R$ {{$product->promotion ? number_format($product->promotion, '2', ',', ' ') : number_format($product->price, '2', ',', ' ' ) }}</td>
                                 <td>{{ $product->current_qty }}</td>
-                                @if (Auth::user()->role != 2)
-
-                                    <td>{{ $product->total_sold }}</td>
-
-                                @endif
                                 <td>{{ $product->created_at->format('d/m/Y') }}</td>
                                 <td>
                                     @if (Auth::user()->role != 2)
@@ -77,6 +102,7 @@
                                             <button type="button" class="btn btn-primary btn-cart-add"><i class="bi bi-plus"></i></button>
                                             <button type="button" class="btn btn-danger d-none btn-cart-remove"><i class="bi bi-x-lg"></i></button>
                                         </div>
+
                                     @endif
                                 </td>
                             </tr>
