@@ -15,13 +15,13 @@
 
             @include('components.alert')
 
-            {{-- @if (Auth::user() != 'user') --}}
+            @if (!Session::get('customer'))
 
                 <div class="page-controls mb-3">
                     <a href="{{ url('promotion/create') }}" class="btn btn-primary">Nova Promoção</a>
                 </div>
 
-            {{-- @endif --}}
+            @endif
 
 
             <div class="row g-3">

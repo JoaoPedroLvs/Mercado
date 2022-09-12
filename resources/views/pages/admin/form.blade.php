@@ -29,12 +29,12 @@
 
                 <div class="form-group">
                     <label for="name">Nome</label>
-                    <input type="text" name="name" id="name" class="form-control" value="{{ $user->name }}" required>
+                    <input type="text" name="name" id="name" class="form-control" value="{{ old('name',$user->name) }}" required>
                 </div>
 
                 <div class="form-group">
                     <label for="email">E-mail</label>
-                    <input type="email" name="email" id="email" class="form-control" value="{{ $user->email }}" {{ $isEdit ? "readonly" : "required" }}>
+                    <input type="email" name="email" id="email" class="form-control" value="{{ old('email',$user->email) }}" {{ $isEdit ? "readonly" : "required" }}>
                 </div>
 
                 @if ($isEdit)

@@ -8,7 +8,6 @@
         $isEdit = !empty($customer->id);
         $user = $customer->user ?? $customer;
     @endphp
-
     <div class="page page-customer page-form">
 
         <div class="page-header">
@@ -19,7 +18,7 @@
 
             @include('components.alert')
 
-            <form action="{{ url('customer') }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ url('/customer') }}" method="POST" enctype="multipart/form-data">
 
                 @csrf
 
@@ -34,7 +33,7 @@
 
                 <div class="form-group">
                     <label>Nome</label>
-                    <input type="text" class="form-control" name="name" value="{{ old('name',$user->name) }}" maxlength="100" required />
+                    <input type="text" class="form-control" name="name" value="{{ old('name',$user->customer->person->name) }}" maxlength="100" required />
                 </div>
 
                 <div class="form-group">
@@ -44,25 +43,25 @@
 
                 <div class="form-group">
                     <label>Endereço</label>
-                    <input class="form-control" type="text" name="address" value="{{ old('address',$customer->address) }}" maxlength="250" required />
+                    <input class="form-control" type="text" name="address" value="{{ old('address',$user->customer->person->address) }}" maxlength="250" required />
                 </div>
 
                 <div class="form-group">
                     <label>RG</label>
-                    <input class="form-control" type="text" name="rg" value="{{ old('rg',$customer->rg) }}" required />
+                    <input class="form-control" type="text" name="rg" value="{{ old('rg',$user->customer->person->rg) }}" required />
                 </div>
 
                 <div class="form-group">
                     <label>CPF</label>
-                    <input class="form-control cpf" type="text" name="cpf" value="{{ old('cpf',$customer->cpf) }}" required />
+                    <input class="form-control cpf" type="text" name="cpf" value="{{ old('cpf',$user->customer->person->cpf) }}" required />
                 </div>
 
                 <div class="form-group">
                     <label for="phone">Telefone</label>
-                    <input type="text" name="phone" id="phone" class="form-control phone" value="{{ old('phone', $customer->phone) }}">
+                    <input type="text" name="phone" id="phone" class="form-control phone" value="{{ old('phone', $user->customer->person->phone) }}">
                 </div>
 
-                @if (Auth::user()->role == 2)
+                @if (Session::get('customer'))
 
                     @if (Auth::user()->customer->is_new == false)
 
@@ -202,7 +201,7 @@
 
                 <div class="page-controls">
 
-                    @if (Auth::user()->role != 2)
+                    @if (!Session::get('customer'))
 
                         <a href="{{ url('customers') }}" class="btn btn-outline-primary">Voltar</a>
 

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Employee;
+use App\Models\EmployeeRole;
 use App\Models\Person;
 use App\Models\User;
 use Illuminate\Contracts\Validation\Rule;
@@ -54,11 +55,15 @@ class EmployeeController extends Controller
      * @param integer $id
      * @return \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
      */
-    public function show(int $id) {
+    public function show(Request $request, int $id) {
 
-        $employee = Employee::find($id);
+        $column = $request->column  ?? 'id';
+        $order = $request->order  ?? 'asc';
+
+        $employee = Employee::searchEmployee($column, $order, $id)->first();
 
         $data = [
+            'order' => $order,
             'employee' => $employee
         ];
 
@@ -160,8 +165,10 @@ class EmployeeController extends Controller
      * @return \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
      */
     public function form(Employee $employee) {
+        $roles = EmployeeRole::get();
 
         $data = [
+            'roles' => $roles,
             'employee' => $employee,
         ];
 
@@ -208,14 +215,14 @@ class EmployeeController extends Controller
 
                 Session::flash('success', 'O funcionário foi '. ($isEdit ? 'alterado' : 'criado'). ' com sucesso');
 
-                if ($user->role == 0) {
+                // if ($user->role == 0) {
 
-                    return redirect('/');
+                //     return redirect('/');
 
-                } else {
+                // } else {
 
-                    return redirect('employees');
-                }
+                return redirect('employees');
+                // }
 
             } catch (\Exception $e) {
 
@@ -303,6 +310,10 @@ class EmployeeController extends Controller
             $employee->person_id = $person->id;
 
         }
+
+        $employee->role_id = $request->role_id;
+
+        $employee->work_code = $request->work_code;
 
         $employee->save();
 

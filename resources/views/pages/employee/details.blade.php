@@ -6,14 +6,14 @@
     <div class="page page-employee page-details">
 
         <div class="page-header">
-            <h1>Funcionários <small>Detalhes do Funcionário {{$employee->user->name}}</small></h1>
+            <h1>Funcionários <small>Detalhes do Funcionário {{$employee->name}}</small></h1>
         </div>
 
         <div class="page-body">
 
             <ul>
-                <li><b>Nome: </b>{{ $employee->user->name }}</li>
-                <li><b>E-mail: </b>{{ $employee->user->email }}</li>
+                <li><b>Nome: </b>{{ $employee->name }}</li>
+                <li><b>E-mail: </b>{{ $employee->email }}</li>
                 <li><b>Endereço: </b>{{ $employee->address }}</li>
                 <li><b>Telefone: </b>{{ $employee->phone }}</li>
                 <li><b>RG: </b>{{ $employee->rg }}</li>
@@ -23,7 +23,7 @@
 
             <div class="page-controls">
 
-                @if (Auth::user()->role==0)
+                @if (!Session::get('employee'))
 
                     <a href="{{ url('/') }}" class="btn btn-outline-primary">Voltar</a>
                     <a class="btn btn-primary" href="{{ url('/employee/'. $employee->id .'/edit') }}">Editar</a>

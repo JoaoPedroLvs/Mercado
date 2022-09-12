@@ -47,4 +47,17 @@ class Customer extends Model
 
         return $query;
     }
+
+    public function scopeSearchCustomer($query, $id) {
+
+        $query->select('p.*', 'u.email')
+        ->from('customers as c')
+        ->where('c.id', $id);
+
+        $query->join('users as u', 'c.id', 'u.customer_id');
+        $query->join('people as p', 'p.id', 'c.person_id');
+
+
+        return $query;
+    }
 }

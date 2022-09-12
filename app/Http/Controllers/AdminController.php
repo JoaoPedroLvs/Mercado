@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Manager;
+use App\Models\Person;
 use App\Models\User;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
@@ -187,9 +189,13 @@ class AdminController extends Controller
 
                 $isEdit = $request->method() == 'PUT';
 
-                $admin = $isEdit ? User::find($request->id) : new User();
+                $user = $isEdit ? User::find($request->id) : new User();
 
-                $this->save($admin, $request);
+                $manager = $user->manager ?? new Manager();
+
+                $person = $manager->person ?? new Person();
+
+                $this->save($user, $request, $manager, $person);
 
                 DB::commit();
 
@@ -243,15 +249,30 @@ class AdminController extends Controller
      * @param Request $request
      * @return void
      */
-    private function save(User $user, Request $request) {
+    private function save(User $user, Request $request, Manager $manager, Person $person) {
 
-        $user->name = $request->name;
+        $person->name = $request->name;
+
+        $person->save();
+
+        if (!$manager->person_id) {
+
+            $manager->person_id = $person->id;
+
+            $manager->save();
+        }
+
+        if (!$user->manager_id) {
+
+            $user->manager_id = $manager->id;
+        }
+
         $user->email = $request->email;
 
         if ($request->password) {
             $user->password = Hash::make($request->password);
         }
-        $user->role = 1;
+
         $user->save();
     }
 }

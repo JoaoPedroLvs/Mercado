@@ -55,7 +55,7 @@ class CustomerController extends Controller
      */
     public function show(int $id) {
 
-        $customer = Customer::find($id);
+        $customer = Customer::searchCustomer($id)->first();
 
         $data = [
             'customer' => $customer
@@ -98,7 +98,6 @@ class CustomerController extends Controller
      * @return \Illuminate\Routing\Redirector|\Illuminate\Http\RedirectResponse
      */
     public function insert(Request $request) {
-
         return $this->insertOrUpdate($request);
 
     }
@@ -110,7 +109,6 @@ class CustomerController extends Controller
      * @return \Illuminate\Routing\Redirector|\Illuminate\Http\RedirectResponse
      */
     public function update(Request $request) {
-
         return $this->insertOrUpdate($request);
 
     }
@@ -206,7 +204,7 @@ class CustomerController extends Controller
 
                 Session::flash('success', 'O cliente foi '. ($isEdit ? 'alterado' : 'criado'). ' com sucesso!');
 
-                if ($user->role == 2) {
+                if (Session::get('customer')) {
 
                     return redirect('/customer/'.$customer->id.'/show');
 
@@ -290,7 +288,7 @@ class CustomerController extends Controller
         $person->cpf = $request->cpf;
         $person->rg = $request->rg;
         $person->address = $request->address;
-        $person->phone = $request->pohne;
+        $person->phone = $request->phone;
         $person->gender = $request->gender;
 
         $person->save();

@@ -5,7 +5,6 @@ $(function(){
 
         var $switch = $self.find('.switch');
 
-
         $password = $self.find('.password');
 
         $switch.on('change', function() {

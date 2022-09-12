@@ -14,7 +14,7 @@
 
             @include('components.alert')
 
-            @if(Auth::user()->role != 2)
+            @if(!Session::get('customer'))
 
                 <div class="page-controls mb-3">
 

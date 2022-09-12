@@ -11,6 +11,9 @@
     ];
 
 @endphp
+
+@dd(Session::get('customer'))
+
 <nav class="navbar navbar-expand-lg bg-light">
 
     <div class="container-fluid">
@@ -25,7 +28,7 @@
 
             <ul class="navbar-nav">
 
-                {{-- @if (Auth::user()->role == 1) --}}
+                @if (Session::get('manager'))
 
                     <li class="nav-item dropdown">
 
@@ -43,25 +46,25 @@
 
                     </li>
 
-                {{-- @endif --}}
+                @endif
 
                 @foreach ($pages as $page)
 
-                    @if (Auth::user()->role == 0)
-{{--
+                    @if (Session::get('employee'))
+
                         @if ($page[0] != 'Funcionários')
 
                             <li class="nav-item">
                                 <a href="{{ url($page[1]) }}" aria-current="page" class="nav-link">{{ $page[0] }}</a>
                             </li>
 
-                        @endif --}}
+                        @endif
 
-                    {{-- @else --}}
+                    @else
 
-                        {{-- @if (Auth::user()->role == 2) --}}
+                        @if (Session::get('customer'))
 
-                            {{-- @if ($page[0] == 'Produtos' || $page[0] == 'Categorias' || $page[0] == 'Promoção')
+                            @if ($page[0] == 'Produtos' || $page[0] == 'Categorias' || $page[0] == 'Promoção')
 
                                 <li class="nav-item">
                                     <a href="{{ url($page[1]) }}" aria-current="page" class="nav-link">{{ $page[0] }}</a>
@@ -69,13 +72,36 @@
 
                             @endif
 
-                        @else --}}
+                        @else
 
-                            <li class="nav-item">
-                                <a href="{{ url($page[1]) }}" aria-current="page" class="nav-link">{{ $page[0] }}</a>
-                            </li>
+                            @if ($page[0] == 'Funcionários')
 
-                        {{-- @endif --}}
+
+                                <li class="nav-item dropdown">
+
+                                    <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                                        {{ $page[0] }}
+                                    </a>
+
+                                    <div class="nav-item dropdown-menu" aria-labelledby="navbarDropdown">
+
+                                        <a href="{{ url($page[1]) }}" class="dropdown-item"><i class="fas fa-user-tie"></i> Funcionários</a>
+
+                                        <a href="{{ url('/employees/roles') }}" class="dropdown-item">Cargos</a>
+                                    </div>
+
+                                </li>
+
+                            @else
+
+                                <li class="nav-item">
+                                    <a href="{{ url($page[1]) }}" aria-current="page" class="nav-link">{{ $page[0] }}</a>
+                                </li>
+
+                            @endif
+
+
+                        @endif
 
                     @endif
 
@@ -84,7 +110,7 @@
 
             </ul>
 
-            @if (Auth::user()->role == 0)
+            @if (Session::get('customer'))
 
                 <ul class="navbar-nav ms-auto">
                     <div class="position-relative">
@@ -107,14 +133,13 @@
                 <ul class="navbar-nav ms-end">
 
                     <li class="nav-item dropdown">
-                        {{-- @dd(Auth::user()->employee->id) --}}
                         <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                             {{ Auth::user()->customer->person->name }}
                         </a>
 
                         <div class="nav-item dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
 
-                            @if (Auth::user()->role == 2)
+                            @if (Session::get('customer'))
 
                                 <a href="{{ url('/customer/'.Auth::user()->customer_id.'/show') }}" class="dropdown-item"><i class="bi bi-person-fill"></i> Perfil</a>
 
@@ -135,7 +160,7 @@
 
                 </ul>
 
-            {{-- @else
+            @else
 
                 <ul class="navbar-nav ms-auto ms-end">
 
@@ -146,14 +171,14 @@
 
                         <div class="nav-item dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
 
-                            @if (Auth::user()->role == 0)
+                            @if (Session::get('employee'))
 
                                 <a href="{{ url('/employee/'.Auth::user()->employee_id.'/show') }}" class="dropdown-item"><i class="bi bi-person-fill"></i> Perfil</a>
 
                             @endif
 
                             <a class="dropdown-item" class="dropdown-item" href="{{ route('logout') }}"onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                <i class="bi bi-box-arrow-right"></i>
+                                <i class="bi bi-box-arrow-right"></i>{{ Session::flush() }}
                                 Sair
                             </a>
 
@@ -165,10 +190,9 @@
 
                     </li>
 
-                </ul> --}}
+                </ul>
 
             @endif
-
 
         </div>
 

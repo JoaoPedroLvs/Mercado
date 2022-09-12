@@ -46,6 +46,8 @@ class LoginController extends Controller
 
         Auth::logout();
 
+        Session::flush();
+
         Session::flash('success','Saiu da conta com sucesso!');
 
         return redirect('login');

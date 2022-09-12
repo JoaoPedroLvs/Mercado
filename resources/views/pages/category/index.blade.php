@@ -14,7 +14,7 @@
 
             @include('components.alert')
 
-            @if (Auth::user()->role != 2)
+            @if (!Session::get('customer'))
 
                 <div class="page-controls mb-3">
                     <a href="{{ url('category/create') }}" class="btn btn-primary">Nova categoria</a>

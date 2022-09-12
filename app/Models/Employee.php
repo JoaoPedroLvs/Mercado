@@ -31,8 +31,8 @@ class Employee extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function employee_roles() {
-        return $this->hasMany(EmployeeRole::class);
+    public function roles() {
+        return $this->hasOne(EmployeeRole::class);
     }
 
     public function person() {
@@ -55,6 +55,19 @@ class Employee extends Model
             $query->whereRaw("name ilike '%".$search."%' or email ilike '%".$search."%'");
 
         }
+
+        return $query;
+    }
+
+    public function scopeSearchEmployee($query, $column, $order, $id) {
+
+        $query->select('p.*', 'u.email')
+        ->from('employees as em')->where('em.id', $id);
+
+        $query->join('people as p', 'p.id', 'em.person_id');
+        $query->join('users as u', 'u.employee_id', 'em.id');
+
+        $query->orderBy($column,$order);
 
         return $query;
     }

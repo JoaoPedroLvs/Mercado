@@ -1,7 +1,5 @@
 <?php
 
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Route;
 
 /* Rotas de login, registro, resetar senha */
@@ -21,12 +19,16 @@ Route::group([], function() {
 
 });
 
-/* Rotas os usuários tem acesso */
-
-Route::group(['middleware' => ['auth'/* ,'permission:customer '*/]], function() {
+Route::group(['middleware' => 'auth', 'permissions:customer,employee,manager'], function() {
 
     // Página inicial
     Route::get   ('/', function () {return view('welcome');});
+
+});
+
+/* Rotas os usuários tem acesso */
+
+Route::group(['middleware' => ['auth','permissions:customer']], function() {
 
     Route::get   ('/customer/{id}/edit',   'CustomerController@edit');
     Route::put   ('/customer',        'CustomerController@update');
@@ -39,7 +41,7 @@ Route::group(['middleware' => ['auth'/* ,'permission:customer '*/]], function() 
 });
 
 /* Rotas que os funcionários tem acesso */
-Route::group(['middleware' => ['auth'/* , 'permission:employee' */]], function() {
+Route::group(['middleware' => ['auth', 'permissions:employee']], function() {
 
 
     /* Rotas para gerenciar clientes */
@@ -85,10 +87,19 @@ Route::group(['middleware' => ['auth'/* , 'permission:employee' */]], function()
     Route::post  ('/sale',           'SaleController@insert');
     Route::get   ('/sale/{id}/delete',     'SaleController@delete');
 
+    /* Rotas para gerenciar os cargos de um funcionário */
+    Route::get   ('/employees/roles', 'EmployeeRoleController@index');
+    Route::get   ('/employees/role/{id}/details', 'EmployeeRoleController@show');
+    Route::get   ('/employees/role/create', 'EmployeeRoleController@create');
+    Route::get   ('/employees/role/{id}/edit', 'EmployeeRoleController@edit');
+    Route::get   ('/employees/role/{id}/delete', 'EmployeeRoleController@delete');
+    Route::post  ('/employees/role', 'EmployeeRoleController@insert');
+    Route::put   ('/employees/role', 'EmployeeRoleController@update');
+
 });
 
 
-Route::group(['middleware' => ['auth'/* , 'permission:manager' */]], function() {
+Route::group(['middleware' => ['auth', 'permissions:manager']], function() {
 
     /* Rotas para gerenciar os funcionários */
     Route::get   ('/employees',            'EmployeeController@index');

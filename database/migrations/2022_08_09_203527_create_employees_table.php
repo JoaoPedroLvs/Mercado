@@ -19,7 +19,7 @@ class CreateEmployeesTable extends Migration
 
             $table->bigInteger('person_id');
             $table->bigInteger('role_id');
-            $table->json('work_point')->nullable();
+            $table->string('work_code');
             $table->timestamps();
 
             $table->foreign('person_id')->references('id')->on('people');

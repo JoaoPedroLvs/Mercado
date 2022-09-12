@@ -1,13 +1,13 @@
 @extends('layouts.main', [
-    'pageTitle' => 'Funcionários'
+    'pageTitle' => 'Cargos'
 ])
 
 @section('content')
 
-    <div class="page page-employee page-index">
+    <div class="page page-roles page-index">
 
         <div class="page-header">
-            <h1><a href="{{ url('employees') }}">Funcionários</a> <small>Listagem de funcionários</small></h1>
+            <h1><a href="{{ url('employees/roles') }}">Cargos</a> <small>Listagem de cargos</small></h1>
         </div>
 
         <div class="page-body">
@@ -15,14 +15,16 @@
             @include('components.alert')
 
             <div class="page-controls mb-3">
-                <a href="{{ url('employee/create') }}" class="btn btn-primary">Novo funcionário</a>
+
+                <a href="{{ url('employees/role/create') }}" class="btn btn-primary">Criar novo cargo</a>
+
             </div>
 
             <div class="row g-3">
 
                 <div class="col-md-6">
 
-                    <form action="/employees" method="get">
+                    <form action="/employees/roles" method="get">
 
                         @csrf
 
@@ -62,48 +64,48 @@
             </div>
 
             @if ($search)
-                <div class="page-message">
 
-                    <h4>Pesquisando por <small>{{ $search }}</small></h4>
+                <h4>Pesquisando por <small>{{ $search }}</small></h4>
 
-                </div>
             @endif
 
-            @if (count($employees) > 0)
+            @if (count($roles) > 0)
 
                 <table class="table table-striped">
 
                     <thead>
 
                         <tr>
-                            <th class="order" data-url="/employees" data-field="id" data-order="{{ $order == 'asc' ? 'desc' : 'asc' }}">ID <span><small><i class="bi bi-caret-down d-none id"></i><i class="bi bi-caret-up d-none id"></i></small></span></th>
-                            <th class="order" data-url="/employees" data-field="name" data-order="{{ $order == 'asc' ? 'desc' : 'asc' }}">Nome <span><small><i class="bi bi-caret-down d-none name"></i><i class="bi bi-caret-up d-none name"></i></small></span></th>
-                            <th class="order" data-url="/employees" data-field="email" data-order="{{ $order == 'asc' ? 'desc' : 'asc' }}">E-mail <span><small><i class="bi bi-caret-down d-none email"></i><i class="bi bi-caret-up d-none email"></i></small></span></th>
+                            <th class="order" data-url="/employees/roles" data-field="id" data-order="{{ $order == 'asc' ? 'desc' : 'asc'}}">ID <span><small><i class="bi bi-caret-down d-none id"></i><i class="bi bi-caret-up d-none id"></i></small></span></th>
+                            <th class="order" data-url="/employees/roles" data-field="name" data-order="{{ $order == 'asc' ? 'desc' : 'asc' }}">Name <span><small><i class="bi bi-caret-down d-none name"></i><i class="bi bi-caret-up d-none name"></small></span></th>
+                            <th class="order" data-url="/employees/roles" data-field="qty_employees" data-order="{{ $order == 'asc' ? 'desc' : 'asc' }}">Quantidade de funcionário <span><small><i class="bi bi-caret-down d-none qty_employees"></i><i class="bi bi-caret-up d-none qty_employees"></small></span></th>
                             <th>Data de criação</th>
                             <th>Ações</th>
                         </tr>
 
                     </thead>
 
-                    @foreach ($employees as $employee)
+                    @foreach ($roles as $role)
 
                         <tbody>
 
                             <tr>
-                                <td>{{ $employee->id }}</td>
-                                <td>{{ $employee->name }}</td>
-                                <td>{{ $employee->email }}</td>
-                                <td>{{ $employee->created_at->format('d/m/Y') }}</td>
+
+                                <td>{{ $role->id }}</td>
+                                <td>{{ $role->name }}</td>
+                                <td>{{ $role->qty_employees }}</td>
+                                <td>{{ $role->created_at->format('d/m/Y') }}</td>
                                 <td>
 
                                     <div class="table-options">
 
-                                        <a href="{{ url('employee/'.$employee->id.'/show') }}" class="btn btn-secondary buttons" ><i class="fas fa-list"></i></a><br>
-                                        <a href="{{ url('employee/'.$employee->id.'/edit') }}" class="btn btn-primary buttons" ><i class="far fa-edit"></i></a><br>
-                                        <a href="{{ url('employee/'.$employee->id.'/delete') }}" class="btn btn-danger buttons" ><i class="fas fa-trash"></i></a>
-
+                                        <a href="{{ url('employees/role/'.$role->id.'/show') }}" class="btn btn-secondary buttons"><i class="fas fa-list"></i></a>
+                                        <a href="{{ url('employees/role/'.$role->id.'/edit') }}" class="btn btn-primary buttons"><i class="far fa-edit"></i></a>
+                                        <a href="{{ url('employees/role/'.$role->id.'/delete') }}" class="btn btn-danger buttons"><i class="fas fa-trash"></i></a>
                                     </div>
+
                                 </td>
+
                             </tr>
 
                         </tbody>
@@ -112,13 +114,13 @@
 
                 </table>
 
-                {{ $employees->appends(Request::except('page'))->links() }}
+                {{ $roles->appends(Request::except('page'))->links() }}
 
             @else
 
                 <div class="page-message">
 
-                    <h3>Nenhum funcionário criado</h3>
+                    <h3>Nenhum cargo criado</h3>
 
                 </div>
 

@@ -41,7 +41,6 @@ class ProductController extends Controller
             'qtyPaginate' => $qtyPaginate,
             'search' => $search,
             'order' => $order,
-            'request' => $request,
             'products' => $products
         ];
 
