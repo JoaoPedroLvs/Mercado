@@ -82,7 +82,6 @@
                         @else
 
                             <h3>Nenhum produto cadastrado</h3>
-                            <p><a href="/create/product">Clique aqui</a> para criar um novo</p>
 
                         <br>
 

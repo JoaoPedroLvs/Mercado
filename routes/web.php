@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\PersonController;
 use Illuminate\Support\Facades\Route;
 
 /* Rotas de login, registro, resetar senha */
@@ -19,10 +20,10 @@ Route::group([], function() {
 
 });
 
-Route::group(['middleware' => 'auth', 'permissions:customer,employee,manager'], function() {
+Route::group(['middleware' => ['auth', 'permissions:customer,employee,manager']], function() {
 
     // Página inicial
-    Route::get   ('/', function () {return view('welcome');});
+    Route::get   ('/', 'HomeController@index');
 
 });
 
@@ -30,10 +31,10 @@ Route::group(['middleware' => 'auth', 'permissions:customer,employee,manager'], 
 
 Route::group(['middleware' => ['auth','permissions:customer']], function() {
 
+    Route::get   ('/customer/{id}/show', 'CustomerController@show');
     Route::get   ('/customer/{id}/edit',   'CustomerController@edit');
     Route::put   ('/customer',        'CustomerController@update');
-    Route::get   ('/customer/{id}/show', 'CustomerController@show');
-    Route::get   ('/categories',           'CategoryController@index');
+    Route::get   ('/categories',           ['uses' => 'CategoryController@index', 'role' => 'customer.index']);
     Route::get   ('/category/{id}/products', 'CategoryController@show');
     Route::get   ('/products',             'ProductController@index');
     Route::get   ('/promotions',           'PromotionController@index');
@@ -42,7 +43,16 @@ Route::group(['middleware' => ['auth','permissions:customer']], function() {
 
 /* Rotas que os funcionários tem acesso */
 Route::group(['middleware' => ['auth', 'permissions:employee']], function() {
+    // Route::group(['middleware' => ['auth']], function() {
 
+    /* Rotas para gerenciar as pessoas */
+    Route::get   ('/people', 'PersonController@index');
+    Route::get   ('/person/{id}/show', 'PersonController@show');
+    Route::get   ('/person/create', 'PersonController@create');
+    Route::get   ('/person/{id}/edit', 'PersonController@edit');
+    Route::post  ('/person', 'PersonController@insert');
+    Route::put   ('/person', 'PersonController@update');
+    Route::get   ('/person/{id}/delete', 'PersonController@delete');
 
     /* Rotas para gerenciar clientes */
     Route::get   ('/customers',            ['uses' => 'CustomerController@index', 'role' => 'customer.index']);
@@ -73,12 +83,6 @@ Route::group(['middleware' => ['auth', 'permissions:employee']], function() {
     Route::post  ('/inventory',      'InventoryController@insert');
     Route::get   ('/inventory/{id}/delete',     'InventoryController@delete');
 
-    /* Rotas para gerenciar as promoções */
-    Route::get   ('/promotion/create',     'PromotionController@create');
-    Route::get   ('/promotion/{id}/edit',  'PromotionController@edit');
-    Route::post  ('/promotion',      'PromotionController@insert');
-    Route::put   ('/promotion',       'PromotionController@update');
-    Route::get   ('/promotion/{id}/delete', 'PromotionController@delete');
 
     /* Rotas para gerenciar as vendas */
     Route::get   ('/sales',                'SaleController@index');
@@ -87,19 +91,18 @@ Route::group(['middleware' => ['auth', 'permissions:employee']], function() {
     Route::post  ('/sale',           'SaleController@insert');
     Route::get   ('/sale/{id}/delete',     'SaleController@delete');
 
-    /* Rotas para gerenciar os cargos de um funcionário */
-    Route::get   ('/employees/roles', 'EmployeeRoleController@index');
-    Route::get   ('/employees/role/{id}/details', 'EmployeeRoleController@show');
-    Route::get   ('/employees/role/create', 'EmployeeRoleController@create');
-    Route::get   ('/employees/role/{id}/edit', 'EmployeeRoleController@edit');
-    Route::get   ('/employees/role/{id}/delete', 'EmployeeRoleController@delete');
-    Route::post  ('/employees/role', 'EmployeeRoleController@insert');
-    Route::put   ('/employees/role', 'EmployeeRoleController@update');
 
 });
 
 
 Route::group(['middleware' => ['auth', 'permissions:manager']], function() {
+
+    /* Rotas para gerenciar as promoções */
+    Route::get   ('/promotion/create',     'PromotionController@create');
+    Route::get   ('/promotion/{id}/edit',  'PromotionController@edit');
+    Route::post  ('/promotion',      'PromotionController@insert');
+    Route::put   ('/promotion',       'PromotionController@update');
+    Route::get   ('/promotion/{id}/delete', 'PromotionController@delete');
 
     /* Rotas para gerenciar os funcionários */
     Route::get   ('/employees',            'EmployeeController@index');
@@ -109,7 +112,14 @@ Route::group(['middleware' => ['auth', 'permissions:manager']], function() {
     Route::post  ('/employee',       'EmployeeController@insert');
     Route::put   ('/employee',        'EmployeeController@update');
 
-
+    /* Rotas para gerenciar os cargos de um funcionário */
+    Route::get   ('/employees/roles', 'EmployeeRoleController@index');
+    Route::get   ('/employees/role/{id}/details', 'EmployeeRoleController@show');
+    Route::get   ('/employees/role/create', 'EmployeeRoleController@create');
+    Route::get   ('/employees/role/{id}/edit', 'EmployeeRoleController@edit');
+    Route::get   ('/employees/role/{id}/delete', 'EmployeeRoleController@delete');
+    Route::post  ('/employees/role', 'EmployeeRoleController@insert');
+    Route::put   ('/employees/role', 'EmployeeRoleController@update');
 
     /* Rotas para gerenciar os admins */
     Route::get   ('/admins', 'AdminController@index');

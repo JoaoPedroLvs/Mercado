@@ -13,7 +13,7 @@
 
             <ul>
                 <li><b>Nome: </b>{{ $employee->name }}</li>
-                <li><b>E-mail: </b>{{ $employee->email }}</li>
+                <li><b>Gênero: </b>{{ $employee->gender == 'm' ? 'Masculino' : ($employee->gender == 'f' ? 'Feminino' : ($manager->gender == 'L' ? 'LGBTQIA+PLUS' : '-')) }}</li>
                 <li><b>Endereço: </b>{{ $employee->address }}</li>
                 <li><b>Telefone: </b>{{ $employee->phone }}</li>
                 <li><b>RG: </b>{{ $employee->rg }}</li>
@@ -23,7 +23,7 @@
 
             <div class="page-controls">
 
-                @if (!Session::get('employee'))
+                @if (Session::get('employee'))
 
                     <a href="{{ url('/') }}" class="btn btn-outline-primary">Voltar</a>
                     <a class="btn btn-primary" href="{{ url('/employee/'. $employee->id .'/edit') }}">Editar</a>
@@ -31,6 +31,7 @@
                 @else
 
                     <a class="btn btn-outline-primary" href="{{ url('employees') }}">Voltar</a>
+                    <a class="btn btn-primary" href="{{ url('/employee/'. $employee->id .'/edit') }}">Editar</a>
 
                 @endif
 

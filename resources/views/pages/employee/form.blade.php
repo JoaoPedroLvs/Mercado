@@ -6,6 +6,7 @@
 
     @php
         $isEdit = !empty($employee->id);
+        $personData = $employee->person ?? $employee;
     @endphp
 
     <div class="page page-employee page-form">
@@ -24,41 +25,58 @@
 
                 @method($isEdit ? 'PUT' : 'POST')
 
-                @php
-                    $user = $employee->user ?? $employee;
-                @endphp
+                @if (!$isEdit)
 
-                <input type="hidden" name="id" value="{{ $employee->id }}">
+                    <div class="form-check form-switch">
+                        <input class="form-check-input switch" type="checkbox" role="switch" id="flexSwitchCheckDefault" name="checkbox">
+                        <label class="form-check-label label-switch" for="flexSwitchCheckChecked">Pessoa já criada</label>
+                    </div>
 
-                <div class="form-group">
-                    <label>Nome</label>
-                    <input type="text" name="name" class="form-control" value="{{ old('name',$user->name) }}" required autofocus/>
-                </div>
+                    <div class="form-group person">
 
-                <div class="form-group">
-                    <label>E-mail</label>
-                    <input type="text" name="email" class="form-control" value="{{ old('email', $user->email) }}" required/>
-                </div>
+                        <label for="person">Pessoa</label>
+                        <select name="person_id" id="person" class="form-select">
 
-                <div class="form-group">
-                    <label>Endereço</label>
-                    <input type="text" name="address" class="form-control" value="{{ old('address', $employee->address) }}" required/>
-                </div>
+                            <option value="">Selecione uma pessoa</option>
 
-                <div class="form-group">
-                    <label>Telefone</label>
-                    <input type="text" name="phone" class="form-control phone" value="{{ old('phone', $employee->phone) }}" required/>
-                </div>
+                            @foreach ($people as $person)
 
-                <div class="form-group">
-                    <label>CPF</label>
-                    <input type="text" name="cpf" class="form-control cpf" value="{{ old('cpf', $employee->cpf) }}" required/>
-                </div>
+                                <option value="{{ $person->id }}">{{ $person->name }}</option>
 
-                <div class="form-group">
-                    <label>RG</label>
-                    <input type="number" name="rg" class="form-control" value="{{ old('rg', $employee->rg) }}" required/>
-                </div>
+                            @endforeach
+
+                        </select>
+
+                    </div>
+
+                    <div class="d-none new-person">
+
+                        @include('components.person-form')
+
+                    </div>
+
+                @else
+
+                    <input type="hidden" name="id" value="{{ $employee->id }}">
+
+                    <div class="form-group">
+
+                        <label for="person">Pessoa</label>
+                        <select name="person_id" id="person" class="form-select">
+
+                            <option value="">Selecione uma pessoa</option>
+
+                            @foreach ($people as $person)
+
+                                <option value="{{ $person->id }}" {{ $person->id == $employee->person_id ? 'selected' : '' }}>{{ $person->name }}</option>
+
+                            @endforeach
+
+                        </select>
+
+                    </div>
+
+                @endif
 
                 <div class="row g-3">
 
@@ -94,156 +112,6 @@
                     </div>
 
                 </div>
-
-                @if (Auth::user()->role == 0)
-
-                    @if($isEdit)
-
-                        <div class="page-controls">
-                            <div class="form-check form-switch">
-                                <input class="form-check-input switch" type="checkbox" role="switch" id="flexSwitchCheckDefault">
-                                <label class="form-check-label" for="flexSwitchCheckDefault">Editar senha</label>
-                            </div>
-
-                        </div>
-
-                        <div class="row g-3">
-
-                            <div class="col-md-6">
-
-                                <div class="form-group d-none password">
-
-                                    <label for="password">Senha</label>
-                                    <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" >
-
-                                        @error('password')
-
-                                            <span class="invalid-feedback" role="alert">
-
-                                                <strong>{{ $message }}</strong>
-
-                                            </span>
-
-                                        @enderror
-                                </div>
-
-                            </div>
-
-                            <div class="col-md-6">
-
-                                <div class="form-group d-none password">
-
-                                    <label for="password-confirm">Confirmar senha</label>
-                                    <input id="password-confirm" type="password" class="form-control" name="password_confirmation" >
-
-                                </div>
-
-                            </div>
-
-                        </div>
-
-                    @else
-                    <div class="row g-3">
-
-                        <div class="col-md-6">
-
-                            <div class="form-group">
-
-                                <label for="password">Senha</label>
-                                <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" >
-
-                                    @error('password')
-
-                                        <span class="invalid-feedback" role="alert">
-
-                                            <strong>{{ $message }}</strong>
-
-                                        </span>
-
-                                    @enderror
-                            </div>
-
-                        </div>
-
-                        <div class="col-md-6">
-
-                            <div class="form-group">
-
-                                <label for="password-confirm">Confirmar senha</label>
-                                <input id="password-confirm" type="password" class="form-control" name="password_confirmation" >
-
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                    @endif
-
-
-                @else
-
-                    @if ($isEdit)
-
-                        <div class="page-controls">
-                            <div class="form-check form-switch">
-                                <input class="form-check-input switch" type="checkbox" role="switch" id="flexSwitchCheckDefault">
-                                <label class="form-check-label" for="flexSwitchCheckDefault">Editar senha</label>
-                            </div>
-
-                        </div>
-
-                        <div class="form-group d-none password">
-
-                            <label for="password">Senha</label>
-                            <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" >
-
-                                @error('password')
-
-                                    <span class="invalid-feedback" role="alert">
-
-                                        <strong>{{ $message }}</strong>
-
-                                    </span>
-
-                                @enderror
-                        </div>
-
-                        <div class="form-group d-none password">
-
-                            <label for="password-confirm">Confirmar senha</label>
-                            <input id="password-confirm" type="password" class="form-control" name="password_confirmation" >
-
-                        </div>
-
-                    @else
-
-                        <div class="form-group">
-
-                            <label for="password">Senha</label>
-                            <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required>
-
-                                @error('password')
-
-                                    <span class="invalid-feedback" role="alert">
-
-                                        <strong>{{ $message }}</strong>
-
-                                    </span>
-
-                                @enderror
-                        </div>
-
-                        <div class="form-group">
-
-                            <label for="password-confirm">Confirmar senha</label>
-                            <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required>
-
-                        </div>
-
-                    @endif
-
-                @endif
 
                 <div class="page-controls">
 

@@ -73,7 +73,7 @@
                 </div>
 
             @endif
-            @if (count($users) > 0)
+            @if (count($managers) > 0)
 
                 <table class="table table-striped">
 
@@ -83,7 +83,7 @@
 
                             <th class="order" data-url="/admins" data-field="id" data-order="{{ $order == 'asc' ? 'desc' : 'asc' }}">ID <span><small><i class="bi bi-caret-down d-none id"></i><i class="bi bi-caret-up d-none id"></i></small></span></th>
                             <th class="order" data-url="/admins" data-field="name" data-order="{{ $order == 'asc' ? 'desc' : 'asc' }}">Nome <span><small><i class="bi bi-caret-down d-none name"></i><i class="bi bi-caret-up d-none name"></i></small></span></th>
-                            <th class="order" data-url="/admins" data-field="email" data-order="{{ $order == 'asc' ? 'desc' : 'asc' }}">E-mail <span><small><i class="bi bi-caret-down d-none email"></i><i class="bi bi-caret-up d-none email"></i></small></span></th>
+                            <th>CPF</th>
                             <th class="order" data-url="/admins" data-field="created_at" data-order="{{ $order == 'asc' ? 'desc' : 'asc' }}">Data de criação <span><small><i class="bi bi-caret-down d-none created_at"></i><i class="bi bi-caret-up d-none created_at"></i></small></span></th>
                             <th>Ações</th>
 
@@ -91,22 +91,22 @@
 
                     </thead>
 
-                    @foreach ($users as $user)
+                    @foreach ($managers as $manager)
 
                         <tbody>
 
                             <tr>
 
-                                <td>{{ $user->id }}</td>
-                                <td>{{ $user->name }}</td>
-                                <td>{{ $user->email }}</td>
-                                <td>{{ $user->created_at ? $user->created_at->format("d/m/Y") : "-" }}</td>
+                                <td>{{ $manager->id }}</td>
+                                <td>{{ $manager->name }}</td>
+                                <td>{{ $manager->cpf ?? '-' }}</td>
+                                <td>{{ $manager->created_at ? $manager->created_at->format("d/m/Y") : "-" }}</td>
                                 <td>
                                     <div class="page-controls">
 
-                                        <a href="{{ url('admin/'.$user->id.'/show') }}" class="btn btn-secondary"><i class="fas fa-list"></i></a>
-                                        <a href="{{ url('admin/'.$user->id.'/edit') }}" class="btn btn-primary"><i class="far fa-edit"></i></a>
-                                        <a href="{{ url('admin/'.$user->id.'/delete') }}" class="btn btn-danger"><i class="fas fa-trash"></i></a>
+                                        <a href="{{ url('admin/'.$manager->id.'/show') }}" class="btn btn-secondary"><i class="fas fa-list"></i></a>
+                                        <a href="{{ url('admin/'.$manager->id.'/edit') }}" class="btn btn-primary"><i class="far fa-edit"></i></a>
+                                        <a href="{{ url('admin/'.$manager->id.'/delete') }}" class="btn btn-danger"><i class="fas fa-trash"></i></a>
 
                                     </div>
                                 </td>
@@ -119,7 +119,7 @@
 
                 </table>
 
-                {{ $users->appends(Request::except('page'))->links() }}
+                {{ $managers->appends(Request::except('page'))->links() }}
             @else
 
                 <div class="page-message">

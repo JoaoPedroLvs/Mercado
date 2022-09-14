@@ -12,5 +12,6 @@ $(function() {
 
         $('.price').mask('# ##0,00', {reverse:true});
 
+        $('.rg').mask('00000000000000');
     });
 });

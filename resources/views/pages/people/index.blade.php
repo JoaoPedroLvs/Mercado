@@ -1,13 +1,13 @@
-@extends('layouts.main', [
-    'pageTitle' => 'Funcionários'
+@extends('layouts.main',[
+    'pageTitle' => 'Pessoa'
 ])
 
 @section('content')
 
-    <div class="page page-employee page-index">
+    <div class="page page-people page-index">
 
         <div class="page-header">
-            <h1><a href="{{ url('employees') }}">Funcionários</a> <small>Listagem de funcionários</small></h1>
+            <h1><a href="/people">Pessoas</a> <small>Listagem de pessoas</small></h1>
         </div>
 
         <div class="page-body">
@@ -15,14 +15,16 @@
             @include('components.alert')
 
             <div class="page-controls mb-3">
-                <a href="{{ url('employee/create') }}" class="btn btn-primary">Novo funcionário</a>
+
+                <a href="{{ url('person/create') }}" class="btn btn-primary">Nova Pessoa</a>
+
             </div>
 
             <div class="row g-3">
 
                 <div class="col-md-6">
 
-                    <form action="/employees" method="get">
+                    <form action="/people" method="get">
 
                         @csrf
 
@@ -37,13 +39,13 @@
 
                 <div class="col-md-6">
 
-                    <form action="/employees" method="get">
+                    <form action="/people" method="get">
                         @csrf
 
 
                         <div class="input-group">
 
-                            <select name="qtyPaginate" id="qtyPaginate" class="form-select select-qty" data-url="/employees">
+                            <select name="qtyPaginate" id="qtyPaginate" class="form-select select-qty" data-url="/people">
 
                                 <option {{ $qtyPaginate == 10 ? 'selected' : '' }}>Quantos itens deseja aparecer</option>
                                 <option data-value="10">10</option>
@@ -64,20 +66,20 @@
             @if ($search)
                 <div class="page-message">
 
-                    <h4>Pesquisando por <small>{{ $search }}</small></h4>
+                    <h4>Pesquisando por: <small>{{ $search }}</small></h4>
 
                 </div>
             @endif
 
-            @if (count($employees) > 0)
+            @if (count($people) > 0)
 
                 <table class="table table-striped">
 
                     <thead>
 
                         <tr>
-                            <th class="order" data-url="/employees" data-field="id" data-order="{{ $order == 'asc' ? 'desc' : 'asc' }}">ID <span><small><i class="bi bi-caret-down d-none id"></i><i class="bi bi-caret-up d-none id"></i></small></span></th>
-                            <th class="order" data-url="/employees" data-field="name" data-order="{{ $order == 'asc' ? 'desc' : 'asc' }}">Nome <span><small><i class="bi bi-caret-down d-none name"></i><i class="bi bi-caret-up d-none name"></i></small></span></th>
+                            <th class="order" data-url="/people" data-field="id" data-order="{{ $order == 'asc' ? 'desc' : 'asc' }}">ID <span><small><i class="bi bi-caret-down d-none id"></i><i class="bi bi-caret-up d-none id"></i></small></span></th>
+                            <th class="order" data-url="/people" data-field="name" data-order="{{ $order == 'asc' ? 'desc' : 'asc' }}">Nome <span><small><i class="bi bi-caret-down d-none name"></i><i class="bi bi-caret-up d-none name"></i></small></span></th>
                             <th>CPF</th>
                             <th>Data de criação</th>
                             <th>Ações</th>
@@ -85,25 +87,26 @@
 
                     </thead>
 
-                    @foreach ($employees as $employee)
+                    @foreach ($people as $person)
 
                         <tbody>
 
                             <tr>
-                                <td>{{ $employee->id }}</td>
-                                <td>{{ $employee->name }}</td>
-                                <td>{{ $employee->cpf ?? '-' }}</td>
-                                <td>{{ $employee->created_at->format('d/m/Y') }}</td>
-                                <td>
 
+                                <td>{{ $person->id }}</td>
+                                <td>{{ $person->name }}</td>
+                                <td>{{ $person->cpf }}</td>
+                                <td>{{ $person->created_at->format('d/m/Y') }}</td>
+                                <td>
                                     <div class="table-options">
 
-                                        <a href="{{ url('employee/'.$employee->id.'/show') }}" class="btn btn-secondary buttons" ><i class="fas fa-list"></i></a><br>
-                                        <a href="{{ url('employee/'.$employee->id.'/edit') }}" class="btn btn-primary buttons" ><i class="far fa-edit"></i></a><br>
-                                        <a href="{{ url('employee/'.$employee->id.'/delete') }}" class="btn btn-danger buttons" ><i class="fas fa-trash"></i></a>
+                                        <a href="{{ url('person/'.$person->id.'/show') }}" class="btn btn-secondary buttons"><i class="fas fa-list"></i></a>
+                                        <a href="{{ url('person/'.$person->id.'/edit') }}" class="btn btn-primary buttons"><i class="far fa-edit"></i></a>
+                                        <a href="{{ url('person/'.$person->id.'/delete') }}" class="btn btn-danger buttons"><i class="fas fa-trash"></i></a>
 
                                     </div>
                                 </td>
+
                             </tr>
 
                         </tbody>
@@ -112,13 +115,17 @@
 
                 </table>
 
-                {{ $employees->appends(Request::except('page'))->links() }}
+                <div class="paginate">
+
+                    {{ $people->appends(Request::except('page'))->links() }}
+
+                </div>
 
             @else
 
                 <div class="page-message">
 
-                    <h3>Nenhum funcionário criado</h3>
+                    <h3>Nenhuma pessoa criada</h3>
 
                 </div>
 
@@ -127,5 +134,4 @@
         </div>
 
     </div>
-
 @endsection

@@ -23,6 +23,67 @@
 
                 @method($isEdit ? 'PUT' : 'POST')
 
+                @if (!$isEdit)
+
+                    <div class="form-group">
+
+                        <label>Permissões:</label>
+
+                        <div class="selects-form">
+
+                            <div class="row">
+
+                                <div class="form-check  col-md-2 checkbox-user">
+                                    <input class="form-check-input checkbox" type="checkbox" value="" id="admin" data-type="manager">
+                                    <label class="form-check-label" for="admin">Administrador</label>
+                                </div>
+
+                                <div class="form-check  col-md-4 select manager d-none">
+                                    <select name="manager_id" class="form-select col-md-6">
+                                        <option value="">a</option>
+                                    </select>
+                                </div>
+
+                            </div>
+
+                            <div class="row">
+
+                                <div class="form-check  col-md-2 checkbox-user">
+                                    <input class="form-check-input checkbox" type="checkbox" value="" id="employee" data-type="employee">
+                                    <label class="form-check-label" for="employee">Funcionário</label>
+                                </div>
+
+                                <div class="form-check col-md-4 select d-none employee">
+                                    <select name="employee" class="form-select col-md-6">
+                                        <option value="">a</option>
+                                    </select>
+                                </div>
+
+                            </div>
+
+                            <div class="row">
+
+                                <div class="form-check col-md-2 checkbox-user">
+                                    <input class="form-check-input checkbox" type="checkbox" value="" id="customer" data-type="customer">
+                                    <label class="form-check-label" for="customer">Cliente</label>
+                                </div>
+
+                                <div class="form-check col-md-4 select customer d-none">
+                                    <select name="customer" class="form-select col-md-6">
+                                        <option value="">a</option>
+                                    </select>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                @else
+
+
+                @endif
                 <input type="hidden" name="id" value="{{ $user->id }}">
 
                 <div class="form-group">
@@ -43,7 +104,7 @@
                 @if ($isEdit)
                     <div class="page-controls mb-3">
                         <div class="form-check form-switch">
-                            <input class="form-check-input switch" type="checkbox" role="switch" id="flexSwitchCheckDefault">
+ 2                          <input class="form-check-input switch" type="checkbox" role="switch" id="flexSwitchCheckDefault">
                             <label class="form-check-label" for="flexSwitchCheckDefault">Editar senha</label>
                         </div>
 

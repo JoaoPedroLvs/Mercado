@@ -59,24 +59,4 @@ class User extends Authenticatable
         return $query;
     }
 
-    public function scopeSearchAdmin($query, $column, $order, $search) {
-
-        $query->select('u.*', 'p.name')->from('users as u');
-
-        $query->join('managers as ma', 'ma.id', 'u.manager_id');
-
-        $query->join('people as p', 'p.id', 'ma.person_id');
-
-        $query->whereRaw("exists (select * from managers as ma where ma.id = u.manager_id)");
-
-        if ($search) {
-
-            $query->whereRaw("name ilike '%".$search."%' or email ilike '%".$search."%'");
-        }
-
-        $query->orderBy($column, $order);
-
-        return $query;
-
-    }
 }

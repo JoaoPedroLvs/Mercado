@@ -5,7 +5,8 @@
 
 @section('content')
     @php
-        $isEdit = !empty($user->id);
+        $isEdit = !empty($manager->id);
+        $personData = $manager->person ?? $manager;
     @endphp
 
     <div class="page page-admin page-form">
@@ -25,59 +26,66 @@
 
                 @method($isEdit ? 'PUT' : 'POST')
 
-                <input type="hidden" name="id" value="{{ $user->id }}">
+                @if (!$isEdit)
 
-                <div class="form-group">
-                    <label for="name">Nome</label>
-                    <input type="text" name="name" id="name" class="form-control" value="{{ old('name',$user->name) }}" required>
+
+                    <div class="form-check form-switch">
+                        <input class="form-check-input switch" type="checkbox" role="switch" id="flexSwitchCheckDefault" name="checkbox">
+                        <label class="form-check-label label-switch" for="flexSwitchCheckChecked">Pessoa já criada</label>
+                    </div>
+
+                    <div class="form-group person">
+
+                        <label for="person">Pessoa</label>
+                        <select name="person_id" id="person" class="form-select">
+
+                            <option value="">Selecione uma pessoa</option>
+
+                            @foreach ($people as $person)
+
+                                <option value="{{ $person->id }}">{{ $person->name }}</option>
+
+                            @endforeach
+
+                        </select>
+
+                    </div>
+
+                    <div class="d-none new-person">
+
+                        @include('components.person-form')
+
+                    </div>
+
+                @else
+
+                    <input type="hidden" name="id" value="{{ $manager->id }}">
+
+                    <div class="form-group">
+
+                        <label for="person">Pessoa</label>
+                        <select name="person_id" id="person" class="form-select">
+
+                            <option value="">Selecione uma pessoa</option>
+
+                            @foreach ($people as $person)
+
+                                <option value="{{ $person->id }}" {{ $person->id == $manager->person_id ? 'selected' : '' }}>{{ $person->name }}</option>
+
+                            @endforeach
+
+                        </select>
+
+                    </div>
+
+                @endif
+
+                <div class="page-controls">
+
+                    <a href="{{ url('admins') }}" class="btn btn-outline-primary">Voltar</a>
+                    <button type="submit" class="btn btn-success">Enviar</button>
+
                 </div>
-
-                <div class="form-group">
-                    <label for="email">E-mail</label>
-                    <input type="email" name="email" id="email" class="form-control" value="{{ old('email',$user->email) }}" {{ $isEdit ? "readonly" : "required" }}>
-                </div>
-
-                @if ($isEdit)
-
-                    <div class="page-controls mb-3">
-                        <div class="form-check form-switch">
-                            <input class="form-check-input switch" type="checkbox" role="switch" id="flexSwitchCheckDefault">
-                            <label class="form-check-label" for="flexSwitchCheckDefault">Editar senha</label>
-                        </div>
-
-                    </div>
-
-                    <div class="form-group d-none password">
-                        <label for="password">Senha</label>
-                        <input type="password" name="password" class="form-control" >
-                    </div>
-
-                    <div class="form-group d-none password">
-                        <label for="password-confirm">Confirmar senha</label>
-                        <input type="password" name="password_confirmation" id="password-confirm" class="form-control" >
-                    </div>
-
-                    @else
-
-                        <div class="form-group password">
-                            <label for="password">Senha</label>
-                            <input type="password" name="password" class="form-control" required>
-                        </div>
-
-                        <div class="form-group password">
-                            <label for="password-confirm">Confirmar senha</label>
-                            <input type="password" name="password_confirmation" id="password-confirm" class="form-control" required>
-                        </div>
-
-                    @endif
-
-                    <div class="page-control">
-
-                        <a href="{{ url('admins') }}" class="btn btn-outline-primary">Voltar</a>
-
-                        <button type="submit" class="btn btn-success">Enviar</button>
-
-                    </div>
 
             </form>
 

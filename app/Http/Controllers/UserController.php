@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Person;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -158,8 +159,11 @@ class UserController extends Controller
      */
     public function form(User $user) {
 
+        $people = Person::get();
+
         $data = [
-            'user' => $user
+            'user' => $user,
+            'people' => $people
         ];
 
         return view('pages.user.form',$data);

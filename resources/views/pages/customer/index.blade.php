@@ -78,7 +78,7 @@
                         <tr>
                             <th class="order" data-url="/customers" data-field="id" data-order="{{ $order == 'asc' ? 'desc' : 'asc' }}">ID <span><small><i class="bi bi-caret-down d-none id"></i><i class="bi bi-caret-up d-none id"></i></small></span></th>
                             <th class="order" data-url="/customers" data-field="name" data-order="{{ $order == 'asc' ? 'desc' : 'asc' }}">Nome <span><small><i class="bi bi-caret-down d-none name"></i><i class="bi bi-caret-up d-none name"></i></small></span></th>
-                            <th class="order" data-url="/customers" data-field="email" data-order="{{ $order == 'asc' ? 'desc' : 'asc' }}">E-mail <span><small><i class="bi bi-caret-down d-none email"></i><i class="bi bi-caret-up d-none email"></i></small></span></th>
+                            <th>CPF</th>
                             <th>Data de criação</th>
                             <th>Ações</th>
 
@@ -93,7 +93,7 @@
                             <tr>
                                 <td>{{ $customer->id }}</td>
                                 <td>{{ $customer->name }}</td>
-                                <td>{{ $customer->email }}</td>
+                                <td>{{ $customer->cpf ?? '-' }}</td>
                                 <td>{{ $customer->created_at->format('d/m/Y') }}</td>
                                 <td>
 

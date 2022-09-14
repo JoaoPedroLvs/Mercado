@@ -5,7 +5,6 @@ $(function(){
 
         var $switch = $self.find('.switch');
 
-
         $password = $self.find('.password');
 
         $switch.on('change', function() {
@@ -22,6 +21,31 @@ $(function(){
             }
 
         });
+
+        var $checkbox = $self.find('.checkbox');
+
+        $checkbox.on('change', function() {
+
+            var $this = $(this);
+
+
+            var type = $this.data('type');
+
+            var $select = $this.parents('.row').find(type);
+
+            if ($checkbox.is(':checked')) {
+
+                $select.removeClass('d-none');
+                console.log($select);
+
+            } else {
+
+                $select.addClass('d-none');
+                console.log($select);
+
+
+            }
+        })
 
     });
 

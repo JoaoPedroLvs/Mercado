@@ -12,7 +12,7 @@
 
 @endphp
 
-@dd(Session::get('customer'))
+{{-- @dd(Auth::user()->manager) --}}
 
 <nav class="navbar navbar-expand-lg bg-light">
 
@@ -41,6 +41,8 @@
                             <a href="{{ url('admins') }}" class="dropdown-item"><i class="fas fa-users"></i> Administração</a>
 
                             <a href="{{ url('users') }}" class="dropdown-item"><i class="bi bi-people-fill"></i> Usuários</a>
+
+                            <a href="{{ url('people') }}" class="dropdown-item"><i class="bi bi-person-badge"></i> Pessoas</a>
 
                         </div>
 
@@ -162,6 +164,8 @@
 
             @else
 
+                @if (Session::get('employee'))
+
                 <ul class="navbar-nav ms-auto ms-end">
 
                     <li class="nav-item dropdown">
@@ -178,7 +182,7 @@
                             @endif
 
                             <a class="dropdown-item" class="dropdown-item" href="{{ route('logout') }}"onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                <i class="bi bi-box-arrow-right"></i>{{ Session::flush() }}
+                                <i class="bi bi-box-arrow-right"></i>
                                 Sair
                             </a>
 
@@ -191,6 +195,34 @@
                     </li>
 
                 </ul>
+
+                @else
+
+                    <ul class="navbar-nav ms-auto ms-end">
+
+                        <li class="nav-item dropdown">
+                            <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                                {{ Auth::user()->manager->person->name ?? '' }}
+                            </a>
+
+                            <div class="nav-item dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+
+                                <a class="dropdown-item" class="dropdown-item" href="{{ route('logout') }}"onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                    <i class="bi bi-box-arrow-right"></i>
+                                    Sair
+                                </a>
+
+                                <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                    @csrf
+                                </form>
+
+                            </div>
+
+                        </li>
+
+                    </ul>
+
+                @endif
 
             @endif
 

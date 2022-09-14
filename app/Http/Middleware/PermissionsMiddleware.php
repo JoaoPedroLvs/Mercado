@@ -7,8 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
-class PermissionsMiddleware
-{
+class PermissionsMiddleware {
     /**
      * Handle an incoming request.
      *
@@ -16,143 +15,120 @@ class PermissionsMiddleware
      * @param  \Closure(\Illuminate\Http\Request): (\Illuminate\Http\Response|\Illuminate\Http\RedirectResponse)  $next
      * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
      */
-    public function handle(Request $request, Closure $next, $role, $permission = null)
-    {
+    public function handle(Request $request, Closure $next, ...$roles) {
 
-        $user = Auth::user();
+         $user = Auth::user();
 
-        if ($role == 'customer') {
+        /*
+            Dentro da model de Grupo.
+
+            private $roles = [
+                1 => ['customer.index', 'category.index'],
+                2 => ['customer.index'],
+                3 => ['category.index']
+            ]
+
+            public function getRoles() {
+                return $this->roles($this->id);
+            }
 
 
-            if (isset($user->customer_id) || isset($user->manager_id) && $permission != 'only') {
 
-                // dd(isset($user->manager_id));
+            dd('entrou', $request->route()->getAction('role'));
+
+            $user = Auth::user();
+
+            dd($request->all());
+            dd($roles);
+
+            $data = [
+                'customer' => true,
+                'manager' => true,
+                'employee' => true
+            ];
+            Session::put($data);
+            // return $next($request);
+        */
+
+
+
+        foreach ($roles as $role) {
+
+            if ($role == 'manager') {
+
                 if (isset($user->manager_id)) {
-                    $data = [
-                        'customer' => true,
-                        'manager' => true,
-                        'employee' => false
-                    ];
-
-                } else {
 
                     $data = [
-                        'customer' => true,
-                        'manager' => false,
-                        'employee' => false
+                        'manager' => true
                     ];
-                }
-
-                if ($user->customer->is_new && !$request->is('customer/'.$user->customer->id.'/edit')) {
-                    return redirect('customer/'.$user->customer->id.'/edit');
-                }
-
-                $request->session()->put($data);
-
-                return $next($request);
-
-            } else {
-
-                if (!isset($user->manager_id) && isset($user->customer_id)) {
-
-                    if (isset($user->manager_id)) {
-
-                        $data = [
-                            'customer' => true,
-                            'manager' => true,
-                            'employee' => false
-                        ];
-
-                    } else {
-
-                        $data = [
-                            'customer' => true,
-                            'manager' => false,
-                            'employee' => false
-                        ];
-                    }
-
-
                     $request->session()->put($data);
+
                     return $next($request);
 
                 } else {
-
-                    return back()->with(Session::flash('error', 'Não possui permissão para acessar essa página'));
+                    return back()->with(Session::flash('error', 'Não possui permissão para acessar essa pagina'));
                 }
+
             }
 
-        }
+            if ($role == 'employee') {
 
-        if ($role == 'employees') {
-
-            if (isset($user->employee_id) || isset($user->manager_id) && $permission != 'only') {
-
-                if (isset($user->manager_id)) {
-
+                if (isset($user->employee_id)) {
                     $data = [
-                        'customer' => false,
-                        'employee' => true,
+                        'employee' => true
+                    ];
+
+                    $request->session()->put($data);
+
+                    return $next($request);
+
+                } else if (isset($user->manager_id)) {
+                    $data = [
                         'manager' => true
                     ];
 
-                } else {
-
-                    $data = [
-                        'customer' => false,
-                        'manager' => false,
-                        'employee' => true
-                    ];
-                }
-
-                $request->session()->put($data);
-
-                return $next($request);
-
-            } else {
-
-                if (!isset($user->manager_id) && isset($user->employee_id)) {
-
-                    $data = [
-                        'customer' => false,
-                        'employee' => true,
-                        'manager' => false
-                    ];
                     $request->session()->put($data);
 
                     return $next($request);
 
                 } else {
-
                     return back()->with(Session::flash('error', 'Não possui permissão para acessar essa página'));
-                    // throw new \Exception('Não possui permissão para acessar essa página');
                 }
-            }
-
-        }
-
-        if ($role == 'manager') {
-
-            if (isset($user->manager_id)) {
-
-                $data = [
-                    'customer' => false,
-                    'employee' => false,
-                    'manager' => true
-                ];
-                $request->session()->put($data);
-
-                return $next($request);
-
-            } else {
-
-                return back()->with(Session::flash('error', 'Não possui permissão para acessar essa pagina'));
 
             }
 
-        } else {
+            if ($role == 'customer') {
 
-            return back()->with(Session::flash('error', 'Não possui permissão para acessar essa pagina'));
+                if (isset($user->customer_id)) {
+                    $data = [
+                        'customer' => true
+                    ];
+
+                    if ($user->customer->is_new && !$request->is('customer/'.$user->customer->id.'/edit') && !$request->rg) {
+                        return redirect('customer/'.$user->customer->id.'/edit');
+                    }
+
+                    $request->session()->put($data);
+
+                    return $next($request);
+
+                } else if (isset($user->manager_id)) {
+
+                    $data = [
+                        'manager' => true
+                    ];
+
+                    $request->session()->put($data);
+
+                    return $next($request);
+
+                } else {
+                    return back()->with(Session::flash('error', 'Não possui permissão para acessar essa página'));
+                }
+
+            }
+
+            abort(403);
         }
     }
 }

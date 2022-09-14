@@ -30,16 +30,14 @@ class Customer extends Model
 
     public function scopeSearch($query, $column, $order, $search) {
 
-        $query->select('c.*', 'p.name', 'u.email')
+        $query->select('c.*', 'p.name', 'p.cpf')
         ->from('customers as c');
-
-        $query->join('users as u', 'c.id', 'u.customer_id');
 
         $query->join('people as p', 'p.id', 'c.person_id');
 
         if ($search) {
 
-            $query->whereRaw("name ilike '%".$search."%' or email ilike '%".$search."%'");
+            $query->whereRaw("name ilike '%".$search."%'");
 
         }
 
@@ -50,13 +48,11 @@ class Customer extends Model
 
     public function scopeSearchCustomer($query, $id) {
 
-        $query->select('p.*', 'u.email')
+        $query->select('p.*')
         ->from('customers as c')
         ->where('c.id', $id);
 
-        $query->join('users as u', 'c.id', 'u.customer_id');
         $query->join('people as p', 'p.id', 'c.person_id');
-
 
         return $query;
     }

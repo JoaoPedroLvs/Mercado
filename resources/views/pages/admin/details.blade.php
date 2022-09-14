@@ -14,8 +14,11 @@
             @include('components.alert')
 
             <ul>
-                <li><b>Nome:</b> {{ $user->name }}</li>
-                <li><b>E-mail:</b> {{ $user->email}} </li>
+                <li><b>Nome: </b>{{ $manager->name }}</li>
+                <li><b>Gênero: </b>{{ $manager->gender == 'm' ? 'Masculino' : ($manager->gender == 'f' ? 'Feminino' : ($manager->gender == 'L' ? 'LGBTQIA+PLUS' : '-')) }}</li>
+                <li><b>CPF: </b>{{ $manager->cpf ?? '-' }}</li>
+                <li><b>RG: </b>{{ $manager->rg ?? '-' }}</li>
+                <li><b>Endereço: </b>{{ $manager->address ?? '-' }}</li>
             </ul>
 
             <div class="page-controls">

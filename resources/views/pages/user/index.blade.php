@@ -79,6 +79,7 @@
 
                             <th class="order" data-url="/users" data-field="id" data-order="{{ $order == 'asc' ? 'desc' : 'asc' }}">ID <span><small><i class="bi bi-caret-down d-none id"></i><i class="bi bi-caret-up d-none id"></i></small></span></th>
                             <th class="order" data-url="/users" data-field="email" data-order="{{ $order == 'asc' ? 'desc' : 'asc' }}">Email <span><small><i class="bi bi-caret-down d-none email"></i><i class="bi bi-caret-up d-none email"></i></small></span></th>
+                            <th>Permissões</th>
                             <th class="order" data-url="/users" data-field="created_at" data-order="{{ $order == 'asc' ? 'desc' : 'asc' }}">Data de criação <span><small><i class="bi bi-caret-down d-none created_at"></i><i class="bi bi-caret-up d-none created_at"></i></small></span></th>
                             <th>Ações</th>
 
@@ -93,6 +94,46 @@
 
                                 <td>{{ $user->id }}</td>
                                 <td>{{ $user->email }}</td>
+                                <td>
+                                    <div class="row g-3 d-flex justify-content-center">
+
+                                        @if (isset($user->customer_id) > 0)
+
+                                            <div class="col-sm-4">
+
+                                                <span class="badge rounded-pill text-bg-secondary">Cliente</span>
+
+
+
+                                            </div>
+
+                                        @endif
+
+                                        @if (isset($user->employee_id) > 0)
+
+                                            <div class="col-sm-4">
+
+
+                                                <span class="badge rounded-pill text-bg-secondary">Funcionário</span>
+
+
+                                            </div>
+
+                                        @endif
+
+                                        @if (isset($user->manager_id) > 0)
+
+                                            <div class="col-sm-4">
+
+
+                                                <span class="badge rounded-pill text-bg-secondary">Gerente</span>
+
+                                            </div>
+
+                                        @endif
+
+                                    </div>
+                                </td>
                                 <td>{{ $user->created_at ? $user->created_at->format("d/m/Y") : "-"  }}</td>
                                 <td>
                                     <div class="page-controls">

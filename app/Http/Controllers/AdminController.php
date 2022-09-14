@@ -32,13 +32,13 @@ class AdminController extends Controller
         $search = $request->search;
         $qtyPaginate = $request->qtyPaginate ?? 10;
 
-        $users = User::searchAdmin($column,$order,$search)->paginate($qtyPaginate);
+        $managers = Manager::search($column,$order,$search)->paginate($qtyPaginate);
 
         $data = [
             'qtyPaginate' => $qtyPaginate,
             'search' => $search,
             'order' => $order,
-            'users' => $users
+            'managers' => $managers
         ];
 
         return view('pages.admin.index', $data);
@@ -52,10 +52,10 @@ class AdminController extends Controller
      */
     public function show(int $id) {
 
-        $user = User::find($id);
+        $manager = Manager::searchManager($id)->first();
 
         $data = [
-            'user' => $user
+            'manager' => $manager
         ];
 
         return view('pages.admin.details', $data);
@@ -69,9 +69,9 @@ class AdminController extends Controller
      */
     public function create() {
 
-        $admin = new User();
+        $manager = new Manager();
 
-        return $this->form($admin);
+        return $this->form($manager);
     }
 
     /**
@@ -82,9 +82,9 @@ class AdminController extends Controller
      */
     public function edit(int $id) {
 
-        $admin = User::find($id);
+        $manager = Manager::find($id);
 
-        return $this->form($admin);
+        return $this->form($manager);
     }
 
     /**
@@ -123,14 +123,14 @@ class AdminController extends Controller
 
             DB::beginTransaction();
 
-            $user = User::find($id);
+            $manager = Manager::find($id);
 
-            if (!$user) {
+            if (!$manager) {
 
                 throw new \Exception('Administrador não encontrado!');
             }
 
-            $user->delete();
+            $manager->delete();
 
             DB::commit();
 
@@ -156,10 +156,13 @@ class AdminController extends Controller
      * @param User $user
      * @return \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
      */
-    public function form(User $user) {
+    public function form(Manager $manager) {
+
+        $people = Person::get();
 
         $data = [
-            'user' => $user
+            'manager' => $manager,
+            'people' => $people
         ];
 
         return view('pages.admin.form', $data);
@@ -189,13 +192,11 @@ class AdminController extends Controller
 
                 $isEdit = $request->method() == 'PUT';
 
-                $user = $isEdit ? User::find($request->id) : new User();
-
-                $manager = $user->manager ?? new Manager();
+                $manager = $isEdit ? Manager::find($request->id) : new Manager();
 
                 $person = $manager->person ?? new Person();
 
-                $this->save($user, $request, $manager, $person);
+                $this->save($manager, $request, $person);
 
                 DB::commit();
 
@@ -227,11 +228,22 @@ class AdminController extends Controller
 
         $method = $request->method();
 
-        $rules = [
-            'name' => ['required', 'max:100'],
-            'email' => ['required_if:_method,post', 'email'],
-            'password' => ['required_if:_method,post', 'confirmed', 'string']
-        ];
+        if (!isset($request->checkbox)) {
+
+            $rules = [
+                'person_id' => ['required', 'exists:people,id']
+            ];
+
+        } else {
+
+            $rules = ['name' => ['required', 'string', 'max:150'],
+            'cpf' => ['required', 'string', 'max:16'],
+            'rg' => ['required', 'string', 'max:14'],
+            'phone' => ['required', 'string', 'max:15'],
+            'gender' => ['required', 'string', 'max:1'],
+            'address' => ['required', 'string', 'max:350']
+            ];
+        }
 
         $validator = Validator::make($data,$rules);
 
@@ -249,30 +261,34 @@ class AdminController extends Controller
      * @param Request $request
      * @return void
      */
-    private function save(User $user, Request $request, Manager $manager, Person $person) {
+    private function save(Manager $manager, Request $request, Person $person) {
 
-        $person->name = $request->name;
+        if (isset($request->checkbox)) {
 
-        $person->save();
+            $person->name = $request->name;
+            $person->cpf = $request->cpf;
+            $person->rg = $request->rg;
+            $person->phone = $request->phone;
+            $person->gender = $request->gender;
+            $person->address = $request->address;
+
+            $person->save();
+
+        }
 
         if (!$manager->person_id) {
 
-            $manager->person_id = $person->id;
+            if ($request->person_id) {
+
+                $manager->person_id = $request->person_id;
+
+            } else {
+
+                $manager->person_id = $person->id;
+            }
 
             $manager->save();
         }
 
-        if (!$user->manager_id) {
-
-            $user->manager_id = $manager->id;
-        }
-
-        $user->email = $request->email;
-
-        if ($request->password) {
-            $user->password = Hash::make($request->password);
-        }
-
-        $user->save();
     }
 }

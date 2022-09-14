@@ -137,11 +137,7 @@ class EmployeeController extends Controller
                 throw new \Exception('Funcionário não encontrado!');
             }
 
-            $user = $employee->user;
-
             $employee->delete();
-
-            $user->delete();
 
             DB::commit();
 
@@ -166,10 +162,12 @@ class EmployeeController extends Controller
      */
     public function form(Employee $employee) {
         $roles = EmployeeRole::get();
+        $people = Person::get();
 
         $data = [
             'roles' => $roles,
             'employee' => $employee,
+            'people' => $people
         ];
 
         return view('pages.employee.form', $data);
@@ -187,8 +185,6 @@ class EmployeeController extends Controller
 
         $validator = $this->getInsertUpdateValidator($request);
 
-        $user = Auth::user();
-
         if ($validator->fails()) {
 
             $error = $validator->errors()->first();
@@ -205,24 +201,22 @@ class EmployeeController extends Controller
 
                 $employee = $isEdit ? Employee::where('id',$request->id)->first() : new Employee();
 
-                $user = $employee->user ?? new User();
-
                 $person = $employee->person ?? new Person();
 
-                $this->save($employee, $request, $user, $person);
+                $this->save($employee, $request, $person);
 
                 DB::commit();
 
                 Session::flash('success', 'O funcionário foi '. ($isEdit ? 'alterado' : 'criado'). ' com sucesso');
 
-                // if ($user->role == 0) {
+                if (Session::get('employee')) {
 
-                //     return redirect('/');
+                    return redirect('/');
 
-                // } else {
+                } else {
 
                 return redirect('employees');
-                // }
+                }
 
             } catch (\Exception $e) {
 
@@ -248,16 +242,28 @@ class EmployeeController extends Controller
 
         $method = $request->method();
 
-        $rules = [
-            'name' => ['required_if:_method,post','max:250'],
-            'email' => ['required_if:_method,post', 'email'],
-            'rg' => ['required', 'string', 'max:14'],
-            'cpf' => ['required_if:_method,post', 'string', 'max:14'],
-            'address' => ['string', 'max:250'],
-            'phone' => ['required', 'string'],
-            'work_code' => ['required', 'string'],
-            'password' => ['required_if:_method,post','confirmed']
-        ];
+        if (!isset($request->checkbox)) {
+
+            $rules = [
+                'person_id' => ['required', 'exists:people,id'],
+                'work_code' => ['required', 'string'],
+                'role_id' => ['required', 'exists:employee_roles,id']
+            ];
+
+        } else {
+
+            $rules = [
+                'name' => ['required', 'string', 'max:150'],
+                'cpf' => ['required', 'string', 'max:16'],
+                'rg' => ['required', 'string', 'max:14'],
+                'phone' => ['required', 'string', 'max:15'],
+                'gender' => ['required', 'string', 'max:1'],
+                'address' => ['required', 'string', 'max:350'],
+                'work_code' => ['required', 'string'],
+                'role_id' => ['required', 'exists:employee_roles,id']
+            ];
+
+        }
 
         $employee = Employee::where('id',$request->id)->first();
 
@@ -294,20 +300,32 @@ class EmployeeController extends Controller
      * @param Request $request
      * @return void
      */
-    private function save(Employee $employee, Request $request, User $user, Person $person) {
+    private function save(Employee $employee, Request $request, Person $person) {
 
-        $person->name = $request->name;
-        $person->cpf = $request->cpf;
-        $person->rg = $request->rg;
-        $person->phone = $request->phone;
-        $person->gender = $request->gender;
-        $person->address = $request->address;
+        if (isset($request->checkbox)) {
 
-        $person->save();
+            $person->name = $request->name;
+            $person->cpf = $request->cpf;
+            $person->rg = $request->rg;
+            $person->phone = $request->phone;
+            $person->gender = $request->gender;
+            $person->address = $request->address;
+
+            $person->save();
+
+        }
 
         if (!$employee->person_id) {
 
-            $employee->person_id = $person->id;
+            if ($request->person_id) {
+
+                $employee->person_id = $request->person_id;
+
+            } else {
+
+                $employee->person_id = $person->id;
+
+            }
 
         }
 
@@ -316,21 +334,6 @@ class EmployeeController extends Controller
         $employee->work_code = $request->work_code;
 
         $employee->save();
-
-        $user->email = $request->email;
-
-        if (!$user->employee_id) {
-
-            $user->employee_id = $employee->id;
-
-        }
-
-        if ($request->password) {
-
-            $user->password = Hash::make($request->password);
-
-        }
-        $user->save();
 
     }
 

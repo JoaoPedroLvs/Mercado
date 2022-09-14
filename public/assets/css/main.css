@@ -99,6 +99,14 @@ table {
     border-radius: 25px;
 }
 
+.checkbox-user {
+    margin-right: -60px;
+}
+
+.selects-form {
+    margin-left: 10px;
+}
+
 .card {
     margin-top: 15px;
     margin-bottom: 15px;

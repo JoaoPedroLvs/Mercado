@@ -8,6 +8,8 @@ class DatabaseSeeder extends Seeder {
 
     public function run() {
         $this->call([
+            PersonSeeder::class,
+            ManagerSeeder::class,
             UserSeeder::class
         ]);
     }

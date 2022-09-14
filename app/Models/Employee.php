@@ -41,10 +41,8 @@ class Employee extends Model
 
     public function scopeSearch($query, $column, $order, $search) {
 
-        $query->select('em.*', 'p.name', 'u.email')
+        $query->select('em.*', 'p.name', 'p.cpf')
         ->from('employees as em');
-
-        $query->join('users as u', 'em.id', 'u.employee_id');
 
         $query->join('people as p', 'p.id', 'em.person_id');
 
@@ -52,7 +50,7 @@ class Employee extends Model
 
         if ($search) {
 
-            $query->whereRaw("name ilike '%".$search."%' or email ilike '%".$search."%'");
+            $query->whereRaw("name ilike '%".$search."%'");
 
         }
 
@@ -61,11 +59,10 @@ class Employee extends Model
 
     public function scopeSearchEmployee($query, $column, $order, $id) {
 
-        $query->select('p.*', 'u.email')
+        $query->select('p.*', 'em.work_code')
         ->from('employees as em')->where('em.id', $id);
 
         $query->join('people as p', 'p.id', 'em.person_id');
-        $query->join('users as u', 'u.employee_id', 'em.id');
 
         $query->orderBy($column,$order);
 

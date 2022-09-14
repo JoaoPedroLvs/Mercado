@@ -109,6 +109,7 @@ class CustomerController extends Controller
      * @return \Illuminate\Routing\Redirector|\Illuminate\Http\RedirectResponse
      */
     public function update(Request $request) {
+
         return $this->insertOrUpdate($request);
 
     }
@@ -131,13 +132,7 @@ class CustomerController extends Controller
                 throw new \Exception('Cliente não encontrado!');
             }
 
-            File::delete($customer->user->image);
-
-            $user = $customer->user;
-
             $customer->delete();
-
-            $user->delete();
 
             DB::commit();
 
@@ -161,10 +156,12 @@ class CustomerController extends Controller
      */
     public function form(Customer $customer) {
 
-        $data = [
-            'customer' => $customer
-        ];
+        $people = Person::get();
 
+        $data = [
+            'customer' => $customer,
+            'people' => $people
+        ];
         return view('pages.customer.form',$data);
     }
 
@@ -194,11 +191,9 @@ class CustomerController extends Controller
 
                 $customer = $isEdit ? Customer::find($request->id) : new Customer();
 
-                $user = $customer->user ?? new User();
-
                 $person = $customer->person ?? new Person();
 
-                $this->save($customer, $request, $user, $person);
+                $this->save($customer, $request, $person);
 
                 DB::commit();
 
@@ -238,15 +233,25 @@ class CustomerController extends Controller
 
         $method = $request->method();
 
-        $rules = [
-            'name' => ['required', 'max:250'],
-            'email' => ['required', 'email'],
+        if (!isset($request->checkbox)) {
+
+            $rules = [
+                'person_id' => ['required', 'exists:people,id']
+            ];
+
+        } else {
+
+            $rules = [
+            'name' => ['required', 'string', 'max:150'],
+            'cpf' => ['required', 'string', 'max:16'],
             'rg' => ['required', 'string', 'max:14'],
-            'cpf' => ['required', 'string', 'max:14'],
-            'address' => ['required', 'string', 'max:250'],
-            'phone' => ['required', 'string'],
-            'password' => ['required_if:_method,post','confirmed']
-        ];
+            'phone' => ['required', 'string', 'max:15'],
+            'gender' => ['required', 'string', 'max:1'],
+            'address' => ['required', 'string', 'max:350']
+            ];
+
+        }
+
 
         $validator = Validator::make($data, $rules);
 
@@ -282,49 +287,36 @@ class CustomerController extends Controller
      * @param Person $person
      * @return void
      */
-    private function save(Customer $customer, Request $request, User $user, Person $person) {
+    private function save(Customer $customer, Request $request, Person $person) {
 
-        $person->name = $request->name;
-        $person->cpf = $request->cpf;
-        $person->rg = $request->rg;
-        $person->address = $request->address;
-        $person->phone = $request->phone;
-        $person->gender = $request->gender;
+        if (isset($request->checkbox)) {
 
-        $person->save();
+            $person->name = $request->name;
+            $person->cpf = $request->cpf;
+            $person->rg = $request->rg;
+            $person->phone = $request->phone;
+            $person->gender = $request->gender;
+            $person->address = $request->address;
+
+            $person->save();
+
+        }
 
         if (!$customer->person_id) {
 
-            $customer->person_id = $person->id;
+            if ($request->person_id) {
+
+                $customer->person_id = $request->person_id;
+
+            } else {
+
+                $customer->person_id = $person->id;
+            }
 
         }
 
         $customer->is_new = false;
         $customer->save();
-
-        if (!$user->customer_id) {
-
-            $user->customer_id = $customer->id;
-
-        }
-
-        $user->email = $request->email;
-
-        if ($request->password) {
-
-            $user->password = Hash::make($request->password);
-        }
-
-        if ($request->hasFile('image')) {
-
-            $extension = $request->file('image')->getClientOriginalExtension();
-            $filename = date('Y-m-d-H-i').'.'.$extension;
-            $image = $request->image->move('assets/img/profile/', $filename);
-            $user->image = $image;
-
-        }
-
-        $user->save();
 
     }
 
