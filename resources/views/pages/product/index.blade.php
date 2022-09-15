@@ -118,7 +118,7 @@
                                 <td>{{ $product->current_qty }}</td>
                                 <td>{{ $product->created_at->format('d/m/Y') }}</td>
                                 <td>
-                                    @if (Auth::user()->role != 2)
+                                    @if (!Session::get('customer'))
 
                                         <div class="table-options">
 
@@ -129,8 +129,9 @@
                                     @else
 
                                         <div class="table-options">
-                                            <button type="button" class="btn btn-primary btn-cart-add"><i class="bi bi-plus"></i></button>
-                                            <button type="button" class="btn btn-danger d-none btn-cart-remove"><i class="bi bi-x-lg"></i></button>
+                                            <a href="{{ url('add/cart/'.$product->id) }}" class="btn btn-primary"><i class="bi bi-plus"></i></a>
+                                            {{-- <button type="button" class="btn btn-primary btn-cart-add"></button> --}}
+                                            <button type="button" class="btn btn-danger d-none removeCart"><i class="bi bi-x-lg"></i></button>
                                         </div>
 
                                     @endif

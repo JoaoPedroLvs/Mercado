@@ -263,6 +263,10 @@ class ProductController extends Controller
             $image = $request->image->move('assets/img/products', $filename);
             $product->image = $image;
 
+        } else {
+
+            $product->image = "assets/img/products/default_image.png";
+
         }
 
 

@@ -99,9 +99,10 @@
                                 <td>{{ $category->created_at->format('d/m/Y') }}</td>
                                 <td>
                                     <div class="table-options">
+
                                         <a href="{{ url('category/'.$category->id.'/products') }}" class="btn btn-secondary buttons" ><i class="fas fa-list"></i></a><br>
 
-                                        @if (Auth::user()->role != 2)
+                                        @if (!Session::get('customer'))
 
                                             <a href="{{ url('category/'.$category->id.'/edit') }}" class="btn btn-primary buttons" ><i class="far fa-edit"></i></a><br>
                                             <a href="{{ url('category/'.$category->id.'/delete') }}" class="btn btn-danger buttons" ><i class="fas fa-trash"></i></a>

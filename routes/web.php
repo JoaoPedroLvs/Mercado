@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\PersonController;
+use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\Route;
 
 /* Rotas de login, registro, resetar senha */

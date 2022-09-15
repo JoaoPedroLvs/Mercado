@@ -108,7 +108,8 @@
                                 <td>{{ $promotion->is_active ? 'Ativa' : 'Desativa' }}</td>
                                 <td>{{ $promotion->started_at->format('d/m/Y') }}</td>
                                 <td>{{ $promotion->ended_at->format('d/m/Y') }}</td>
-                                @if (Auth::user()->role != 2)
+
+                                @if (!Session::get('customer'))
 
                                     <td>
                                         <div class="table-options">

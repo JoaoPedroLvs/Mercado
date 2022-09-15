@@ -12,7 +12,6 @@
 
 @endphp
 
-{{-- {{Session::flush()}} --}}
 
 <nav class="navbar navbar-expand-lg bg-light">
 
@@ -117,15 +116,22 @@
                 <ul class="navbar-nav ms-auto">
                     <div class="position-relative">
 
-                        <button type="button" class="btn btn-light"><i class="bi bi-basket"></i>
+                        @if (Session::has('cart'))
 
-                            @if(Session::has('itens'))
+                            <a href="/cart" class="btn btn-ligth"><i class="bi bi-basket"></i>
 
-                                <span class="position-absolute badge rounded-pill bg-danger">{{ count(Session::get('itens')) }}</span>
+                                @if(Session::has('cart'))
 
-                            @endif
+                                    <span class="position-absolute badge rounded-pill bg-danger">{{ count((array) Session::get('cart')) }}</span>
 
-                        </button>
+                                @endif
+
+                            </a>
+                        @else
+
+                            <a href="/cart" class="btn btn-ligth"><i class="bi bi-basket"></i></a>
+
+                        @endif
 
 
                     </div>
