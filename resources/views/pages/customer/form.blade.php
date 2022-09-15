@@ -29,7 +29,7 @@
 
 
                     <div class="form-check form-switch">
-                        <input class="form-check-input switch" type="checkbox" role="switch" id="flexSwitchCheckDefault" name="checkbox">
+                        <input class="form-check-input switch" type="checkbox" role="switch" id="flexSwitchCheckDefault" name="customer">
                         <label class="form-check-label label-switch" for="flexSwitchCheckChecked">Pessoa já criada</label>
                     </div>
 

@@ -102,7 +102,7 @@
 
                                         <a href="{{ url('person/'.$person->id.'/show') }}" class="btn btn-secondary buttons"><i class="fas fa-list"></i></a>
                                         <a href="{{ url('person/'.$person->id.'/edit') }}" class="btn btn-primary buttons"><i class="far fa-edit"></i></a>
-                                        <a href="{{ url('person/'.$person->id.'/delete') }}" class="btn btn-danger buttons"><i class="fas fa-trash"></i></a>
+                                        <a data-url="person/{{ $person->id }}/delete" class="btn btn-danger buttons delete"><i class="fas fa-trash"></i></a>
 
                                     </div>
                                 </td>

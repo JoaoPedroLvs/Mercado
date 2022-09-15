@@ -194,9 +194,7 @@ class AdminController extends Controller
 
                 $manager = $isEdit ? Manager::find($request->id) : new Manager();
 
-                $person = $manager->person ?? new Person();
-
-                $this->save($manager, $request, $person);
+                $this->save($manager, $request);
 
                 DB::commit();
 
@@ -228,22 +226,9 @@ class AdminController extends Controller
 
         $method = $request->method();
 
-        if (!isset($request->checkbox)) {
-
-            $rules = [
-                'person_id' => ['required', 'exists:people,id']
-            ];
-
-        } else {
-
-            $rules = ['name' => ['required', 'string', 'max:150'],
-            'cpf' => ['required', 'string', 'max:16'],
-            'rg' => ['required', 'string', 'max:14'],
-            'phone' => ['required', 'string', 'max:15'],
-            'gender' => ['required', 'string', 'max:1'],
-            'address' => ['required', 'string', 'max:350']
-            ];
-        }
+        $rules = [
+            'person_id' => ['required', 'exists:people,id']
+        ];
 
         $validator = Validator::make($data,$rules);
 
@@ -261,34 +246,11 @@ class AdminController extends Controller
      * @param Request $request
      * @return void
      */
-    private function save(Manager $manager, Request $request, Person $person) {
+    private function save(Manager $manager, Request $request) {
 
-        if (isset($request->checkbox)) {
+        $manager->person_id = $request->person_id;
 
-            $person->name = $request->name;
-            $person->cpf = $request->cpf;
-            $person->rg = $request->rg;
-            $person->phone = $request->phone;
-            $person->gender = $request->gender;
-            $person->address = $request->address;
-
-            $person->save();
-
-        }
-
-        if (!$manager->person_id) {
-
-            if ($request->person_id) {
-
-                $manager->person_id = $request->person_id;
-
-            } else {
-
-                $manager->person_id = $person->id;
-            }
-
-            $manager->save();
-        }
+        $manager->save();
 
     }
 }

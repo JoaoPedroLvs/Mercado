@@ -242,28 +242,11 @@ class EmployeeController extends Controller
 
         $method = $request->method();
 
-        if (!isset($request->checkbox)) {
-
-            $rules = [
-                'person_id' => ['required', 'exists:people,id'],
-                'work_code' => ['required', 'string'],
-                'role_id' => ['required', 'exists:employee_roles,id']
-            ];
-
-        } else {
-
-            $rules = [
-                'name' => ['required', 'string', 'max:150'],
-                'cpf' => ['required', 'string', 'max:16'],
-                'rg' => ['required', 'string', 'max:14'],
-                'phone' => ['required', 'string', 'max:15'],
-                'gender' => ['required', 'string', 'max:1'],
-                'address' => ['required', 'string', 'max:350'],
-                'work_code' => ['required', 'string'],
-                'role_id' => ['required', 'exists:employee_roles,id']
-            ];
-
-        }
+        $rules = [
+            'person_id' => ['required', 'exists:people,id'],
+            'work_code' => ['required', 'string'],
+            'role_id' => ['required', 'exists:employee_roles,id']
+        ];
 
         $employee = Employee::where('id',$request->id)->first();
 
@@ -302,32 +285,7 @@ class EmployeeController extends Controller
      */
     private function save(Employee $employee, Request $request, Person $person) {
 
-        if (isset($request->checkbox)) {
-
-            $person->name = $request->name;
-            $person->cpf = $request->cpf;
-            $person->rg = $request->rg;
-            $person->phone = $request->phone;
-            $person->gender = $request->gender;
-            $person->address = $request->address;
-
-            $person->save();
-
-        }
-
-        if (!$employee->person_id) {
-
-            if ($request->person_id) {
-
-                $employee->person_id = $request->person_id;
-
-            } else {
-
-                $employee->person_id = $person->id;
-
-            }
-
-        }
+        $employee->person_id = $request->person_id;
 
         $employee->role_id = $request->role_id;
 

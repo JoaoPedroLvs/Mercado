@@ -13,7 +13,7 @@
 
             <ul>
                 <li><b>Nome: </b>{{ $employee->name }}</li>
-                <li><b>Gênero: </b>{{ $employee->gender == 'm' ? 'Masculino' : ($employee->gender == 'f' ? 'Feminino' : ($manager->gender == 'L' ? 'LGBTQIA+PLUS' : '-')) }}</li>
+                <li><b>Gênero: </b>{{ $employee->gender == 'm' ? 'Masculino' : ($employee->gender == 'f' ? 'Feminino' : ($employee->gender == 'L' ? 'LGBTQIA+PLUS' : '-')) }}</li>
                 <li><b>Endereço: </b>{{ $employee->address }}</li>
                 <li><b>Telefone: </b>{{ $employee->phone }}</li>
                 <li><b>RG: </b>{{ $employee->rg }}</li>

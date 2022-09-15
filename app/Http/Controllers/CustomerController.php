@@ -191,9 +191,7 @@ class CustomerController extends Controller
 
                 $customer = $isEdit ? Customer::find($request->id) : new Customer();
 
-                $person = $customer->person ?? new Person();
-
-                $this->save($customer, $request, $person);
+                $this->save($customer, $request);
 
                 DB::commit();
 
@@ -233,25 +231,9 @@ class CustomerController extends Controller
 
         $method = $request->method();
 
-        if (!isset($request->checkbox)) {
-
-            $rules = [
-                'person_id' => ['required', 'exists:people,id']
-            ];
-
-        } else {
-
-            $rules = [
-            'name' => ['required', 'string', 'max:150'],
-            'cpf' => ['required', 'string', 'max:16'],
-            'rg' => ['required', 'string', 'max:14'],
-            'phone' => ['required', 'string', 'max:15'],
-            'gender' => ['required', 'string', 'max:1'],
-            'address' => ['required', 'string', 'max:350']
-            ];
-
-        }
-
+        $rules = [
+            'person_id' => ['required', 'exists:people,id']
+        ];
 
         $validator = Validator::make($data, $rules);
 
@@ -287,35 +269,10 @@ class CustomerController extends Controller
      * @param Person $person
      * @return void
      */
-    private function save(Customer $customer, Request $request, Person $person) {
+    private function save(Customer $customer, Request $request) {
 
-        if (isset($request->checkbox)) {
+        $customer->person_id = $request->person_id;
 
-            $person->name = $request->name;
-            $person->cpf = $request->cpf;
-            $person->rg = $request->rg;
-            $person->phone = $request->phone;
-            $person->gender = $request->gender;
-            $person->address = $request->address;
-
-            $person->save();
-
-        }
-
-        if (!$customer->person_id) {
-
-            if ($request->person_id) {
-
-                $customer->person_id = $request->person_id;
-
-            } else {
-
-                $customer->person_id = $person->id;
-            }
-
-        }
-
-        $customer->is_new = false;
         $customer->save();
 
     }

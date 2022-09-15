@@ -18,7 +18,7 @@
                 <a href="{{ url('customer/create') }}" class="btn btn-primary">Novo Cliente</a>
             </div>
 
-            <div class="row g-3">
+            <div class="row g-3 mb-3">
 
                 <div class="col-md-6">
                     <form action="/customers" method="get">

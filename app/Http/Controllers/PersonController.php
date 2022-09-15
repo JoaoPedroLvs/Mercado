@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Customer;
+use App\Models\Employee;
+use App\Models\Manager;
 use App\Models\Person;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -127,16 +130,13 @@ class PersonController extends Controller
                 throw new \Exception('Pessoa não encontrada!');
             }
 
-            if (count($person->customer) > 0 || count($person->employee) > 0 || count($person->manager) > 0) {
-
-                throw new \Exception('Alguma conta atralada à pessoa!');
-            }
+            $this->preDelete($person);
 
             $person->delete();
 
             DB::commit();
 
-            Session::flash('succes', 'Pessoa removida com sucesso!');
+            Session::flash('success', 'Pessoa removida com sucesso!');
 
         } catch (\Exception $e) {
 
@@ -191,13 +191,35 @@ class PersonController extends Controller
 
                 $person = $isEdit ? Person::find($request->id) : new Person();
 
-                $this->save($request, $person);
+                $customer = $request->customer ? new Customer() : null;
+
+                $employee = $request->employee ? new Employee() : null;
+
+                $manager = $request->manager ? new Manager() : null;
+
+                $this->save($request, $person, $customer, $employee, $manager);
 
                 DB::commit();
 
                 Session::flash('success', 'A pessoa foi '.($isEdit ? 'editado' : 'criado').' com sucesso!');
 
-                return redirect('people');
+                if ($customer) {
+
+                    return redirect('customers');
+
+                } else if ($employee) {
+
+                    return redirect('employees');
+
+                } else if ($manager) {
+
+                    return redirect('managers');
+
+                } else {
+
+                    return redirect('people');
+
+                }
 
             } catch (\Exception $e) {
 
@@ -222,6 +244,19 @@ class PersonController extends Controller
 
         $method = $request->method();
 
+        if ($request->employee) {
+
+            $rules = [
+                'work_code' => ['required', 'string'],
+                'role_id' => ['required', 'exists:employee_roles,id'],
+                'name' => ['required', 'string', 'max:150'],
+                'cpf' => ['required', 'string', 'max:16'],
+                'rg' => ['required', 'string', 'max:14'],
+                'phone' => ['required', 'string', 'max:15'],
+                'gender' => ['required', 'string', 'max:1'],
+                'address' => ['required', 'string', 'max:350']
+            ];
+        }
         $rules = [
             'name' => ['required', 'string', 'max:150'],
             'cpf' => ['required', 'string', 'max:16'],
@@ -247,7 +282,7 @@ class PersonController extends Controller
      * @param Person $person
      * @return void
      */
-    private function save (Request $request, Person $person) {
+    private function save (Request $request, Person $person, Customer $customer = null, Employee $employee = null, Manager $manager = null) {
 
         $person->name = $request->name;
         $person->cpf = $request->cpf;
@@ -258,5 +293,87 @@ class PersonController extends Controller
 
         $person->save();
 
+        if ($customer) {
+
+            $customer->person_id = $person->id;
+            $customer->is_new = false;
+
+            $customer->save();
+
+        } else if ($employee) {
+
+            $employee->person_id = $person->id;
+            $employee->work_code = $request->work_code;
+            $employee->role_id = $request->role_id;
+
+            $employee->save();
+
+        } else if ($manager) {
+
+            $manager->person_id = $person->id;
+
+            $manager->save();
+
+        }
+
     }
+
+    /**
+     * Deleta tudo relacionado com determinada pessoa
+     *
+     * @param Person $person
+     * @return void
+     */
+    private function preDelete(Person $person) {
+
+        if (count($person->manager) > 0) {
+
+            if (isset($person->manager->user)) {
+
+                $user = $person->manager->user;
+                dd($user);
+
+                $user->delete();
+
+            }
+
+            $manager = $person->manager();
+            $manager->delete();
+
+        }
+
+        if (count($person->employee) > 0) {
+
+            if (isset($person->employee->user)) {
+
+                $user = $person->employee->user;
+                dd($user);
+
+
+                $user->delete();
+
+            }
+
+            $employee = $person->employee();
+            $employee->delete();
+        }
+
+        if (count($person->customer) > 0) {
+
+            if (isset($person->customer->user)) {
+
+                $user = $person->customer->user;
+                dd($user);
+
+
+                $user->delete();
+
+            }
+
+            $customer = $person->customer();
+            $customer->delete();
+        }
+
+    }
+
 }

@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Customer;
+use App\Models\Employee;
+use App\Models\Manager;
 use App\Models\Person;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -132,8 +135,6 @@ class UserController extends Controller
 
             }
 
-            $this->preDelete($user);
-
             $user->delete();
 
             DB::commit();
@@ -160,8 +161,14 @@ class UserController extends Controller
     public function form(User $user) {
 
         $people = Person::get();
+        $managers = Manager::get();
+        $employees = Employee::get();
+        $customers = Customer::get();
 
         $data = [
+            'managers' => $managers,
+            'employees' => $employees,
+            'customers' => $customers,
             'user' => $user,
             'people' => $people
         ];
@@ -226,12 +233,36 @@ class UserController extends Controller
 
         $method = $request->method();
 
-        $rules = [
-            'name' => ['required', 'max:100'],
-            'email' => ['required_if:_method,post', 'email'],
-            'cpf' => ['required_if:_method,post', 'string', 'max:14'],
-            'password' => ['required_if:_method,post', 'string', 'confirmed']
-        ];
+        if (isset($request->checkboxManager)) {
+
+            $rules = [
+                'manager_id' => ['required', 'exists:managers,id'],
+                'email' => ['required', 'email'],
+                'password' => ['required', 'string', 'confirmed']
+            ];
+
+        } else if (isset($request->chackboxEmployee)) {
+
+            $rules = [
+                'employee_id' => ['required', 'exists:employees,id'],
+                'email' => ['required', 'email'],
+                'password' => ['required', 'string', 'confirmed']
+            ];
+
+        } else if (isset($request->checkboxCustomer)) {
+            $rules = [
+                'customer_id' => ['required', 'exists:customers,id'],
+                'email' => ['required', 'email'],
+                'password' => ['required', 'string', 'confirmed']
+            ];
+        } else {
+
+            $rules = [
+                'email' => ['required', 'email'],
+                'password' => ['required', 'string', 'confirmed']
+            ];
+
+        }
 
         $validator = Validator::make($data,$rules);
 
@@ -251,32 +282,29 @@ class UserController extends Controller
      */
     private function save(User $user, Request $request) {
 
+        if ($request->checkboxManager) {
 
-        $user->name = $request->name;
+            $user->manager_id = $request->manager_id;
+
+        }
+
+        if ($request->checkboxEmployee) {
+
+            $user->employee_id = $request->employee_id;
+
+        }
+
+        if ($request->checkboxCustomer) {
+
+            $user->customer_id = $request->customer_id;
+
+        }
+
         $user->email = $request->email;
         $user->password = Hash::make($request->password);
 
         $user->save();
 
-        $employee = $user->employee;
-        $employee->cpf = $request->cpf;
-        $employee->is_new = true;
-
-        $employee->save();
-
     }
 
-    /**
-     * Excluír dados do funcionário relacionado com o usuário
-     *
-     * @param User $user
-     * @return void
-     */
-    private function preDelete(User $user) {
-
-        $employee = $user->employee;
-
-        $employee->delete();
-
-    }
 }

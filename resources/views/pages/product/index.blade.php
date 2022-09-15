@@ -143,7 +143,11 @@
 
                 </table>
 
-                {{ $products->appends(Request::except('page'))->links() }}
+                <div class="paginate">
+
+                    {{ $products->appends(Request::except('page'))->links() }}
+
+                </div>
 
             @else
 

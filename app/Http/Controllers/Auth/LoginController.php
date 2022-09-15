@@ -45,15 +45,9 @@ class LoginController extends Controller
 
     public function logout() {
 
+        Session::flush();
+
         Auth::logout();
-
-        $data = [
-            'customer',
-            'employee',
-            'manager'
-        ];
-
-        Session::forget($data);
 
         Session::flash('success','Saiu da conta com sucesso!');
 

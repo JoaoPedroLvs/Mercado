@@ -29,7 +29,7 @@ $(function(){
 
                 $inputs.attr({required:true});
 
-                // $form.attr({action: window.location.origin+'/person'});
+                $form.attr({action: window.location.origin+'/person'});
 
 
             } else {
@@ -42,7 +42,7 @@ $(function(){
 
                 $inputs.removeAttr('required');
 
-                // $form.attr({action : window.location.origin+'/customer'});
+                $form.attr({action : window.location.origin+'/admin'});
 
             }
 

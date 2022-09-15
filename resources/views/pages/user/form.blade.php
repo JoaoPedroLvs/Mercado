@@ -33,15 +33,25 @@
 
                             <div class="row">
 
-                                <div class="form-check  col-md-2 checkbox-user">
-                                    <input class="form-check-input checkbox" type="checkbox" value="" id="admin" data-type="manager">
+                                <div class="form-check col-md-2 checkbox-user">
+                                    <input class="form-check-input checkbox" type="checkbox" id="admin" data-type="manager" name="checkboxManager">
                                     <label class="form-check-label" for="admin">Administrador</label>
                                 </div>
 
-                                <div class="form-check  col-md-4 select manager d-none">
+                                <div class="form-check col-md-4 select manager d-none">
+
                                     <select name="manager_id" class="form-select col-md-6">
-                                        <option value="">a</option>
+
+                                        <option value="">Selecione um administrador</option>
+
+                                        @foreach ($managers as $manager)
+
+                                            <option value="{{ $manager->id }}">{{ $manager->person->name }}</option>
+
+                                        @endforeach
+
                                     </select>
+
                                 </div>
 
                             </div>
@@ -49,13 +59,21 @@
                             <div class="row">
 
                                 <div class="form-check  col-md-2 checkbox-user">
-                                    <input class="form-check-input checkbox" type="checkbox" value="" id="employee" data-type="employee">
+                                    <input class="form-check-input checkbox" type="checkbox" id="employee" data-type="employee" name="checkboxEmployee">
                                     <label class="form-check-label" for="employee">Funcionário</label>
                                 </div>
 
                                 <div class="form-check col-md-4 select d-none employee">
-                                    <select name="employee" class="form-select col-md-6">
-                                        <option value="">a</option>
+                                    <select name="employee_id" class="form-select col-md-6">
+
+                                        <option value="">Selecione um funcionário</option>
+
+                                        @foreach ($employees as $employee)
+
+                                            <option value="{{ $employee->id }}">{{ $employee->person->name }}</option>
+
+                                        @endforeach
+
                                     </select>
                                 </div>
 
@@ -64,14 +82,22 @@
                             <div class="row">
 
                                 <div class="form-check col-md-2 checkbox-user">
-                                    <input class="form-check-input checkbox" type="checkbox" value="" id="customer" data-type="customer">
+                                    <input class="form-check-input checkbox" type="checkbox" id="customer" data-type="customer" name="checkboxCustomer">
                                     <label class="form-check-label" for="customer">Cliente</label>
                                 </div>
 
                                 <div class="form-check col-md-4 select customer d-none">
-                                    <select name="customer" class="form-select col-md-6">
-                                        <option value="">a</option>
+                                    <select name="customer_id" class="form-select col-md-6">
+                                        <option value="">Selecione um cliente</option>
+
+                                        @foreach ($customers as $customer)
+
+                                            <option value="{{ $customer->id }}">{{ $customer->person->name }}</option>
+
+                                        @endforeach
+
                                     </select>
+
                                 </div>
 
                             </div>
@@ -80,57 +106,73 @@
 
                     </div>
 
+                    <div class="form-group">
+                        <label for="email">E-mail</label>
+                        <input type="email" name="email" class="form-control" value="{{ $user->email }}" {{ $isEdit ? "readonly" : "required" }}>
+                    </div>
+
+
+                    <div class="row g-3">
+
+                        <div class="col-md-6">
+
+                            <div class="form-group password">
+                                <label for="password">Senha</label>
+                                <input type="password" name="password" class="form-control" >
+                            </div>
+
+                        </div>
+
+                        <div class="col-md-6">
+
+                            <div class="form-group password">
+                                <label for="password-confirm">Confirmar senha</label>
+                                <input type="password" name="password_confirmation" id="password-confirm" class="form-control" >
+                            </div>
+
+                        </div>
+
+                    </div>
+
                 @else
 
+                    <input type="hidden" name="id" value="{{ $user->id }}">
 
-                @endif
-                <input type="hidden" name="id" value="{{ $user->id }}">
+                    <div class="form-group">
+                        <label for="email">E-mail</label>
+                        <input type="email" name="email" class="form-control" value="{{ $user->email }}" {{ $isEdit ? "readonly" : "required" }}>
+                    </div>
 
-                <div class="form-group">
-                    <label for="name">Nome</label>
-                    <input type="text" name="name" class="form-control" value="{{$user->name}}" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="email">E-mail</label>
-                    <input type="email" name="email" class="form-control" value="{{ $user->email }}" {{ $isEdit ? "readonly" : "required" }}>
-                </div>
-
-                <div class="form-group">
-                    <label for="cpf">CPF</label>
-                    <input type="text" name="cpf" class="form-control cpf" value="{{ $user->employee->cpf ?? "" }}" {{ $isEdit ? "readonly" : "required" }}>
-                </div>
-
-                @if ($isEdit)
                     <div class="page-controls mb-3">
                         <div class="form-check form-switch">
- 2                          <input class="form-check-input switch" type="checkbox" role="switch" id="flexSwitchCheckDefault">
+                            <input class="form-check-input switch" type="checkbox" role="switch" id="flexSwitchCheckDefault">
                             <label class="form-check-label" for="flexSwitchCheckDefault">Editar senha</label>
                         </div>
 
                     </div>
 
-                    <div class="form-group d-none password">
-                        <label for="password">Senha</label>
-                        <input type="password" name="password" class="form-control" >
+                    <div class="row g-3">
+
+                        <div class="col-md-6">
+
+                            <div class="form-group d-none password">
+                                <label for="password">Senha</label>
+                                <input type="password" name="password" class="form-control" >
+                            </div>
+
+                        </div>
+
+                        <div class="col-md-6">
+
+                            <div class="form-group d-none password">
+                                <label for="password-confirm">Confirmar senha</label>
+                                <input type="password" name="password_confirmation" id="password-confirm" class="form-control" >
+                            </div>
+
+                        </div>
+
                     </div>
 
-                    <div class="form-group d-none password">
-                        <label for="password-confirm">Confirmar senha</label>
-                        <input type="password" name="password_confirmation" id="password-confirm" class="form-control" >
-                    </div>
-
-                @else
-
-                    <div class="form-group password">
-                        <label for="password">Senha</label>
-                        <input type="password" name="password" class="form-control" required>
-                    </div>
-
-                    <div class="form-group password">
-                        <label for="password-confirm">Confirmar senha</label>
-                        <input type="password" name="password_confirmation" id="password-confirm" class="form-control" required>
-                    </div>
 
                 @endif
 

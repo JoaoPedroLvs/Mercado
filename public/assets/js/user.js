@@ -22,30 +22,27 @@ $(function(){
 
         });
 
-        var $checkbox = $self.find('.checkbox');
+        $self.find('.checkbox').on('change', function() {
 
-        $checkbox.on('change', function() {
+            var $checkbox = $(this);
 
             var $this = $(this);
 
-
             var type = $this.data('type');
 
-            var $select = $this.parents('.row').find(type);
+            var $select = $this.parents('.row').find(`.${type}`);
 
             if ($checkbox.is(':checked')) {
 
                 $select.removeClass('d-none');
-                console.log($select);
 
             } else {
 
                 $select.addClass('d-none');
-                console.log($select);
-
 
             }
         })
+
 
     });
 
