@@ -33,23 +33,5 @@ $(function() {
 
         });
 
-
-        $select.on('change', function() {
-
-            var price = $select.find('option:selected').data('price');
-            $span = $(this).parent().find('.span');
-
-            $span.text('R$ ' + price);
-
-            if (price) {
-
-                $span.removeClass('d-none');
-
-            } else {
-
-                $span.addClass('d-none')
-            }
-
-        });
     });
 });

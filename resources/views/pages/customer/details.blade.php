@@ -13,11 +13,10 @@
         </div>
 
         <div class="page-body">
-            {{-- @dd($customer) --}}
 
             <ul>
                 <li><b>Nome: </b>{{ $customer->name }}</li>
-                <li><b>Gênero: </b>{{ $customer->gender == 'm' ? 'Masculino' : ($customer->gender == 'f' ? 'Feminino' : ($manager->gender == 'L' ? 'LGBTQIA+PLUS' : '-')) }}</li>
+                <li><b>Gênero: </b>{{ $customer->gender == 'm' ? 'Masculino' : ($customer->gender == 'f' ? 'Feminino' : ($customer->gender == 'L' ? 'LGBTQIA+PLUS' : '-')) }}</li>
                 <li><b>CPF: </b>{{ $customer->cpf ?? '-' }}</li>
                 <li><b>RG: </b>{{ $customer->rg ?? '-' }}</li>
                 <li><b>Endereço: </b>{{ $customer->address ?? '-' }}</li>
@@ -31,7 +30,7 @@
                 @else
 
                     <a class="btn btn-outline-primary" href="{{ url('/') }}">Voltar</a>
-                    <a href="{{ url('/customer/'. Auth::user()->customer->id .'/edit') }}" class="btn btn-primary">Editar</a>
+                    <a href="{{ url('/person/'. Auth::user()->customer->person_id .'/edit') }}" class="btn btn-primary">Editar</a>
 
                 @endif
             </div>

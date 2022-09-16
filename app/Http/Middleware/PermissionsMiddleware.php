@@ -104,8 +104,8 @@ class PermissionsMiddleware {
                         'customer' => true
                     ];
 
-                    if ($user->customer->is_new && !$request->is('customer/'.$user->customer->id.'/edit') && !$request->rg) {
-                        return redirect('customer/'.$user->customer->id.'/edit');
+                    if ($user->customer->is_new && !$request->is('person/'.$user->customer->person_id.'/edit') && !$request->rg) {
+                        return redirect('person/'.$user->customer->person_id.'/edit');
                     }
 
                     $request->session()->put($data);
@@ -122,7 +122,18 @@ class PermissionsMiddleware {
 
                     return $next($request);
 
+                } else if (isset($user->employee_id)) {
+
+                    $data = [
+                        'employee' => true
+                    ];
+
+                    $request->session()->put($data);
+
+                    return $next($request);
+
                 } else {
+
                     return back()->with(Session::flash('error', 'Não possui permissão para acessar essa página'));
                 }
 

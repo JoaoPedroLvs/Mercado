@@ -15,7 +15,7 @@
 
             @include('components.alert')
 
-            @if (!Session::get('customer'))
+            @if (Session::has('manager'))
 
                 <div class="page-controls mb-3">
                     <a href="{{ url('promotion/create') }}" class="btn btn-primary">Nova Promoção</a>

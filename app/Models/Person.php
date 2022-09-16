@@ -20,16 +20,16 @@ class Person extends Model
     ];
 
     public function employee() {
-        return $this->hasMany(Employee::class);
+        return $this->hasOne(Employee::class);
 
     }
 
     public function customer() {
-        return $this->hasMany(Customer::class);
+        return $this->hasOne(Customer::class);
     }
 
     public function manager() {
-        return $this->hasMany(Manager::class);
+        return $this->hasOne(Manager::class);
     }
 
     public function scopeSearch($query, $column, $order, $search) {

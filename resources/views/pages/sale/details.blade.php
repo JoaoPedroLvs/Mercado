@@ -17,11 +17,8 @@
             <div class="page-list">
 
                 <ul>
-                    {{-- @dd($sales) --}}
 
                     <li><b>Cliente: </b>{{ $sales[0]->client }}</li>
-
-                    <li><b>Funcionário: </b>{{ $sales[0]->employee ?? "Administrador" }}</li>
 
                 </ul>
 

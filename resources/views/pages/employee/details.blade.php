@@ -20,18 +20,16 @@
                 <li><b>CPF: </b>{{ $employee->cpf }}</li>
                 <li><b>Carteira de trabalho: </b>{{ $employee->work_code }}</li>
             </ul>
-
             <div class="page-controls">
 
                 @if (Session::get('employee'))
 
                     <a href="{{ url('/') }}" class="btn btn-outline-primary">Voltar</a>
-                    <a class="btn btn-primary" href="{{ url('/employee/'. $employee->id .'/edit') }}">Editar</a>
+                    <a class="btn btn-primary" href="{{ url('/person/'. $employee->id .'/edit') }}">Editar</a>
 
                 @else
 
                     <a class="btn btn-outline-primary" href="{{ url('employees') }}">Voltar</a>
-                    <a class="btn btn-primary" href="{{ url('/employee/'. $employee->id .'/edit') }}">Editar</a>
 
                 @endif
 

@@ -94,6 +94,12 @@ table {
     justify-content: center;
 }
 
+.product-qty {
+
+    margin-right: 10px;
+    margin-left: 10px;
+}
+
 .bootbox-close-button.close{
     background-color: white;
     border: none;

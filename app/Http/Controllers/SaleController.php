@@ -193,9 +193,20 @@ class SaleController extends Controller
 
                 DB::commit();
 
-                Session::flash('success', 'Venda criada com sucesso!');
+                Session::forget('cart');
 
-                return redirect('sales');
+
+                if (Session::has('customer')) {
+
+                    Session::flash('success', 'Compra realizada com sucesso!');
+                    return redirect ('/');
+
+                } else {
+
+                    Session::flash('success', 'Venda criada com sucesso!');
+                    return redirect('sales');
+
+                }
 
             } catch (\Exception $e) {
 
@@ -221,9 +232,9 @@ class SaleController extends Controller
         $data = $request->all();
 
         $rules = [
-            'customer_id' => ['required', 'integer', 'exists:customers,id'],
-            'qty_sales' => ['required'],
-            'product_id' => ['required', 'exists:products,id']
+            // 'customer_id' => ['required', 'integer', 'exists:customers,id'],
+            // 'qty_sales' => ['required'],
+            // 'product_id' => ['required', 'exists:products,id']
         ];
 
         $validator = Validator::make($data, $rules);
@@ -247,14 +258,6 @@ class SaleController extends Controller
     private function save(Sale $sale, Request $request) {
 
         $sale->customer_id = $request->customer_id;
-
-        if (!Auth::user()->role == 1) {
-
-            $sale->employee_id = Auth::user()->employee->id;
-        } else {
-            $sale->employee_id = null;
-        }
-
 
         $products = $request->product_id;
 

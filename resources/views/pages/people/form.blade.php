@@ -5,7 +5,7 @@
 @section('content')
 
     @php
-        $isEdit = !empty($person->id)
+        $isEdit = !empty($person->id);
     @endphp
 
     <div class="page page-people page-form">
@@ -93,7 +93,15 @@
 
                 <div class="page-control">
 
-                    <a href="{{ url('people') }}" class="btn btn-outline-primary">Voltar</a>
+                    @if (Session::has('customer'))
+
+                        <a href="{{ url('customer/'.Auth::user()->customer_id.'/show') }}" class="btn btn-outline-primary">Voltar</a>
+
+                    @else
+
+                        <a href="{{ url('people') }}" class="btn btn-outline-primary">Voltar</a>
+
+                    @endif
 
                     <button type="submit" class="btn btn-success">Enviar</button>
                 </div>

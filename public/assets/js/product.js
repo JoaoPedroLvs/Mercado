@@ -26,4 +26,20 @@ $(function () {
 
     });
 
+    $('.page.page-products.page-cart').each(function() {
+
+        var $self = $(this);
+
+        var $sale = $self.find('.sale');
+
+        $sale.on('click', function(e) {
+
+            e.preventDefault();
+
+            $self.find('.sale-form').trigger('submit');
+
+        });
+
+    });
+
 });

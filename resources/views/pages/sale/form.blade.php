@@ -27,7 +27,7 @@
 
                             @foreach ($customers as $customer)
 
-                                <option value="{{ $customer->id }}">{{ $customer->user->name }}</option>
+                                <option value="{{ $customer->id }}">{{ $customer->person->name }}</option>
 
                             @endforeach
 
@@ -68,8 +68,6 @@
                                         @endforeach
 
                                     </select>
-
-                                    <span class="input-group-text d-none span"></span>
 
                                     <input type="number" placeholder="Quantidade" name="qty_sales[]" class="form-control">
 

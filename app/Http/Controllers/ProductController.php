@@ -48,6 +48,66 @@ class ProductController extends Controller
 
     }
 
+    public function cart() {
+
+        return view('pages.product.cart');
+
+    }
+
+    public function addCart(int $id) {
+
+        $product = Product::find($id);
+
+        $cart = Session::get('cart', []);
+
+        if (isset($cart[$id])) {
+
+            $cart[$id]['qty']++;
+
+        } else {
+
+            $cart[$id] = [
+
+                "name" => $product->name,
+                "qty" => 1,
+                "price" => $product->price,
+                "image" => $product->image
+
+            ];
+
+        }
+
+        Session::put('cart',$cart);
+
+        Session::flash('success', 'Produto adicionado ao carrinho!');
+
+        return redirect()->back();
+    }
+
+    public function removeCart(int $id) {
+
+        $cart = Session::get('cart');
+
+        if ($cart[$id]['qty'] > 1) {
+
+            $cart[$id]['qty']--;
+
+
+        } else {
+
+            unset($cart[$id]);
+
+        }
+
+        Session::put('cart',$cart);
+
+
+        Session::flash('success', 'Produto removido do carrinho com sucesso!');
+
+        return redirect()->back();
+
+    }
+
     /**
      * Carregar o formulário para criar novo produto
      *

@@ -203,6 +203,10 @@ class PersonController extends Controller
 
                 Session::flash('success', 'A pessoa foi '.($isEdit ? 'editado' : 'criado').' com sucesso!');
 
+                if (Session::has('customer')) {
+                    return redirect('customer/'.$person->customer->id.'/show');
+                }
+
                 if ($customer) {
 
                     return redirect('customers');
@@ -293,6 +297,15 @@ class PersonController extends Controller
 
         $person->save();
 
+        if ($person->customer) {
+
+            $customer = $person->customer;
+
+            $customer->is_new = false;
+
+            $customer->save();
+        }
+
         if ($customer) {
 
             $customer->person_id = $person->id;
@@ -315,6 +328,7 @@ class PersonController extends Controller
             $manager->save();
 
         }
+
 
     }
 

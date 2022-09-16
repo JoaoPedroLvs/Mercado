@@ -116,7 +116,7 @@
                 <ul class="navbar-nav ms-auto">
                     <div class="position-relative">
 
-                        @if (Session::has('cart'))
+                        @if (Session::has('cart') && count(Session::get('cart')) > 0 )
 
                             <a href="/cart" class="btn btn-ligth"><i class="bi bi-basket"></i>
 
@@ -129,7 +129,7 @@
                             </a>
                         @else
 
-                            <a href="/cart" class="btn btn-ligth"><i class="bi bi-basket"></i></a>
+                            <a href="/cart" class="nav-link"><i class="bi bi-basket"></i></a>
 
                         @endif
 

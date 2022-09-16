@@ -26,15 +26,20 @@ class Sale extends Model
 
     public function scopeSearch($query, $id) {
 
-        $query->select("ps.id", "pr.name as product", "ps.qty_sales", "ps.total_price", "c.name as client", "us.name as employee", "ps.sale_id", "pr.price", "sa.total_no_promotion")
-        ->from("products as pr")
-        ->join("product_sale as ps", "pr.id", "ps.product_id")
-        ->join("sales as sa", "sa.id", "ps.sale_id")
-        ->join("customers as c", "c.id", "sa.customer_id")
-        ->leftJoin("employees as em", "em.id", "sa.employee_id")
-        ->leftJoin("users as us" , "us.id", "em.user_id")
-        ->leftJoin("promotions as pm", "pm.product_id", "pr.id")
-        ->where("ps.sale_id", $id);
+        $query->select('ps.id', 'pr.name as product', 'ps.qty_sales', 'ps.total_price', 'p.name as client', 'ps.sale_id', 'pr.price', 's.total_no_promotion')
+        ->from('sales as s');
+
+        $query->join('product_sale as ps', 'ps.sale_id', 's.id');
+
+        $query->join('products as pr', 'pr.id', 'ps.product_id');
+
+        $query->join('customers as c', 'c.id', 's.customer_id');
+
+        $query->join('people as p', 'p.id', 'c.person_id');
+
+        $query->leftJoin('promotions as pm', 'pm.product_id', 'pr.id');
+
+        $query->where('ps.sale_id', $id);
 
         return $query;
 
