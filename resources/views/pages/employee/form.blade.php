@@ -35,18 +35,19 @@
                     <div class="form-group person">
 
                         <label for="person">Pessoa</label>
-                        <select name="person_id" id="person" class="form-select">
+                        <select name="person_id" id="person" class="form-select" required required data-parsley-errors-container="#people-type-error" data-parsley-error-message="Pessoa necessária">
 
                             <option value="">Selecione uma pessoa</option>
 
                             @foreach ($people as $person)
 
-                                <option value="{{ $person->id }}">{{ $person->name }}</option>
+                            <option value="{{ $person->id }}">{{ $person->name }}</option>
 
                             @endforeach
 
                         </select>
 
+                        <div class="" id="people-type-error"></div>
                     </div>
 
                     <div class="d-none new-person">
@@ -84,7 +85,8 @@
 
                         <div class="form-group">
                             <label>Carteira de trabalho</label>
-                            <input type="text" name="work_code" class="form-control work-code" value="{{ old('work_code', $employee->work_code) }}" required/>
+                            <input type="text" name="work_code" class="form-control work-code" required data-parsley-errors-container="#work-code-type-error" data-parsley-error-message="Carteira de trabalho necessário" value="{{ old('work_code', $employee->work_code) }}" required/>
+                            <div id="work-code-type-error"></div>
                         </div>
 
                     </div>
@@ -95,7 +97,7 @@
 
                             <label for="role">Cargo</label>
 
-                            <select class="form-select" name="role_id">
+                            <select class="form-select" name="role_id" required required data-parsley-errors-container="#role-type-error" data-parsley-error-message="Cargo necessário">
 
                                 <option value="" selected>Selecione um cargo</option>
 
@@ -105,6 +107,7 @@
 
                                 @endforeach
 
+                                <div id="role-type-error"></div>
                             </select>
 
                         </div>

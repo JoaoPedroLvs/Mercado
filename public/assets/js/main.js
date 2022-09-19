@@ -86,4 +86,33 @@ $(function() {
 
     });
 
+
+    $('form').parsley({
+
+        namespace: 'data-parsley-',
+        inputs: 'input, textarea, select',
+
+        excluded: 'input[type=button], input[type=submit], input[type=reset], input[type=hidden]',
+        prorityEnabled: true,
+
+        multiple: null,
+        group: null,
+        uiEnabled: true,
+
+        validationThreshold: 3,
+        focus: 'first',
+        trigger: false,
+
+        errorClass:'parsley-error',
+        successClass: 'parsley-success',
+
+        classHandler: function(Field) {},
+
+        errosContainer: function (Field) {},
+
+        errorsWrapper: '<div class="parsley-errors"></div>',
+        errorTemplate: '<p style="color: red"></p>'
+
+    }).validate();
+
 });

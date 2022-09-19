@@ -232,9 +232,9 @@ class SaleController extends Controller
         $data = $request->all();
 
         $rules = [
-            // 'customer_id' => ['required', 'integer', 'exists:customers,id'],
-            // 'qty_sales' => ['required'],
-            // 'product_id' => ['required', 'exists:products,id']
+            'customer_id' => ['required', 'integer', 'exists:customers,id'],
+            'qty_sales' => ['required'],
+            'product_id' => ['required', 'exists:products,id']
         ];
 
         $validator = Validator::make($data, $rules);

@@ -12,7 +12,6 @@
 
 @endphp
 
-
 <nav class="navbar navbar-expand-lg bg-light">
 
     <div class="container-fluid">
@@ -108,7 +107,6 @@
 
                 @endforeach
 
-
             </ul>
 
             @if (Session::get('customer'))
@@ -153,14 +151,14 @@
 
                             @endif
 
-                            <a class="dropdown-item" class="dropdown-item" href="{{ route('logout') }}"onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                            {{-- <a class="dropdown-item" class="dropdown-item" href="{{ route('logout') }}"onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                                 <i class="bi bi-box-arrow-right"></i>
                                 Sair
                             </a>
 
                             <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                                 @csrf
-                            </form>
+                            </form> --}}
 
                         </div>
 
@@ -233,7 +231,6 @@
             @endif
 
         </div>
-
 
     </div>
 

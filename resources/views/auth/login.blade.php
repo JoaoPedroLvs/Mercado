@@ -40,7 +40,8 @@
 
                                             <div class="col-md-6">
 
-                                                <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
+                                                <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required data-parsley-errors-container="#email-type-error" data-parsley-error-message="Email necessário" autocomplete="email" autofocus>
+                                                <div id="email-type-error"></div>
 
                                             </div>
 
@@ -52,7 +53,8 @@
 
                                             <div class="col-md-6">
 
-                                                <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="current-password">
+                                                <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required data-parsley-errors-container="#password-type-error" data-parsley-error-message="Senha necessária" autocomplete="current-password">
+                                                <div id="password-type-error"></div>
 
                                             </div>
 
@@ -107,5 +109,9 @@
         </div>
 
     </div>
+
+    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+        @csrf
+    </form>
 
 @endsection

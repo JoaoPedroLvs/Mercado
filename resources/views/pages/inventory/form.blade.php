@@ -18,7 +18,7 @@
 
                 <div class="form-group">
                     <label>Produto</label>
-                    <select name="product_id" class="form-select">
+                    <select name="product_id" class="form-select" required data-parsley-errors-container="#product-type-error" data-parsley-error-message="Produto necessário">
 
                         <option value="" selected>Selecione um produto:</option>
 
@@ -29,16 +29,20 @@
                         @endforeach
 
                     </select>
+
+                    <div id="product-type-error"></div>
                 </div>
 
                 <div class="form-group">
                     <label>Quantidade</label>
-                    <input type="number" name="qty" class="form-control">
+                    <input type="number" name="qty" class="form-control" required data-parsley-errors-container="#qty-type-error" data-parsley-error-message="Preço necessário">
+                    <div id="qty-type-error"></div>
                 </div>
 
                 <div class="form-group">
                     <label>Data de entrada</label>
-                    <input type="date" name="created_at" class="form-control">
+                    <input type="date" name="created_at" class="form-control" required data-parsley-errors-container="#date-type-error" data-parsley-error-message="Data necessária">
+                    <div class="" id="date-type-error"></div>
                 </div>
 
                 <div class="page-controls">

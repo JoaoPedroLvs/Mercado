@@ -38,6 +38,19 @@ $(function() {
             });
 
         });
+
+        $('form').parsley(function (){
+
+            $('[data-parsley]').parsley({
+                errorClass: '-error',
+                successClass: '-success',
+
+                errorWrapper: '<ul class="parsley-error-list"></ul>',
+                errorTemplate: '<li class="parsley-error">Necessário nome</li>'
+            });
+
+        })
+
     });
 
 

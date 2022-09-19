@@ -28,7 +28,8 @@
 
                 <div class="form-group">
                     <label for="name">Nome</label>
-                    <input type="text" name="name" id="name" class="form-control" value="{{ old('name',$role->name) }}" required autofocus />
+                    <input type="text" name="name" id="name" class="form-control" value="{{ old('name',$role->name) }}" required data-parsley-errors-container="#name-type-error" data-parsley-error-message="Nome necessário" required autofocus />
+                    <div id="name-type-error"></div>
                 </div>
 
                 <a class="btn btn-outline-primary" href="{{ url('employees/roles') }}">Voltar</a>

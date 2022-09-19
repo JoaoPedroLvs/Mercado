@@ -36,7 +36,7 @@
                     <div class="form-group person">
 
                         <label for="person">Pessoa</label>
-                        <select name="person_id" id="person" class="form-select">
+                        <select name="person_id" id="person" class="form-select" required required data-parsley-errors-container="#people-type-error" data-parsley-error-message="Pessoa necessária">
 
                             <option value="">Selecione uma pessoa</option>
 
@@ -47,6 +47,7 @@
                             @endforeach
 
                         </select>
+                        <div class="" id="people-type-error"></div>
 
                     </div>
 

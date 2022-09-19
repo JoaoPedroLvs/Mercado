@@ -26,13 +26,13 @@
                 <input type="hidden" name="id" value="{{ $promotion->id }}">
 
                 <div class="form-group">
-                    <input type="checkbox" name="is_active" id="checkbox" class="from-check-input" {{ $promotion->is_active ? "checked" : "" }} value="{{true}}">
+                    <input type="checkbox" name="is_active" id="checkbox" class="from-check-input" {{ $promotion->is_active ? "checked" : "" }} value="{{ true }}">
                     <label for="checkbox">Está Ativo?</label>
                 </div>
 
                 <div class="form-group">
                     <label>Produto</label>
-                    <select name="product_id" class="form-select">
+                    <select name="product_id" class="form-select" required data-parsley-errors-container="#product-type-error" data-parsley-error-message="Produto necessário">
 
                         @if (count($products) > 0)
 
@@ -52,28 +52,35 @@
                         @endif
 
                     </select>
+
+                    <div id="#product-type-error"></div>
+
                 </div>
 
-                {{-- @dd($promotion->price) --}}
                 <div class="form-group">
                     <label>Preço</label>
 
                     <div class="input-group">
 
                         <span class="input-group-text">R$</span>
-                        <input type="text" name="price" step="0.01" class="form-control price" value="{{ old('price',$promotion->price) }}">
+                        <input type="text" name="price" step="0.01" class="form-control price" required data-parsley-errors-container="#price-type-error" data-parsley-error-message="Preço necessário" value="{{ old('price',$promotion->price) }}">
 
                     </div>
+
+                    <div id="price-type-error"></div>
+
                 </div>
 
                 <div class="form-group">
                     <label>Data de início</label>
-                    <input type="date" name="started_at" class="form-control" required value="{{ $promotion->started_at ? (string) $promotion->started_at->format('Y-m-d') : '' }}">
+                    <input type="date" name="started_at" class="form-control" required data-parsley-errors-container="#dateI-type-error" data-parsley-error-message="Data inicial necessária" value="{{ $promotion->started_at ? (string) $promotion->started_at->format('Y-m-d') : '' }}">
+                    <div id="dateI-type-error"></div>
                 </div>
 
                 <div class="form-group">
                     <label>Data final</label>
-                    <input type="date" name="ended_at" class="form-control" required value="{{ $promotion->ended_at ? (string) $promotion->ended_at->format('Y-m-d') : '' }}">
+                    <input type="date" name="ended_at" class="form-control" required data-parsley-errors-container="#dateF-type-error" data-parsley-error-message="Data final necessária" value="{{ $promotion->ended_at ? (string) $promotion->ended_at->format('Y-m-d') : '' }}">
+                    <div id="#dateF-type-error"></div>
                 </div>
 
                 <div class="page-controls">

@@ -33,30 +33,32 @@
 
                 <div class="form-group">
                     <label for="name">Nome</label>
-                    <input type="text" name="name" class="form-control" value="{{ old('name',$product->name) }}" maxlength="100" required />
+                    <input type="text" name="name" class="form-control" value="{{ old('name',$product->name) }}" maxlength="100" required required required data-parsley-errors-container="#name-type-error" data-parsley-error-message="Nome necessário" />
+                    <div id="name-type-error"></div>
                 </div>
 
                 <div class="form-group">
                     <label for="category_id">Categorias</label>
-                    <select name="category_id" class="form-select">
+                    <select name="category_id" class="form-select" required required data-parsley-errors-container="#category-type-error" data-parsley-error-message="Categoria necessária">
 
-                        @if (count($categories) > 0)
+                    @if (count($categories) > 0)
 
-                            <option value="" {{ $isEdit ?? 'selected' }}>Selecione uma categoria</option>
+                    <option value="" {{ $isEdit ?? 'selected' }}>Selecione uma categoria</option>
 
                             @foreach ($categories as $category)
 
-                                <option value="{{ $category->id }}" {{ $product->category_id == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
+                            <option value="{{ $category->id }}" {{ $product->category_id == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
 
                             @endforeach
 
                         @else
 
-                            <option value="" selected>Nenhuma categoria criada</option>
+                        <option value="" selected>Nenhuma categoria criada</option>
 
                         @endif
 
                     </select>
+                    <div id="category-type-error"></div>
                 </div>
 
                 <div class="form-group">
@@ -65,9 +67,12 @@
                     <div class="input-group">
 
                         <span class="input-group-text">R$</span>
-                        <input type="text" name="price" required step="0.01" class="form-control price" value="{{ old('price',$product->price) }}">
+                        <input type="text" name="price" required required data-parsley-errors-container="#price-type-error" data-parsley-error-message="Preço necessária" step="0.01" class="form-control price" value="{{ old('price',$product->price) }}">
 
                     </div>
+
+
+                    <div class="" id="price-type-error"></div>
 
                 </div>
 

@@ -28,7 +28,8 @@
 
                 <div class="form-group">
                     <label>Nome</label>
-                    <input type="text" name="name" class="form-control" required maxlength="50" value="{{ old('name',$category->name) }}"/>
+                    <input type="text" name="name" class="form-control" required required required data-parsley-errors-container="#name-type-error" data-parsley-error-message="Nome necessário" maxlength="50" value="{{ old('name',$category->name) }}"/>
+                    <div id="name-type-error"></div>
                 </div>
 
                 <div class="page-controls">
