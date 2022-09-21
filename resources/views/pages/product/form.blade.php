@@ -39,7 +39,7 @@
 
                 <div class="form-group">
                     <label for="category_id">Categorias</label>
-                    <select name="category_id" class="form-select" required required data-parsley-errors-container="#category-type-error" data-parsley-error-message="Categoria necessária">
+                    <select name="category_id" class="form-control" required required data-parsley-errors-container="#category-type-error" data-parsley-error-message="Categoria necessária">
 
                     @if (count($categories) > 0)
 

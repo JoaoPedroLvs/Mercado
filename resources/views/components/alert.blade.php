@@ -26,10 +26,12 @@
 
         @foreach ($alerts as $alert)
 
-            <div class="alert-dismissible alert {{ $alert[0] }}">
+            <div class="alert alert-dismissible fade show {{ $alert[0] }}">
 
                 <p class="mb-0">{{ $alert[1] }}</p>
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
 
             </div>
 

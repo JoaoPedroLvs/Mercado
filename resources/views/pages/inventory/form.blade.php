@@ -18,7 +18,7 @@
 
                 <div class="form-group">
                     <label>Produto</label>
-                    <select name="product_id" class="form-select" required data-parsley-errors-container="#product-type-error" data-parsley-error-message="Produto necessário">
+                    <select name="product_id" class="form-control" required data-parsley-errors-container="#product-type-error" data-parsley-error-message="Produto necessário">
 
                         <option value="" selected>Selecione um produto:</option>
 

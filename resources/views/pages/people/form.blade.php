@@ -75,7 +75,7 @@
                         <div class="form-group">
 
                             <label for="gender">Gênero</label>
-                            <select name="gender" id="gender" class="form-select" required required data-parsley-errors-container="#gender-type-error" data-parsley-error-message="Gênero necessário">
+                            <select name="gender" id="gender" class="form-control" required required data-parsley-errors-container="#gender-type-error" data-parsley-error-message="Gênero necessário">
                                 <option value="">Selecione um gênero</option>
                                 <option {{ $person->gender=='m' ? 'selected' : '' }} value="m">Masculino</option>
                                 <option {{ $person->gender=='f' ? 'selected' : '' }} value="f">Feminino</option>

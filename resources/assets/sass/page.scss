@@ -1,0 +1,73 @@
+.page {
+
+    .page-header {
+        margin-bottom: 30px;
+
+        h1 small {
+
+            font-size: 24px;
+            opacity: 0.6;
+        }
+
+        h3 small {
+
+            font-size: 22px;
+            opacity: 0.6;
+        }
+    }
+
+    .paginate {
+        display: flex;
+        justify-content: center;
+    }
+
+    .page-controls {
+        margin-bottom: 10px;
+    }
+
+    .page-message {
+
+        h4 small {
+
+            opacity: 0.6;
+        }
+    }
+
+    .bootbox-close-button.close{
+        background-color: white;
+        border: none;
+        font-size: 20px;
+    }
+
+    .card {
+        margin-top: 15px;
+        margin-bottom: 15px;
+    }
+
+    table {
+        text-align: center;
+    }
+
+    .table-options {
+        display: flex;
+        justify-content: center;
+    }
+
+    .table-options {
+
+        .btn {
+            margin-right: 3px;
+        }
+
+    }
+
+    .product-qty {
+
+        margin-right: 10px;
+        margin-left: 10px;
+    }
+
+    .buttons {
+        margin-right: 4px;
+    }
+}

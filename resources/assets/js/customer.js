@@ -26,6 +26,7 @@ $(function () {
 
         var $switch = $self.find('.switch');
 
+        var $switch = $self.find('.switch');
 
         var $label = $self.find('.label-switch');
 
@@ -36,6 +37,8 @@ $(function () {
         var $inputs = $newPerson.find(':input');
 
         var $form = $self.find('form');
+
+        var $select = $self.find('select').first();
 
         $switch.on('change', function() {
 
@@ -49,8 +52,11 @@ $(function () {
 
                 $inputs.attr({required:true});
 
-                $form.attr({action: window.location.origin+'/person'});
+                $select.attr({disabled: true});
 
+                $inputs.removeAttr('disabled');
+
+                $form.attr({action: window.location.origin+'/person'});
 
             } else {
 
@@ -61,6 +67,10 @@ $(function () {
                 $newPerson.addClass('d-none');
 
                 $inputs.removeAttr('required');
+
+                $inputs.attr({disabled:true});
+
+                $select.removeAttr('disabled');
 
                 $form.attr({action : window.location.origin+'/customer'});
 

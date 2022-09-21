@@ -112,12 +112,12 @@ class EmployeeRoleController extends Controller
             $role = EmployeeRole::find($id);
 
             if (!$role) {
-                throw new \Exception('Cargo não encontrado!');
+                throw new \Exception('cargo não encontrado!');
             }
 
             if (count($role->employee) > 0) {
 
-                throw new \Exception('Funcionários atrelados a ele!');
+                throw new \Exception('funcionários atrelados a ele!');
 
             }
 

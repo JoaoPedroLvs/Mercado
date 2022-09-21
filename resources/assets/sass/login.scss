@@ -1,0 +1,31 @@
+.page.page-auth.page-index {
+
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    .content {
+
+        background-color: #ffffff;
+        border: none;
+        font-size: 15px;
+
+    }
+
+    .page-header h1 {
+
+        display: flex;
+        margin-top: 15px;
+        justify-content: center;
+
+    }
+
+    .card {
+
+        margin-top: 15px;
+        margin-bottom: 15px;
+
+    }
+
+}

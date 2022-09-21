@@ -1,0 +1,122 @@
+@import url("https://fonts.googleapis.com/css?family=Nunito");
+.page.page-auth.page-index {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.page.page-auth.page-index .content {
+  background-color: #ffffff;
+  border: none;
+  font-size: 15px;
+}
+
+.page.page-auth.page-index .page-header h1 {
+  display: flex;
+  margin-top: 15px;
+  justify-content: center;
+}
+
+.page.page-auth.page-index .card {
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+
+html, body {
+  margin: 0;
+  height: 100%;
+}
+
+body .container:first {
+  height: 100%;
+}
+
+a, a:hover, a:focus, a:active {
+  color: inherit;
+}
+
+.header .nav-item.dropdown-menu {
+  position: relative;
+}
+
+.page .page-header {
+  margin-bottom: 30px;
+}
+
+.page .page-header h1 small {
+  font-size: 24px;
+  opacity: 0.6;
+}
+
+.page .page-header h3 small {
+  font-size: 22px;
+  opacity: 0.6;
+}
+
+.page .paginate {
+  display: flex;
+  justify-content: center;
+}
+
+.page .page-controls {
+  margin-bottom: 10px;
+}
+
+.page .page-message h4 small {
+  opacity: 0.6;
+}
+
+.page .bootbox-close-button.close {
+  background-color: white;
+  border: none;
+  font-size: 20px;
+}
+
+.page .card {
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+
+.page table {
+  text-align: center;
+}
+
+.page .table-options {
+  display: flex;
+  justify-content: center;
+}
+
+.page .table-options .btn {
+  margin-right: 3px;
+}
+
+.page .product-qty {
+  margin-right: 10px;
+  margin-left: 10px;
+}
+
+.page .buttons {
+  margin-right: 4px;
+}
+
+.page .form-group {
+  margin-bottom: 15px;
+}
+
+.page .form-group label {
+  font-weight: 500;
+  margin: 0 0 5px;
+}
+
+.page .checkbox-user {
+  margin-right: -60px;
+}
+
+.page .selects-form {
+  margin-left: 10px;
+}
+
+.page .products-itens {
+  margin-bottom: 15px;
+}

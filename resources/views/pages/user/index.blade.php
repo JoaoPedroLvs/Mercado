@@ -28,7 +28,11 @@
 
                         <div class="input-group mb-3">
                             <input type="text" name="search" class="form-control" placeholder="Pesquisar"/>
-                            <button type="submit" class="btn btn-success"><i class="bi bi-search"></i></button>
+                            <div class="input-group-append">
+
+                                <button type="submit" class="btn btn-success"><i class="bi bi-search"></i></button>
+
+                            </div>
                         </div>
 
                     </form>
@@ -43,7 +47,7 @@
 
                         <div class="input-group">
 
-                            <select name="qtyPaginate" id="qtyPaginate" class="form-select select-qty" data-url="/users">
+                            <select name="qtyPaginate" id="qtyPaginate" class="form-control select-qty" data-url="/users">
 
                                 <option {{ $qtyPaginate == 10 ? 'selected' : '' }}>Quantos itens deseja aparecer</option>
                                 <option data-value="10">10</option>
@@ -101,7 +105,7 @@
 
                                             <div class="col-sm-4">
 
-                                                <span class="badge rounded-pill text-bg-secondary">Cliente</span>
+                                                <span class="badge badge-pill badge-secondary">Cliente</span>
 
 
 
@@ -114,7 +118,7 @@
                                             <div class="col-sm-4">
 
 
-                                                <span class="badge rounded-pill text-bg-secondary">Funcionário</span>
+                                                <span class="badge badge-pill badge-secondary">Funcionário</span>
 
 
                                             </div>
@@ -126,7 +130,7 @@
                                             <div class="col-sm-4">
 
 
-                                                <span class="badge rounded-pill text-bg-secondary">Gerente</span>
+                                                <span class="badge badge-pill badge-secondary">Gerente</span>
 
                                             </div>
 
@@ -138,8 +142,8 @@
                                 <td>
                                     <div class="page-controls">
 
-                                        <a href="{{ url('/user/'.$user->id.'/edit') }}" class="btn btn-primary"><i class="far fa-edit"></i></a>
-                                        <a href="{{ url('/user/'.$user->id.'/delete') }}" class="btn btn-danger"><i class="fas fa-trash"></i></a>
+                                        <a href="{{ url('/user/'.$user->id.'/edit') }}" class="btn btn-primary"><i class="bi bi-pencil-square"></i></a>
+                                        <a href="{{ url('/user/'.$user->id.'/delete') }}" class="btn btn-danger"><i class="bi bi-trash"></i></a>
 
                                     </div>
                                 </td>

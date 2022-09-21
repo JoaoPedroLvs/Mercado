@@ -21,8 +21,9 @@ $(function() {
 
     $('.dropdown, .dropdown-menu').on('mouseover', function() {
 
-        // console.log($(this));
-        $(this).find('.dropdown-menu').show();
+        var $this = $(this);
+
+        $this.find('.dropdown-menu').show();
 
     }).on('mouseout', function() {
 
@@ -86,9 +87,9 @@ $(function() {
 
     });
 
+    // $('form').parsley();
 
     $('form').parsley({
-
         namespace: 'data-parsley-',
         inputs: 'input, textarea, select',
 
@@ -111,8 +112,8 @@ $(function() {
         errosContainer: function (Field) {},
 
         errorsWrapper: '<div class="parsley-errors"></div>',
-        errorTemplate: '<p style="color: red"></p>'
+        errorTemplate: '<p style="color: red"></p>',
 
-    }).validate();
+    });
 
 });

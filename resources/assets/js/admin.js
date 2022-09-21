@@ -1,7 +1,9 @@
 $(function(){
 
-    $('.page.page-employee.page-form').each(function() {
+    $('.page.page-admin.page-form').each(function() {
         var $self = $(this);
+
+        var $switch = $self.find('.switch');
 
         var $switch = $self.find('.switch');
 
@@ -15,6 +17,8 @@ $(function(){
 
         var $form = $self.find('form');
 
+        var $select = $self.find('select').first();
+
         $switch.on('change', function() {
 
             if ($switch.is(':checked')) {
@@ -27,8 +31,11 @@ $(function(){
 
                 $inputs.attr({required:true});
 
-                $form.attr({action: window.location.origin+'/person'});
+                $select.attr({disabled: true});
 
+                $inputs.removeAttr('disabled');
+
+                $form.attr({action: window.location.origin+'/person'});
 
             } else {
 
@@ -40,7 +47,11 @@ $(function(){
 
                 $inputs.removeAttr('required');
 
-                $form.attr({action : window.location.origin+'/employee'});
+                $inputs.attr({disabled:true});
+
+                $select.removeAttr('disabled');
+
+                $form.attr({action : window.location.origin+'/admin'});
 
             }
 

@@ -43,10 +43,9 @@
                         <tbody>
 
                             <tr>
-
                                 <td>
-                                    <a data-fancybox data-src="{{ asset($details['image']) }}" data-caption="{{ $details['name'] }}">
-                                        <img src="{{ $details['image'] }}" alt="{{ $details['name'] }}" height="40"></td>
+                                    <a data-fancybox data-src="{{ url('product/'.$id.'/image') }}" data-caption="{{ $details['name'] }}">
+                                        <img src="{{ url('product/'.$id.'/image') }}" alt="{{ $details['name'] }}" height="40"></td>
                                     </a>
                                 <td>{{ $details['name'] }}</td>
                                 <td>{{ $details['qty'] }}</td>
@@ -88,7 +87,7 @@
 
                 </table>
 
-                <div class="page-controls d-flex justify-content-center">
+                <div class="page-controls buttons d-flex justify-content-center">
 
                     <a href="/products" class="btn btn-outline-primary buttons">Voltar aos produtos</a>
 
@@ -104,19 +103,27 @@
 
         </div>
 
-        <form action="/sale" method="POST" class="d-none sale-form">
+        @if (Session::has('cart'))
 
-            @csrf
+            <form action="/sale" method="POST" class="d-none sale-form">
 
-            @foreach (Session::get('cart') as $id => $product)
+                @csrf
 
-                <input type="hidden" name="customer_id" value="{{ Auth::user()->customer_id }}">
-                <input type="hidden" name="product_id[]" value="{{ $id }}">
-                <input type="hidden" name="qty_sales[]" value="{{ $product['qty'] }}">
+                @foreach (Session::get('cart') as $id => $product)
 
-            @endforeach
+                    <input type="hidden" name="customer_id" value="{{ Auth::user()->customer_id }}">
+                    <input type="hidden" name="product_id[]" value="{{ $id }}">
+                    <input type="hidden" name="qty_sales[]" value="{{ $product['qty'] }}">
 
-        </form>
+                @endforeach
+
+            </form>
+
+        @else
+
+            <a href="/products" class="btn btn-outline-primary buttons">Voltar aos produtos</a>
+
+        @endif
     </div>
 
 

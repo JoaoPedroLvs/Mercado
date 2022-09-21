@@ -38,9 +38,9 @@
                                     <label class="form-check-label" for="admin">Administrador</label>
                                 </div>
 
-                                <div class="form-check col-md-4 select manager d-none">
+                                <div class="form-check col-md-6 select manager d-none">
 
-                                    <select name="manager_id" class="form-select col-md-6">
+                                    <select name="manager_id" class="form-control col-md-6">
 
                                         <option value="">Selecione um administrador</option>
 
@@ -58,13 +58,13 @@
 
                             <div class="row">
 
-                                <div class="form-check  col-md-2 checkbox-user">
+                                <div class="form-check col-md-2 checkbox-user">
                                     <input class="form-check-input checkbox" type="checkbox" id="employee" data-type="employee" name="checkboxEmployee">
                                     <label class="form-check-label" for="employee">Funcionário</label>
                                 </div>
 
-                                <div class="form-check col-md-4 select d-none employee">
-                                    <select name="employee_id" class="form-select col-md-6">
+                                <div class="form-check col-md-6 select d-none employee">
+                                    <select name="employee_id" class="form-control col-md-6">
 
                                         <option value="">Selecione um funcionário</option>
 
@@ -86,8 +86,8 @@
                                     <label class="form-check-label" for="customer">Cliente</label>
                                 </div>
 
-                                <div class="form-check col-md-4 select customer d-none">
-                                    <select name="customer_id" class="form-select col-md-6">
+                                <div class="form-check col-md-6 select customer d-none">
+                                    <select name="customer_id" class="form-control col-md-6">
                                         <option value="">Selecione um cliente</option>
 
                                         @foreach ($customers as $customer)
@@ -176,7 +176,7 @@
 
                 @endif
 
-                <a href="{{ url('users') }}" class="btn btn-primary">Voltar</a>
+                <a href="{{ url('users') }}" class="btn btn-outline-primary">Voltar</a>
                 <button type="submit" class="btn btn-success">Enviar</button>
 
             </form>

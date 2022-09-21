@@ -27,7 +27,11 @@
 
                         <div class="input-group">
                             <input type="text" name="search" class="form-control" placeholder="Pesquisar"/>
-                            <button type="submit" class="btn btn-success"><i class="bi bi-search"></i></button>
+                            <div class="input-group-append">
+
+                                <button type="submit" class="btn btn-success"><i class="bi bi-search"></i></button>
+
+                            </div>
                         </div>
 
                     </form>
@@ -41,7 +45,7 @@
 
                         <div class="input-group">
 
-                            <select name="qtyPaginate" id="qtyPaginate" class="form-select select-qty" data-url="/customers">
+                            <select name="qtyPaginate" id="qtyPaginate" class="form-control select-qty" data-url="/customers">
 
                                 <option {{ $qtyPaginate == 10 ? 'selected' : '' }}>Quantos itens deseja aparecer</option>
                                 <option data-value="10">10</option>
@@ -99,9 +103,9 @@
 
                                     <div class="table-options">
 
-                                        <a href="{{ url('customer/'.$customer->id.'/show') }}" class="btn btn-secondary buttons" ><i class="fas fa-list"></i></a><br>
-                                        <a href="{{ url('customer/'.$customer->id.'/edit') }}" class="btn btn-primary buttons" ><i class="far fa-edit"></i></a><br>
-                                        <a href="{{ url('customer/'.$customer->id.'/delete') }}" class="btn btn-danger buttons" ><i class="fas fa-trash"></i></a>
+                                        <a href="{{ url('customer/'.$customer->id.'/show') }}" class="btn btn-secondary buttons" ><i class="bi bi-list-nested"></i></a><br>
+                                        <a href="{{ url('customer/'.$customer->id.'/edit') }}" class="btn btn-primary buttons" ><i class="bi bi-pencil-square"></i></a><br>
+                                        <a href="{{ url('customer/'.$customer->id.'/delete') }}" class="btn btn-danger buttons" ><i class="bi bi-trash"></i></a>
 
                                     </div>
                                 </td>

@@ -34,7 +34,9 @@
 
                         <div class="input-group mb-3">
                             <input type="text" name="search" class="form-control" placeholder="Pesquisar"/>
-                            <button type="submit" class="btn btn-success"><i class="bi bi-search"></i></button>
+                            <div class="input-group-append">
+                                <button type="submit" class="btn btn-success"><i class="bi bi-search"></i></button>
+                            </div>
                         </div>
 
                     </form>
@@ -49,7 +51,7 @@
 
                         <div class="input-group">
 
-                            <select name="qtyPaginate" id="qtyPaginate" class="form-select select-qty" data-url="/products">
+                            <select name="qtyPaginate" id="qtyPaginate" class="form-control select-qty" data-url="/products">
 
                                 <option {{ $qtyPaginate == 10 ? 'selected' : '' }}>Quantos itens deseja aparecer</option>
                                 <option data-value="10">10</option>
@@ -117,9 +119,9 @@
 
                                 <td>
 
-                                    <a data-fancybox data-src="{{ asset($product->image) }}" data-caption="{{ $product->name }}">
+                                    <a data-fancybox data-src="{{ url('product/'.$product->id.'/image') }}" data-caption="{{ $product->name }}">
 
-                                        <img src="{{ asset($product->image) }}" alt="Imagem do produto" height="41px" class="image">
+                                        <img src="{{ url('product/'.$product->id.'/image') }}" alt="{{ $product->name }}" height="41px" class="image">
 
                                     </a>
 
@@ -146,8 +148,8 @@
 
                                         <div class="table-options">
 
-                                            <a href="{{ url('product/'.$product->id.'/edit') }}" class="btn btn-primary buttons" ><i class="far fa-edit"></i></a><br>
-                                            <a href="{{ url('product/'.$product->id.'/delete') }}" class="btn btn-danger buttons" ><i class="fas fa-trash"></i></a>
+                                            <a href="{{ url('product/'.$product->id.'/edit') }}" class="btn btn-primary buttons" ><i class="bi bi-pencil-square"></i></a><br>
+                                            <a href="{{ url('product/'.$product->id.'/delete') }}" class="btn btn-danger buttons" ><i class="bi bi-trash"></i></a>
 
                                         </div>
                                     @else

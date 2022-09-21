@@ -15,7 +15,7 @@ class EmployeeRole extends Model
     ];
 
     public function employee() {
-        return $this->belongsToMany(Employee::class);
+        return $this->hasMany(Employee::class, 'role_id', 'id');
     }
 
     public function scopeSearch ($query, $column, $order, $search = null) {

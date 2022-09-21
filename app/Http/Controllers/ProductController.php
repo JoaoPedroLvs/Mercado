@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 /**
@@ -33,7 +34,6 @@ class ProductController extends Controller
         $column = $request->column ?? "id";
         $search = $request->search;
         $qtyPaginate = $request->qtyPaginate ?? 10;
-
 
         $products = Product::search($search)->orderBy($column, $order)->paginate($qtyPaginate);
 
@@ -299,7 +299,13 @@ class ProductController extends Controller
         if (count($product->sales) > 0) {
             throw new \Exception('ele está presente em pelo menos uma venda');
         }
-        File::delete($product->image);
+
+        if ($product->image != '/products/default_image.png') {
+
+            Storage::delete($product->image);
+
+        }
+
         Inventory::where('product_id', $product->id)->delete();
         Promotion::where('product_id', $product->id)->delete();
 
@@ -316,33 +322,24 @@ class ProductController extends Controller
 
         $product->name = $request->name;
 
+
+        $product->price = floatval(str_replace([' ', ','],['','.'],$request->price));
+        $product->category_id = $request->category_id;
+
+        $product->save();
+
         if ($request->hasFile('image')) {
 
             $extension = $request->file('image')->getClientOriginalExtension();
-            $filename = date('Y-m-d-H-i').'.'.$extension;
-            $image = $request->image->move('assets/img/products', $filename);
-            $product->image = $image;
+            $filename = 'product'.$product->id.'-'.date('Y-m-d-H-i').'.'.$extension;
+            $path = Storage::putFileAs('/private',$request->file('image'),$filename);
+            $product->image = $path;
 
         } else {
 
-            $product->image = "assets/img/products/default_image.png";
+            $product->image = "/products/defaultProduct_image.png";
 
         }
-
-
-        //Vetores para substituir espaçe em branco e virgula no banco de dados
-        $string = [
-            ' ',
-            ','
-        ];
-
-        $stringR = [
-            '',
-            '.'
-        ];
-
-        $product->price = floatval(str_replace($string,$stringR,$request->price));
-        $product->category_id = $request->category_id;
 
         $product->save();
     }

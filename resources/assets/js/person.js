@@ -15,9 +15,9 @@ $(function() {
                 title: "Deletar pessoa",
                 onEscape: function() {},
                 show: true,
-                backdrop: null,
+                backdrop: "static",
                 onEscape: false,
-                closeButton: true,
+                closeButton: false,
                 animate: true,
                 className: "my-modal",
                 buttons: {
@@ -38,18 +38,6 @@ $(function() {
             });
 
         });
-
-        $('form').parsley(function (){
-
-            $('[data-parsley]').parsley({
-                errorClass: '-error',
-                successClass: '-success',
-
-                errorWrapper: '<ul class="parsley-error-list"></ul>',
-                errorTemplate: '<li class="parsley-error">Necessário nome</li>'
-            });
-
-        })
 
     });
 

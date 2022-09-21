@@ -48,6 +48,10 @@ Route::group(['middleware' => ['auth','permissions:customer']], function() {
     Route::get   ('/remove/cart/{id}', 'ProductController@removeCart');
     Route::post  ('/sale',           'SaleController@insert');
 
+    /* Rotas para acesso de imagens */
+
+    Route::get   ('/product/{id}/image', 'ImageController@showProduct');
+
 });
 
 /* Rotas que os funcionários tem acesso */

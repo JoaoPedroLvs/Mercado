@@ -29,14 +29,14 @@
 
 
                     <div class="form-check form-switch">
-                        <input class="form-check-input switch" type="checkbox" role="switch" id="flexSwitchCheckDefault" name="customer">
-                        <label class="form-check-label label-switch" for="flexSwitchCheckChecked">Pessoa já criada</label>
+                        <input class="form-check-input switch" type="checkbox" role="switch" id="check" name="customer">
+                        <label class="form-check-label label-switch" for="check">Pessoa já criada</label>
                     </div>
 
                     <div class="form-group person">
 
                         <label for="person">Pessoa</label>
-                        <select name="person_id" id="person" class="form-select" required required data-parsley-errors-container="#people-type-error" data-parsley-error-message="Pessoa necessária">
+                        <select name="person_id" id="person" class="form-control" required required data-parsley-errors-container="#people-type-error" data-parsley-error-message="Pessoa necessária">
 
                             <option value="">Selecione uma pessoa</option>
 
@@ -64,7 +64,7 @@
                     <div class="form-group">
 
                         <label for="person">Pessoa</label>
-                        <select name="person_id" id="person" class="form-select">
+                        <select name="person_id" id="person" class="form-control">
 
                             <option value="">Selecione uma pessoa</option>
 

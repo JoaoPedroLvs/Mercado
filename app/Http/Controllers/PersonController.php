@@ -340,13 +340,12 @@ class PersonController extends Controller
      */
     private function preDelete(Person $person) {
 
-        if (count($person->manager) > 0) {
+        // dd($person->employee);
+        if (isset($person->manager)) {
 
             if (isset($person->manager->user)) {
 
                 $user = $person->manager->user;
-                dd($user);
-
                 $user->delete();
 
             }
@@ -356,13 +355,11 @@ class PersonController extends Controller
 
         }
 
-        if (count($person->employee) > 0) {
+        if (isset($person->employee)) {
 
             if (isset($person->employee->user)) {
 
                 $user = $person->employee->user;
-                dd($user);
-
 
                 $user->delete();
 
@@ -372,13 +369,11 @@ class PersonController extends Controller
             $employee->delete();
         }
 
-        if (count($person->customer) > 0) {
+        if (isset($person->customer)) {
 
             if (isset($person->customer->user)) {
 
                 $user = $person->customer->user;
-                dd($user);
-
 
                 $user->delete();
 

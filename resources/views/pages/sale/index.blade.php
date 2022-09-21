@@ -48,8 +48,8 @@
 
                                     <div class="table-options">
 
-                                        <a href="{{ url('/sale/'.$sale->id.'/products') }}" class="btn btn-secondary buttons" ><i class="fas fa-list"></i></a><br>
-                                        <a href="{{ url('/sale/'.$sale->id.'/delete') }}" class="btn btn-danger buttons" ><i class="fas fa-trash"></i></a>
+                                        <a href="{{ url('/sale/'.$sale->id.'/products') }}" class="btn btn-secondary buttons" ><i class="bi bi-list-nested"></i></a><br>
+                                        <a href="{{ url('/sale/'.$sale->id.'/delete') }}" class="btn btn-danger buttons" ><i class="bi bi-trash"></i></a>
 
                                     </div>
                                 </td>

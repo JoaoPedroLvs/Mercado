@@ -19,7 +19,7 @@
 
                 <div class="form-group">
                     <label>Cliente</label>
-                    <select name="customer_id" class="form-select" >
+                    <select name="customer_id" class="form-control" >
 
                         @if (count($customers) > 0)
 
@@ -57,7 +57,7 @@
 
                                 <div class="input-group select">
 
-                                    <select name="product_id[]" class="form-select">
+                                    <select name="product_id[]" class="form-control">
 
                                         <option  value="">Selecione um produto</option>
 
@@ -71,7 +71,11 @@
 
                                     <input type="number" placeholder="Quantidade" name="qty_sales[]" class="form-control">
 
-                                    <button type="button" class="btn-delete-product btn btn-danger">X</button>
+                                    <div class="input-group-append">
+
+                                        <button type="button" class="btn-delete-product btn btn-danger">X</button>
+
+                                    </div>
 
                                 </div>
 

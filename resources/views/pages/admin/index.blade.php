@@ -32,7 +32,11 @@
 
                         <div class="input-group mb-3">
                             <input type="text" name="search" class="form-control" placeholder="Pesquisar"/>
-                            <button type="submit" class="btn btn-success"><i class="bi bi-search"></i></button>
+                            <div class="input-group-append">
+
+                                <button type="submit" class="btn btn-success"><i class="bi bi-search"></i></button>
+
+                            </div>
                         </div>
 
                     </form>
@@ -47,7 +51,7 @@
 
                         <div class="input-group">
 
-                            <select name="qtyPaginate" id="qtyPaginate" class="form-select select-qty" data-url="/admins">
+                            <select name="qtyPaginate" id="qtyPaginate" class="form-control select-qty" data-url="/admins">
 
                                 <option {{ $qtyPaginate == 10 ? 'selected' : '' }}>Quantos itens deseja aparecer</option>
                                 <option data-value="10">10</option>
@@ -104,9 +108,9 @@
                                 <td>
                                     <div class="page-controls">
 
-                                        <a href="{{ url('admin/'.$manager->id.'/show') }}" class="btn btn-secondary"><i class="fas fa-list"></i></a>
-                                        <a href="{{ url('admin/'.$manager->id.'/edit') }}" class="btn btn-primary"><i class="far fa-edit"></i></a>
-                                        <a href="{{ url('admin/'.$manager->id.'/delete') }}" class="btn btn-danger"><i class="fas fa-trash"></i></a>
+                                        <a href="{{ url('admin/'.$manager->id.'/show') }}" class="btn btn-secondary"><i class="bi bi-list-nested"></i></a>
+                                        <a href="{{ url('admin/'.$manager->id.'/edit') }}" class="btn btn-primary"><i class="bi bi-pencil-square"></i></a>
+                                        <a href="{{ url('admin/'.$manager->id.'/delete') }}" class="btn btn-danger"><i class="bi bi-trash"></i></a>
 
                                     </div>
                                 </td>

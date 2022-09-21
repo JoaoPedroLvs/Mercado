@@ -31,8 +31,8 @@ class Employee extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function roles() {
-        return $this->hasOne(EmployeeRole::class);
+    public function role() {
+        return $this->belongsTo(EmployeeRole::class);
     }
 
     public function person() {
