@@ -331,9 +331,9 @@ class ProductController extends Controller
         if ($request->hasFile('image')) {
 
             $extension = $request->file('image')->getClientOriginalExtension();
-            $filename = 'product'.$product->id.'-'.date('Y-m-d-H-i').'.'.$extension;
-            $path = Storage::putFileAs('/private',$request->file('image'),$filename);
-            $product->image = $path;
+            $filename = 'product'.$product->id.'-'.microtime(true).'.'.$extension;
+            Storage::putFileAs('/private/product',$request->file('image'),$filename);
+            $product->image = $filename;
 
         } else {
 

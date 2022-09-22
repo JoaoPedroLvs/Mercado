@@ -141,7 +141,7 @@
                                 {{ Auth::user()->customer->person->name }}
                             </a>
 
-                            <div class="nav-item dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                            <div class="nav-item dropdown-menu dropdown-menu-start" aria-labelledby="navbarDropdown">
 
                                 @if (Session::get('customer'))
 
