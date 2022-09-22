@@ -217,7 +217,7 @@ class PersonController extends Controller
 
                 } else if ($manager) {
 
-                    return redirect('managers');
+                    return redirect('admins');
 
                 } else {
 

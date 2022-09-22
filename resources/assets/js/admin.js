@@ -35,6 +35,10 @@ $(function(){
 
                 $inputs.removeAttr('disabled');
 
+                $select.removeAttr('required');
+
+                console.log($select);
+
                 $form.attr({action: window.location.origin+'/person'});
 
             } else {

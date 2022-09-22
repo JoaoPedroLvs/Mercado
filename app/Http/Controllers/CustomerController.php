@@ -132,6 +132,10 @@ class CustomerController extends Controller
                 throw new \Exception('Cliente não encontrado!');
             }
 
+            if (isset($customer->user)) {
+                throw new \Exception('Cliente com usuário criado!');
+            }
+
             $customer->delete();
 
             DB::commit();
