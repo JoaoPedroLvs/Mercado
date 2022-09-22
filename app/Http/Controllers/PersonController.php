@@ -6,6 +6,8 @@ use App\Models\Customer;
 use App\Models\Employee;
 use App\Models\Manager;
 use App\Models\Person;
+use App\Models\Product;
+use App\Models\Sale;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
@@ -189,6 +191,7 @@ class PersonController extends Controller
 
                 $isEdit = $request->method() == 'PUT';
 
+
                 $person = $isEdit ? Person::find($request->id) : new Person();
 
                 $customer = $request->customer ? new Customer() : null;
@@ -198,6 +201,16 @@ class PersonController extends Controller
                 $manager = $request->manager ? new Manager() : null;
 
                 $this->save($request, $person, $customer, $employee, $manager);
+
+                if ($person->customer) {
+
+                    $customer = $person->customer;
+
+                    $customer->is_new = false;
+
+                    $customer->save();
+
+                }
 
                 DB::commit();
 
@@ -297,14 +310,6 @@ class PersonController extends Controller
 
         $person->save();
 
-        if ($person->customer) {
-
-            $customer = $person->customer;
-
-            $customer->is_new = false;
-
-            $customer->save();
-        }
 
         if ($customer) {
 
@@ -340,7 +345,6 @@ class PersonController extends Controller
      */
     private function preDelete(Person $person) {
 
-        // dd($person->employee);
         if (isset($person->manager)) {
 
             if (isset($person->manager->user)) {
@@ -379,8 +383,33 @@ class PersonController extends Controller
 
             }
 
-            $customer = $person->customer();
+            $customer = $person->customer;
+            $sales = Sale::where('customer_id', $customer->id)->get();
+
+            if (count($sales) > 0 ) {
+
+                foreach ($sales as $sale) {
+
+                    $qty = Sale::searchQty($sale->id)->get();
+
+                    foreach ($qty as $productQty) {
+
+                        $product = Product::find($productQty->product_id);
+
+                        $product->increment('current_qty', $productQty->qty_sales);
+
+                    }
+
+                    $sale->products()->detach();
+
+                    $sale->delete();
+
+                }
+
+            }
+
             $customer->delete();
+
         }
 
     }

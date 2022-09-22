@@ -70,7 +70,11 @@
 
                             @foreach ($people as $person)
 
-                                <option value="{{ $person->id }}" {{ $person->id == $customer->person_id ? 'selected' : '' }}>{{ $person->name }}</option>
+                                @if (count($person->customer) > 0)
+
+                                    <option value="{{ $person->id }}" {{ $person->id == $customer->person_id ? 'selected' : '' }}>{{ $person->name }}</option>
+
+                                @endif
 
                             @endforeach
 

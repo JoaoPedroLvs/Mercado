@@ -43,7 +43,11 @@
 
                             @foreach ($people as $person)
 
-                            <option value="{{ $person->id }}">{{ $person->name }}</option>
+                                @if (count($person->manager) > 0)
+
+                                    <option value="{{ $person->id }}">{{ $person->name }}</option>
+
+                                @endif
 
                             @endforeach
 

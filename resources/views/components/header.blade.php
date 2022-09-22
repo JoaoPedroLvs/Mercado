@@ -176,7 +176,7 @@
                                 {{ Auth::user()->employee->person->name }}
                             </a>
 
-                            <div class="nav-item dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                            <div class="nav-item dropdown-menu dropdown-menu-start" aria-labelledby="navbarDropdown">
 
                                 @if (Session::get('employee'))
 
@@ -208,7 +208,7 @@
                                 {{ Auth::user()->manager->person->name ?? '' }}
                             </a>
 
-                            <div class="nav-item dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                            <div class="nav-item dropdown-menu dropdown-menu-start" aria-labelledby="navbarDropdown">
 
                                 <a class="dropdown-item" class="dropdown-item" href="{{ route('logout') }}"onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                                     <i class="bi bi-box-arrow-right"></i>
