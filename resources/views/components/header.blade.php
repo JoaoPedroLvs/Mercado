@@ -16,7 +16,7 @@
 
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
 
-        <a class="navbar-brand" href="{{ url('') }}">{{ config('app.app_name') }}</a>
+        <a class="navbar-brand" href="{{ url('') }}">{{ config('app.name') }}</a>
 
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
@@ -149,7 +149,7 @@
 
                                 @endif
 
-                                <a class="dropdown-item" class="dropdown-item" href="{{ route('logout') }}"onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                <a class="dropdown-item logout">
                                     <i class="bi bi-box-arrow-right"></i>
                                     Sair
                                 </a>
@@ -184,7 +184,7 @@
 
                                 @endif
 
-                                <a class="dropdown-item" class="dropdown-item" href="{{ route('logout') }}"onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                <a class="dropdown-item logout">
                                     <i class="bi bi-box-arrow-right"></i>
                                     Sair
                                 </a>
@@ -210,7 +210,7 @@
 
                             <div class="nav-item dropdown-menu dropdown-menu-start" aria-labelledby="navbarDropdown">
 
-                                <a class="dropdown-item" class="dropdown-item" href="{{ route('logout') }}"onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                <a class="dropdown-item logout">
                                     <i class="bi bi-box-arrow-right"></i>
                                     Sair
                                 </a>

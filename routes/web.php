@@ -26,20 +26,24 @@ Route::group(['middleware' => ['auth', 'permissions:customer,employee,manager']]
     // Página inicial
     Route::get   ('/', 'HomeController@index');
 
-});
-
-/* Rotas os usuários tem acesso */
-
-Route::group(['middleware' => ['auth','permissions:customer']], function() {
-
     Route::get   ('/customer/{id}/show', 'CustomerController@show');
+    Route::get   ('/person/{id}/edit', 'PersonController@edit');
+    Route::put   ('/person', 'PersonController@update');
+
+    /* Rotas para acesso de imagens */
+    Route::get   ('/product/{id}/image', 'ImageController@showProduct');
+
     Route::put   ('/customer',        'CustomerController@update');
     Route::get   ('/categories',           ['uses' => 'CategoryController@index', 'role' => 'customer.index']);
     Route::get   ('/category/{id}/products', 'CategoryController@show');
     Route::get   ('/products',             'ProductController@index');
     Route::get   ('/promotions',           'PromotionController@index');
-    Route::get   ('/person/{id}/edit', 'PersonController@edit');
-    Route::put   ('/person', 'PersonController@update');
+});
+
+/* Rotas os usuários tem acesso */
+
+Route::group(['middleware' => ['auth','permissions:customer,manager']], function() {
+
 
     /* Rotas para gerenciar o carrinho de compras */
 
@@ -48,14 +52,12 @@ Route::group(['middleware' => ['auth','permissions:customer']], function() {
     Route::get   ('/remove/cart/{id}', 'ProductController@removeCart');
     Route::post  ('/sale',           'SaleController@insert');
 
-    /* Rotas para acesso de imagens */
 
-    Route::get   ('/product/{id}/image', 'ImageController@showProduct');
 
 });
 
 /* Rotas que os funcionários tem acesso */
-Route::group(['middleware' => ['auth', 'permissions:employee']], function() {
+Route::group(['middleware' => ['auth', 'permissions:employee,manager']], function() {
     // Route::group(['middleware' => ['auth']], function() {
 
     /* Rota para quando criar um cliente criar uma pessoa */

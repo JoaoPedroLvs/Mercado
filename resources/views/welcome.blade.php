@@ -16,8 +16,6 @@
 
         @include('components.alert')
 
-        {{-- @dd(Auth::user()->role) --}}
-
     </div>
 
 </div>

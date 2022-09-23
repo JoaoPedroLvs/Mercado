@@ -337,7 +337,7 @@ class ProductController extends Controller
 
         } else {
 
-            $product->image = "defaultProduct_image.png";
+            $product->image = "/product/defaultProduct_image.png";
 
         }
 

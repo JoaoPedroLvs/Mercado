@@ -9,14 +9,14 @@ use Illuminate\Support\Facades\Storage;
 class ImageController extends Controller
 {
 
-    public function showProduct (int $id) {
+    public function showProduct (int $id = null) {
 
         $product = Product::find($id);
 
-        if (!Storage::disk('local')->exists('/private/product'.DIRECTORY_SEPARATOR.$product->image)) {
+        if (!Storage::disk('local')->exists('/private'.$product->image)) {
             abort(404);
         }
 
-        return response()->file(storage_path('app/private/product'.DIRECTORY_SEPARATOR.($product->image)));
+        return response()->file(storage_path('app/private'.($product->image)));
     }
 }

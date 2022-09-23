@@ -47,99 +47,35 @@ class PermissionsMiddleware {
                 'employee' => true
             ];
             Session::put($data);
-            // return $next($request);
         */
 
 
 
-        foreach ($roles as $role) {
+        $userPermissions = array_filter([
+            $user->customer_id ? "customer" : null,
+            $user->employee_id ? "employee" : null,
+            $user->manager_id ? "manager" : null
+        ]);
 
-            if ($role == 'manager') {
 
-                if (isset($user->manager_id)) {
 
-                    $data = [
-                        'manager' => true
-                    ];
-                    $request->session()->put($data);
+        if (!array_diff($userPermissions, $roles)) {
 
-                    return $next($request);
+            if ($user->customer_id) {
 
-                } else {
-                    return back()->with(Session::flash('error', 'Não possui permissão para acessar essa pagina'));
+                if ($user->customer->is_new && !$request->is('person/'.$user->customer->person_id.'/edit') && !$request->rg) {
+
+                    return redirect('person/'.$user->customer->person_id.'/edit');
                 }
 
             }
 
-            if ($role == 'employee') {
+            return $next($request);
 
-                if (isset($user->employee_id)) {
-                    $data = [
-                        'employee' => true
-                    ];
+        } else {
 
-                    $request->session()->put($data);
-
-                    return $next($request);
-
-                } else if (isset($user->manager_id)) {
-                    $data = [
-                        'manager' => true
-                    ];
-
-                    $request->session()->put($data);
-
-                    return $next($request);
-
-                } else {
-                    return back()->with(Session::flash('error', 'Não possui permissão para acessar essa página'));
-                }
-
-            }
-
-            if ($role == 'customer') {
-
-                if (isset($user->customer_id)) {
-                    $data = [
-                        'customer' => true
-                    ];
-
-                    if ($user->customer->is_new && !$request->is('person/'.$user->customer->person_id.'/edit') && !$request->rg) {
-                        return redirect('person/'.$user->customer->person_id.'/edit');
-                    }
-
-                    $request->session()->put($data);
-
-                    return $next($request);
-
-                } else if (isset($user->manager_id)) {
-
-                    $data = [
-                        'manager' => true
-                    ];
-
-                    $request->session()->put($data);
-
-                    return $next($request);
-
-                } else if (isset($user->employee_id)) {
-
-                    $data = [
-                        'employee' => true
-                    ];
-
-                    $request->session()->put($data);
-
-                    return $next($request);
-
-                } else {
-
-                    return back()->with(Session::flash('error', 'Não possui permissão para acessar essa página'));
-                }
-
-            }
-
-            abort(403);
+            return back()->with(Session::flash('error', 'Não possui permissão para acessar essa pagina'));
         }
+
     }
 }
