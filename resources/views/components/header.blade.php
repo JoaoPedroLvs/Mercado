@@ -10,6 +10,8 @@
         ['Promoção','promotions']
     ];
 
+    $user = Auth::user();
+
 @endphp
 
 <div class="header">
@@ -26,7 +28,7 @@
 
             <ul class="navbar-nav mr-auto">
 
-                @if (Session::get('manager'))
+                @if (isset($user->manager_id))
 
                     <li class="nav-item dropdown">
 
@@ -50,7 +52,7 @@
 
                 @foreach ($pages as $page)
 
-                    @if (Session::get('employee'))
+                    @if (isset($user->employee_id) && !isset($user->manager_id))
 
                         @if ($page[0] != 'Funcionários')
 
@@ -62,7 +64,7 @@
 
                     @else
 
-                        @if (Session::get('customer'))
+                        @if (isset($user->customer_id) && !isset($user->manager_id))
 
                             @if ($page[0] == 'Produtos' || $page[0] == 'Categorias' || $page[0] == 'Promoção')
 
@@ -108,7 +110,7 @@
 
             </ul>
 
-                @if (Session::get('customer'))
+                @if (isset($user->customer_id) && !isset($euser->employee_id))
 
                     <ul class="navbar-nav">
 
@@ -138,12 +140,12 @@
                         <li class="nav-item dropdown">
 
                             <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                {{ Auth::user()->customer->person->name }}
+                                {{ $user->customer->person->name }}
                             </a>
 
                             <div class="nav-item dropdown-menu dropdown-menu-start" aria-labelledby="navbarDropdown">
 
-                                @if (Session::get('customer'))
+                                @if (isset($user->customer_id))
 
                                     <a href="{{ url('/customer/'.Auth::user()->customer_id.'/show') }}" class="dropdown-item"><i class="bi bi-person-fill"></i> Perfil</a>
 
@@ -166,7 +168,7 @@
 
                 @else
 
-                    @if (Session::get('employee'))
+                    @if (isset($user->employee_id) && !isset($user->manager_id))
 
                     <ul class="navbar-nav ms-auto ms-end">
 
