@@ -43,7 +43,7 @@
 
                             @foreach ($people as $person)
 
-                                @if (count($person->manager) > 0)
+                                @if (!isset($person->manager))
 
                                     <option value="{{ $person->id }}">{{ $person->name }}</option>
 
@@ -75,7 +75,11 @@
 
                             @foreach ($people as $person)
 
-                                <option value="{{ $person->id }}" {{ $person->id == $manager->person_id ? 'selected' : '' }}>{{ $person->name }}</option>
+                                @if (!isset($person->manager) || $person->id == $manager->person_id)
+
+                                    <option value="{{ $person->id }}" {{ $person->id == $manager->person_id ? 'selected' : '' }}>{{ $person->name }}</option>
+
+                                @endif
 
                             @endforeach
 

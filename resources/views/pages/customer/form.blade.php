@@ -7,6 +7,12 @@
     @php
         $isEdit = !empty($customer->id);
         $personData = $customer->person ?? $customer;
+
+        $a = [];
+
+        foreach ($people as $person) {
+            array_push($a,strval($person->name." -> ".isset($person->customer)));
+        };
     @endphp
 
     <div class="page page-customer page-form">
@@ -27,6 +33,7 @@
 
                 @if (!$isEdit)
 
+                {{-- @dd($a) --}}
 
                     <div class="form-check form-switch">
                         <input class="form-check-input switch" type="checkbox" role="switch" id="check" name="customer">
@@ -42,7 +49,11 @@
 
                             @foreach ($people as $person)
 
-                                <option value="{{ $person->id }}">{{ $person->name }}</option>
+                                @if (!isset($person->customer))
+
+                                    <option value="{{ $person->id }}">{{ $person->name }}</option>
+
+                                @endif
 
                             @endforeach
 
@@ -70,7 +81,7 @@
 
                             @foreach ($people as $person)
 
-                                @if (count($person->customer) > 0)
+                                @if (!isset($person->customer) || $person->id == $customer->person_id)
 
                                     <option value="{{ $person->id }}" {{ $person->id == $customer->person_id ? 'selected' : '' }}>{{ $person->name }}</option>
 

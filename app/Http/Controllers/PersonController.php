@@ -31,7 +31,7 @@ class PersonController extends Controller
 
         $column = $request->column ?? 'id';
         $order = $request->order ?? 'asc';
-        $qtyPaginate = $qtyPaginate ?? 10;
+        $qtyPaginate = $request->qtyPaginate ?? 10;
         $search = $request->search ?? null;
 
         $people = Person::search($column,$order,$search)->paginate($qtyPaginate);

@@ -32,6 +32,7 @@
                         <label class="form-check-label label-switch" for="check">Pessoa já criada</label>
                     </div>
 
+                    {{-- @dd($people[0]->employee) --}}
                     <div class="form-group person">
 
                         <label for="person">Pessoa</label>
@@ -41,7 +42,7 @@
 
                             @foreach ($people as $person)
 
-                                @if (count($person->employee) > 0)
+                                @if (!isset($person->employee))
 
                                     <option value="{{ $person->id }}">{{ $person->name }}</option>
 
@@ -73,7 +74,11 @@
 
                             @foreach ($people as $person)
 
-                                <option value="{{ $person->id }}" {{ $person->id == $employee->person_id ? 'selected' : '' }}>{{ $person->name }}</option>
+                                @if (!isset($person->employee) || $person->id == $employee->person_id)
+
+                                    <option value="{{ $person->id }}" {{ $person->id == $employee->person_id ? 'selected' : '' }}>{{ $person->name }}</option>
+
+                                @endif
 
                             @endforeach
 

@@ -32,8 +32,6 @@ class PermissionsMiddleware {
                 return $this->roles($this->id);
             }
 
-
-
             dd('entrou', $request->route()->getAction('role'));
 
             $user = Auth::user();
@@ -46,6 +44,7 @@ class PermissionsMiddleware {
                 'manager' => true,
                 'employee' => true
             ];
+
             Session::put($data);
         */
 
